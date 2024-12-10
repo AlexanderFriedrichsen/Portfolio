@@ -1,114 +1,235 @@
-.error {
-    text-align: center;
+/* Root Variables */
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #252525;
+  --accent-primary: #3498db;
+  --accent-secondary: #2ecc71;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --card-bg: #2d2d2d;
+  --border-color: #404040;
 }
 
-.jumbotron {
-  color: white;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../pictures/homepage.jpeg);
-  background-position: left center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100vh;
+/* Base Styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', Arial, sans-serif;
+  line-height: 1.6;
 }
 
-.jumbotron-text {
-  text-align: center;
+/* Update hero section spacing */
+.hero-section {
+  padding-top: 80px; /* Creates space below navbar */
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Hero image responsive sizing */
+.hero-visual {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.hero-image {
+  max-height: calc(100vh - 160px); /* Adjusts for navbar and padding */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Button styling fix */
+.btn-primary {
+  background-color: var(--accent-primary);
+  border: none;
+  color: var(--text-primary) !important; /* Force white text */
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-secondary);
+  transform: translateY(-2px);
+}
+
+/* Down arrow styling */
+.scroll-down {
   position: absolute;
-  top: 50%;
+  bottom: 30px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
+  transform: translateX(-50%);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  animation: bounce 2s infinite;
+}
+
+.scroll-down:hover {
+  opacity: 1;
+  color: var(--accent-primary);
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+      transform: translateX(-50%) translateY(0);
+  }
+  40% {
+      transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+      transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .hero-image {
+      max-height: 50vh;
+  }
+  
+  .hero-section {
+      padding-top: 60px;
+  }
+}
+
+/* Navigation */
+.navbar {
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.navbar.scrolled {
+  background-color: var(--bg-primary) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+  color: var(--text-primary) !important;
+  font-weight: 600;
+}
+
+.nav-link {
+  color: var(--text-primary) !important;
+  margin: 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent-primary) !important;
+}
+
+.navbar-toggler {
+  border-color: var(--text-primary);
 }
 
 .navbar-toggler span {
+  background-color: var(--text-primary);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* Section Styling */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-align: center;
+  color: var(--text-primary);
+  position: relative;
+}
+
+.section-title:after {
+  content: '';
   display: block;
-  background-color: #fff;
-  height: 3px;
-  width: 25px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  transform: rotate(0deg);
-  left: 0;
-  opacity: 1;
+  width: 50px;
+  height: 4px;
+  background: var(--accent-primary);
+  margin: 1rem auto;
 }
 
-.navbar-b.navbar-trans .nav-link, .navbar-b.navbar-reduce .nav-link {
-  color: #fff;
+/* Project Cards */
+.content-projects {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+  margin-bottom: 2rem;
 }
 
-.navbar-b .navbar-brand {
-  color: #fff;
+.content-projects:hover {
+  transform: translateY(-5px);
 }
 
-a:link {
-  color: black;
+.project-media {
+  position: relative;
+  overflow: hidden;
 }
 
-a:visited {
-  color: black;
+.project-media img {
+  width: 100%;
+  transition: transform 0.3s ease;
 }
 
-a:hover {
-  color: grey;
+.content-projects:hover .project-media img {
+  transform: scale(1.05);
 }
 
-a:active {
-  color:black;
+.project-content {
+  padding: 1.5rem;
 }
 
-.down-button {
-  color: white !important;
-}
-
-.down-button:hover {
-  color: white !important;
-}
-
-.resume-education {
-  padding: 0 0 20px 20px;
-  margin-top: -2px;
-  border-left: 2px solid #82909c;
+.featured-project {
+  border: 2px solid var(--accent-primary);
   position: relative;
 }
 
-.resume-education::before {
-  content: "";
+.featured-badge {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50px;
-  left: -9px;
-  top: 0;
-  background: #82909c;
-  border: 2px solid #82909c;
+  top: -12px;
+  right: 20px;
+  background-color: var(--accent-primary);
+  color: var(--text-primary);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: bold;
+  z-index: 1;
 }
 
-.resume-work {
+/* Resume Section Styling */
+.resume-education, .resume-work, .resume-org {
   padding: 0 0 20px 20px;
   margin-top: -2px;
-  border-left: 2px solid #ac4313;
+  border-left: 2px solid var(--accent-primary);
   position: relative;
 }
 
-.resume-work::before {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50px;
-  left: -9px;
-  top: 0;
-  background: #ac4313;
-  border: 2px solid #ac4313;
-}
-
-.resume-org {
-  padding: 0 0 20px 20px;
-  margin-top: -2px;
-  border-left: 2px solid #1f73bd;
-  position: relative;
-}
-
+.resume-education::before,
+.resume-work::before,
 .resume-org::before {
   content: "";
   position: absolute;
@@ -117,140 +238,134 @@ a:active {
   border-radius: 50px;
   left: -9px;
   top: 0;
-  background: #1f73bd;
-  border: 2px solid #1f73bd;
+  background: var(--accent-primary);
+  border: 2px solid var(--accent-primary);
 }
 
-.resume-summary {
-  margin-left: 20px;
-  font-size: large;
+/* Skills Progress Bars */
+.progress {
+  background-color: var(--bg-secondary);
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
-.resume-work h5 {
-margin-bottom: 1px;
+.progress-bar {
+  background-color: var(--accent-primary);
+  border-radius: 4px;
 }
 
-.resume-education h5 {
-margin-bottom: 1px;
-}
-
-.resume-org h5 {
-  margin-bottom: 1px;
-}
-
-footer {
-  text-align: center;
-}
-
-.navbar-expand-md.scrolled {
-  background-color: white !important;
-  transition: background-color 200ms linear;
-  border: solid;
-  border-width: 2px;
-  border-color: transparent;
-  border-bottom-color: black !important;
-}
-
-.navbar-expand-md.scrolled .nav-link {
-  color: black;
-}
-
-.navbar-brand.scrolled {
-  color: black;
-}
-
-.navbar-toggler.scrolled span{
-  display: block;
-  background-color: black;
-  height: 3px;
-  width: 25px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  transform: rotate(0deg);
-  left: 0;
-  opacity: 1;
-}
-
+/* Contact Section */
 .social-media {
   display: flex;
   justify-content: space-between;
-  margin-left: 15%;
-  margin-right: 15%;
-  margin-top: 40px;
+  margin: 2rem 15%;
 }
 
-.title-name {
-  font-size: xx-large;
+.social-media a {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
-.title-name-about {
-  font-size: xx-large;
-  padding: 2% 2% 2% 10%;
+.social-media a:hover {
+  color: var(--accent-primary);
 }
 
-/* new css */
-/* need to use . tags for eac of these rules */
-* {
-  box-sizing: border-box;
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-secondary);
 }
 
-body {
-  background-color: #f1f1f1;
-  padding: 20px;
-  font-family: Arial;
+/* Responsive Design */
+@media (max-width: 991px) {
+  .hero-title {
+      font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+      font-size: 1.2rem;
+  }
+  
+  .section-title {
+      font-size: 2rem;
+  }
+  
+  .social-media {
+      margin: 2rem 5%;
+  }
 }
 
-/* Center website 
-.main {
-  max-width: 1000px;
-  margin: auto;
+@media (max-width: 768px) {
+  .navbar {
+      background-color: var(--bg-primary) !important;
+  }
+  
+  .content-projects {
+      margin-bottom: 1.5rem;
+  }
+  
+  .hero-content {
+      text-align: center;
+  }
+  
+  .tech-stack {
+      justify-content: center;
+  }
 }
 
-h1 {
-  font-size: 50px;
-  word-break: break-all;
+/* Link Styles */
+a:link, a:visited {
+  color: var(--accent-primary);
+  text-decoration: none;
 }
-*/
 
+a:hover {
+  color: var(--accent-secondary);
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Project Grid */
 .row-projects {
   margin: 8px -16px;
-} 
+}
 
-/* Add padding BETWEEN each column (if you want) */
 .row-projects,
 .row-projects > .column-projects {
   padding: 8px;
 }
 
-/* Create four equal columns that floats next to each other */
 .column-projects {
   float: left;
   width: 25%;
 }
 
-/* Clear floats after rows */
 .row-projects:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* Content */
-.content-projects {
-  background-color: white;
-  padding: 10px;
-}
-
-/* Responsive layout - makes a two column-layout instead of four columns */
 @media screen and (max-width: 900px) {
   .column-projects {
-    width: 50%;
+      width: 50%;
   }
 }
 
-/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .column-projects {
-    width: 100%;
+      width: 100%;
   }
 }
