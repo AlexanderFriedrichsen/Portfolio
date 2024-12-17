@@ -321,41 +321,6 @@ html, body {
   }
 }
 
-/* Resume Section Styling */
-.resume-education, .resume-work, .resume-org {
-  padding: 0 0 20px 20px;
-  margin-top: -2px;
-  border-left: 2px solid var(--accent-primary);
-  position: relative;
-}
-
-.resume-education::before,
-.resume-work::before,
-.resume-org::before {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50px;
-  left: -9px;
-  top: 0;
-  background: var(--accent-primary);
-  border: 2px solid var(--accent-primary);
-}
-
-/* Skills Progress Bars */
-.progress {
-  background-color: var(--bg-secondary);
-  height: 8px;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.progress-bar {
-  background-color: var(--accent-primary);
-  border-radius: 4px;
-}
-
 /* Footer/Contact Section */
 footer {
   text-align: center;
@@ -367,9 +332,9 @@ footer {
 
 .social-media {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1rem;
+  justify-content: center;  /* Center the icons */
+  gap: 2rem;  /* Add consistent spacing between icons */
+  margin: 2rem auto;  /* Center the container */
 }
 
 .social-media a {

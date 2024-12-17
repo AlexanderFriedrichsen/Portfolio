@@ -6,16 +6,16 @@ $(document).ready(function() {
         
         if (fullBio.is(':hidden')) {
             // Show bio
-            fullBio.show(); // Show first
+            fullBio.slideDown(300); // Use slideDown instead of show
             button.text('Show Less');
             
             // Scroll after showing
             $('html, body').animate({
-                scrollTop: button.offset().top - 100
+                scrollTop: fullBio.offset().top - 100
             }, 500);
         } else {
             // Hide bio
-            fullBio.hide();
+            fullBio.slideUp(300); // Use slideUp instead of hide
             button.text('Read Full Bio');
         }
     });
