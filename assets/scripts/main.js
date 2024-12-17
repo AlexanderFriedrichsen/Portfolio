@@ -41,3 +41,36 @@ $('a[href*="#"]') // Remove links that don't actually link to anything
 $('.js-scroll').on("click", function() {
     $('.navbar-collapse').collapse('hide');
 });
+
+// Bio toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded'); // Debug log
+    const readMoreBtn = document.getElementById('read-more-btn');
+    const fullBio = document.getElementById('full-bio');
+
+    if (readMoreBtn && fullBio) {
+        readMoreBtn.addEventListener('click', function() {
+            console.log('Button clicked'); // Debug log
+            const isHidden = fullBio.style.display === 'none' || fullBio.style.display === '';
+            
+            if (isHidden) {
+                // Show bio
+                fullBio.style.display = 'block';
+                setTimeout(() => {
+                    fullBio.classList.add('show');
+                    readMoreBtn.textContent = 'Show Less';
+                    fullBio.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 10);
+            } else {
+                // Hide bio
+                fullBio.classList.remove('show');
+                readMoreBtn.textContent = 'Read Full Bio';
+                setTimeout(() => {
+                    fullBio.style.display = 'none';
+                }, 500);
+            }
+        });
+    } else {
+        console.log('Button or bio section not found'); // Debug log
+    }
+});

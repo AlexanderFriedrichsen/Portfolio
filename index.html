@@ -29,7 +29,9 @@
     <!-- Updated navbar -->
     <nav class="navbar navbar-expand-md fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#home">AF</a>
+            <a class="navbar-brand" href="https://honestafblog.com">
+                HonestAF<span class="blog-link">Blog</span>
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDefault"
                 aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -46,9 +48,6 @@
                         <a class="nav-link" href="#projects">Projects</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#experience">Experience</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     <li class="nav-item">
@@ -61,7 +60,7 @@
         </div>
     </nav>
 
-    <<!-- Updated Hero Section HTML -->
+    <!-- Updated Hero Section HTML -->
     <section class="hero-section" id="home">
         <div class="container h-100">
             <div class="row align-items-center min-vh-100">
@@ -70,8 +69,8 @@
                     <div class="typed-container mb-2">
                         <span class="typed-prefix">Hello, I'm</span>
                     </div>
-                    <h1 class="hero-title">Alex Friedrichsen</h1>
-                    <p class="hero-subtitle">Data Scientist & Software Engineer</p>
+                    <h1 class="hero-title">Alexander Friedrichsen</h1>
+                    <p class="hero-subtitle">Data Scientist, Analyst, Strategist</p>
                     
                     <div class="hero-buttons mt-4">
                         <a href="./assets/files/12-2-2024_resume.pdf" class="btn btn-primary">
@@ -94,10 +93,10 @@
         </div>
     </section>
 
-    <!-- Brief About Section -->
     <div id="about" class="py-5">
         <div class="container">
             <div class="row align-items-center">
+                <!-- Your brief about content -->
                 <div class="col-md-4 mb-4 mb-md-0">
                     <img src="assets/pictures/roundSmilingSuit.png" class="img-fluid rounded-circle shadow" alt="Alex">
                 </div>
@@ -105,76 +104,30 @@
                     <div class="brief-about">
                         <h2 class="mb-4">About Me</h2>
                         <p class="lead mb-4">
-                            Data Scientist and Software Engineer specializing in <span class="highlight-text">complex systems analysis</span> and <span class="highlight-text">machine learning</span>.
+                            Alex Friedrichsen is a data scientist specializing in business intelligence and machine learning, and a professional Magic: The Gathering player for Team Handshake.
                         </p>
-                        <p>
-                            Currently leveraging my MS in <span class="highlight-text">Data Science and Complex Systems</span> to develop innovative solutions in BI dashboard development and data modeling. Former Software Engineer at BAE Systems with expertise in <span class="highlight-text">Python</span>, <span class="highlight-text">SQL</span>, and <span class="highlight-text">R</span>.
-                        </p>
-                        <div class="key-interests mt-4">
-                            <h5 class="mb-3">Key Interests</h5>
-                            <span class="badge bg-secondary me-2 mb-2">Game Theory</span>
-                            <span class="badge bg-secondary me-2 mb-2">Evolutionary Computation</span>
-                            <span class="badge bg-secondary me-2 mb-2">Agent-based Modeling</span>
-                            <span class="badge bg-secondary me-2 mb-2">Data Visualization</span>
-                        </div>
                         <div class="mt-4">
-                            <a href="#full-bio" class="btn btn-outline-primary">Read Full Bio</a>
+                            <button id="read-more-btn" class="btn btn-outline-primary">Read Full Bio</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Featured Projects Section -->
-    <div id="projects" class="py-5">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-12 text-center">
-                    <h2 class="section-title">Featured Work</h2>
-                </div>
-            </div>
-            
-            <div class="row">
-                <!-- Evolutionary Robotics Project -->
-                <div class="col-md-6 mb-4">
-                    <div class="content-projects featured-project">
-                        <span class="featured-badge">Featured</span>
-                        <div class="project-media">
-                            <img src="assets/videos/multi_legged_robot.gif" alt="evolving_robot" class="w-100">
-                        </div>
-                        <div class="project-content p-4">
-                            <h3>Evolutionary Robotics</h3>
-                            <p class="project-description">Multi-legged robot simulation demonstrating advanced evolutionary algorithms and physics-based modeling.</p>
-                            <div class="project-links">
-                                <a href="https://github.com/AlexanderFriedrichsen/EvolvingRobots" class="btn btn-outline-primary me-2">
-                                    <i class="fab fa-github"></i> View Code
-                                </a>
-                                <a href="#" class="btn btn-primary">
-                                    <i class="fas fa-play"></i> Watch Demo
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Deepfake Spread Project -->
-                <div class="col-md-6 mb-4">
-                    <div class="content-projects featured-project">
-                        <span class="featured-badge">Featured</span>
-                        <div class="project-media">
-                            <img src="assets/pictures/deepfakeModelingPorfolio.jpg" alt="deepfakeModeling" class="w-100">
-                        </div>
-                        <div class="project-content p-4">
-                            <h3>Deepfake Spread Analysis</h3>
-                            <p class="project-description">Agent-based modeling of deepfake content spread through social networks using advanced simulation techniques.</p>
-                            <div class="project-links">
-                                <a href="assets/files/12_2021_MOCS_Final_Project_Deep_Fakes.pdf" class="btn btn-outline-primary me-2">
-                                    <i class="fas fa-file-alt"></i> Read Paper
-                                </a>
-                                <a href="https://github.com/AlexanderFriedrichsen/DeepFakeABM_GoogleCollabClone" class="btn btn-primary">
-                                    <i class="fab fa-github"></i> View Code
-                                </a>
+    
+            <!-- Full bio section (hidden by default) -->
+            <div id="full-bio" class="full-bio-section mt-5" style="display: none;">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="mb-4">Full Biography</h3>
+                                <div class="full-bio-content">
+                                    <p>
+                                        Alex Friedrichsen is a data scientist who specializes in business intelligence and machine learning, with expertise in building automated data pipelines and predictive analytics solutions. He holds a master's degree in Data Science from the University of Vermont's Complex Systems Center, where his research focused on evolutionary computation and network analysis. Currently, Alex leads strategy for Team Handshake as a professional Magic: The Gathering player, bringing his analytical mindset to both competitive gaming and data science.
+                                    </p>
+                                    <p>
+                                      Beyond his technical work, Alex is an active member of Vermont's music scene, playing jazz piano with his band The Kyne. When he's not analyzing data or competing in Magic tournaments, you can find him working on climbing problems at local crags or automating daily tasks with Python scripts. His approach to both work and play is guided by a passion for optimization and strategic thinking.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -183,34 +136,159 @@
         </div>
     </div>
 
-    <!-- All Projects Grid -->
-    <div class="row-projects">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-12 text-center">
-                    <h2 class="section-title">All Projects</h2>
+            <!-- Featured Projects Section -->
+        <div id="projects" class="py-5">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h2 class="section-title">Featured Work</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <!-- Project tiles from your original HTML, styled with new design -->
-                <!-- You can keep your existing project grid structure but with updated styling -->
-                [Your existing project grid structure here]
-            </div>
-        </div>
-    </div>
+                <div class="row">
+                    <!-- Goodreads Review -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
 
-    <!-- Experience Section (moved below projects) -->
-    <div id="experience" class="py-5">
-        <div class="container">
-            <h2 class="section-title">Experience</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <!-- Education Section -->
-                    [Your existing education content]
-                </div>
-                <div class="col-lg-6">
-                    <!-- Work Experience Section -->
-                    [Your existing work experience content]
+                            <div class="project-media">
+                                <img src="assets/pictures/goodreadsBooks.jpg" alt="goodreads logo and books" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Goodreads Review Analysis</h3>
+                                <p class="project-description">Performing sentiment analysis, detecting controversy, and identifying reviewer roles through data collected using the Goodreads API.</p>
+                                <div class="project-links">
+                                    <a href="https://www.youtube.com/watch?v=Fd9PpwYnwco" class="btn btn-primary">
+                                        <i class="fab fa-youtube"></i> Video
+                                    </a>
+                                    <a href="https://github.com/AlexanderFriedrichsen/goodreads_project" class="btn btn-outline-primary me-2">
+                                        <i class="fab fa-github"></i> Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deepfake Spread Project -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/pictures/deepfakeModelingPorfolio.jpg" alt="deepfakeModeling" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Deepfake Spread Model</h3>
+                                <p class="project-description">Agent-based modeling of deepfake content spread through social networks using advanced simulation techniques.</p>
+                                <div class="project-links">
+                                    <a href="assets/files/12_2021_MOCS_Final_Project_Deep_Fakes.pdf" class="btn btn-primary">
+                                        <i class="fas fa-file-alt"></i> Explore
+                                    </a>
+                                    <a href="https://github.com/AlexanderFriedrichsen/DeepFakeABM_GoogleCollabClone" class="btn btn-outline-primary me-2">
+                                        <i class="fab fa-github"></i> Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thesis Project -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/pictures/thesisNetwork.png" alt="Thesis" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Code Dissemination in Open Science</h3>
+                                <p class="project-description">Research exploring how scientific code spreads through academia via GitHub, analyzing code sharing patterns and open science practices.</p>
+                                <div class="project-links">
+                                    <a href="assets/files/05_2022_Exploring_code_dissemination_in_open_science_traces_of_GitHub.pdf" class="btn btn-primary">
+                                        <i class="fas fa-file-alt"></i> Explore
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evolutionary Robotics Project -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/videos/multi_legged_robot.gif" alt="evolving_robot" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Evolutionary Robotics</h3>
+                                <p class="project-description">Multi-legged robot simulation demonstrating advanced evolutionary algorithms and physics-based modeling.</p>
+                                <div class="project-links">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fab fa-youtube"></i> Video
+                                    </a>
+                                    <a href="https://github.com/AlexanderFriedrichsen/EvolvingRobots" class="btn btn-outline-primary me-2">
+                                        <i class="fab fa-github"></i> Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EnergyHub Dashboard -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/pictures/EnergyHubDashboardClipping.png" alt="EnergyHub Dashboard" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Tableau Energy Dashboard</h3>
+                                <p class="project-description">Tableau dashboard made using time series data processed by my ETL pipeline to predict energy costs.</p>
+                                <div class="project-links">
+                                    <a href="https://public.tableau.com/views/EnergyAnalyticsDashboard/EnergyAnalyticsDashboard?:language=en-US&:sid=&:display_count=n&:origin=viz_share_link" class="btn btn-primary">
+                                        <i class="fas fa-file-alt"></i> Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PokerHands -->
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/pictures/pokerHandsPortfolio.jpg" alt="PokerHands" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>PokerHands</h3>
+                                <p class="project-description">Poker hand analysis tool demonstrating probability calculations and game theory applications.</p>
+                                <div class="project-links">
+                                    <a href="https://www.youtube.com/watch?v=ue_-jSVSVXI" class="btn btn-primary">
+                                        <i class="fab fa-youtube"></i> Video
+                                    </a>
+                                    <a href="https://github.com/AlexanderFriedrichsen/AlexanderFriedrichsen.github.io/blob/main/Poker_Hands.ipynb" class="btn btn-outline-primary me-2">
+                                        <i class="fab fa-github"></i> Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vaccine Hesitancy
+                    <div class="col-md-6 mb-4">
+                        <div class="content-projects featured-project">
+
+                            <div class="project-media">
+                                <img src="assets/pictures/vaccineHesitancyPortfolio2.png" alt="Vaccine Hesitancy" class="w-100">
+                            </div>
+                            <div class="project-content p-4">
+                                <h3>Vaccine Hesitancy Analysis</h3>
+                                <p class="project-description">Sentiment analysis study examining vaccine hesitancy patterns in social media data using natural language processing.</p>
+                                <div class="project-links">
+                                    <a href="assets/files/VaccineHesitancyPaper.pdf" class="btn btn-primary">
+                                        <i class="fas fa-file-alt"></i> Explore
+                                    </a>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -221,7 +299,43 @@
         <div class="container">
             <h2 class="section-title">Contact Me</h2>
             <!-- Your existing contact content with updated styling -->
-            [Your existing contact content]
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card shadow-lg">
+                        <div class="row social-media">
+                            <a href="https://github.com/AlexanderFriedrichsen"><i class="fab fa-github" style="font-size: 3em;"></i></a>
+                            <a href="https://www.linkedin.com/in/alex-friedrichsen/"><i class="fab fa-linkedin-in" aria-hidden="true" style="font-size: 3em;"></i></a>
+                            <!--Change this to be another type of link besides gitlab, lets try discord?-->
+                            <a href="https://discordapp.com/users/AelaleA37/"><i class="fab fa-discord" style="font-size: 3em;"></i></a>
+                            <a href="https://www.facebook.com/alex.friedrichsen.75"><i class="fab fa-facebook" aria-hidden="true" style="font-size: 3em;"></i></a>
+                            <a href="https://www.instagram.com/a.l.e.x.friedrichsen/?hl=en"><i class="fab fa-instagram" style="font-size: 3em;"></i></a>
+                        </div>
+                        <p></p>
+                        <div class="row justify-content-center">
+                            <h3>
+                                Social Profiles
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="col-sm-6">
+                    <div class="card shadow-lg" style="text-align: center;">
+                        <a href="mailto: alex.p.friedrichsen@gmail.com"><i class="far fa-envelope" style="font-size: 3em;"></i></a>
+                        <a href="mailto: alex.p.friedrichsen@gmail.com"><b>Email Me!</b></a>
+                        <a href="mailto: alex.p.friedrichsen@gmail.com"><b>alex.p.friedrichsen@gmail.com</b></a>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card shadow-lg" style="text-align: center;">
+                        <a href="./assets/files/12-2-2024_resume.pdf" title="Resume" style="font-size: 3em"><i class="far fa-file-alt"></i></a>
+                        <a href="./assets/files/12-2-2024_resume.pdf"><b>Click to download my Resum&eacute;!</b></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
