@@ -135,19 +135,21 @@ html, body {
 /* Down arrow styling */
 .scroll-down {
   position: absolute;
-  bottom: 30px;
+  bottom: 50px;  /* Increased from 30px to be more visible */
   left: 50%;
   transform: translateX(-50%);
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  opacity: 0.7;
+  color: var(--accent-primary); /* Changed to accent color to be more visible */
+  font-size: 2.5rem;  /* Increased from 1.5rem */
+  opacity: 0.9;  /* Increased from 0.7 */
   transition: all 0.3s ease;
   animation: bounce 2s infinite;
+  z-index: 10;  /* Ensure it appears above other content */
 }
 
 .scroll-down:hover {
   opacity: 1;
-  color: var(--accent-primary);
+  color: var(--accent-secondary);
+  font-size: 2.7rem;  /* Slight size increase on hover */
 }
 
 @keyframes bounce {
@@ -155,10 +157,10 @@ html, body {
       transform: translateX(-50%) translateY(0);
   }
   40% {
-      transform: translateX(-50%) translateY(-10px);
+      transform: translateX(-50%) translateY(-15px); /* Increased bounce height */
   }
   60% {
-      transform: translateX(-50%) translateY(-5px);
+      transform: translateX(-50%) translateY(-7px);
   }
 }
 
@@ -354,11 +356,20 @@ html, body {
   border-radius: 4px;
 }
 
-/* Contact Section */
+/* Footer/Contact Section */
+footer {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-color);
+  margin-top: 2rem;
+}
+
 .social-media {
   display: flex;
-  justify-content: space-between;
-  margin: 2rem 15%;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
 }
 
 .social-media a {
@@ -370,11 +381,8 @@ html, body {
   color: var(--accent-primary);
 }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 2rem 0;
-  color: var(--text-secondary);
+.footer-text {
+  font-size: 0.9rem;
 }
 
 /* Link Styles */

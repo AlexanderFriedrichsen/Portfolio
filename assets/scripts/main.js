@@ -5,17 +5,17 @@ $(document).ready(function() {
         var button = $(this);
         
         if (fullBio.is(':hidden')) {
-            fullBio.slideDown(500, function() {
-                const offset = 100;
-                const buttonPosition = button.offset().top - offset;
-                
-                $('html, body').animate({
-                    scrollTop: buttonPosition
-                }, 500);
-            });
+            // Show bio
+            fullBio.show(); // Show first
             button.text('Show Less');
+            
+            // Scroll after showing
+            $('html, body').animate({
+                scrollTop: button.offset().top - 100
+            }, 500);
         } else {
-            fullBio.slideUp(500);
+            // Hide bio
+            fullBio.hide();
             button.text('Read Full Bio');
         }
     });
