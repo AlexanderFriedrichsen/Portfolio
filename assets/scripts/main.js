@@ -9,6 +9,7 @@ $(document).ready(function() {
             // Show bio
             fullBio.slideDown(300); // Use slideDown instead of show
             button.text('Show Less');
+            console.log('prepare to scroll');
             
             // Scroll after showing
             $('html, body').animate({
