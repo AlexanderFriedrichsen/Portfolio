@@ -110,6 +110,8 @@ html, body {
 }
 
 .full-bio-section {
+  position: relative; /* Add this */
+  z-index: 100; /* High z-index to ensure it's above other sections */
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -119,11 +121,13 @@ html, body {
 .full-bio-section.show {
   opacity: 1;
   max-height: 2000px; /* Adjust based on content */
+  position: relative; /* Ensure positioning */
+  z-index: 100; /* Consistent z-index */
 }
 
 .full-bio-content {
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: 1.6; /* Assuming this was the incomplete line */
 }
 
 /* Button styling fix */
