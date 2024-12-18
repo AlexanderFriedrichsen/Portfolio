@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    console.log('Document is ready');
     // Bio toggle code
     $('#read-more-btn').click(function() {
         var fullBio = $('#full-bio');
