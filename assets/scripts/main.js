@@ -1,5 +1,6 @@
 $(document).ready(function() {
     console.log('Document is ready');
+
     // Bio toggle code
     $('#read-more-btn').click(function() {
         var fullBio = $('#full-bio');
@@ -7,7 +8,7 @@ $(document).ready(function() {
         
         if (fullBio.is(':hidden')) {
             // Show bio
-            fullBio.slideDown(300); // Use slideDown instead of show
+            fullBio.slideDown(300).addClass('show');
             button.text('Show Less');
             console.log('prepare to scroll');
             
@@ -17,7 +18,7 @@ $(document).ready(function() {
             }, 500);
         } else {
             // Hide bio
-            fullBio.slideUp(300); // Use slideUp instead of hide
+            fullBio.slideUp(300).removeClass('show');
             button.text('Read Full Bio');
         }
     });
@@ -27,6 +28,7 @@ $(document).ready(function() {
         var $nav = $(".navbar-expand-md");
         var $nav2 = $('.navbar-toggler');
         var $nav3 = $('.navbar-brand');
+        
         $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
         $nav2.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
         $nav3.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
@@ -49,6 +51,7 @@ $(document).ready(function() {
                         window.location.hash = hash;
                     }
                 });
+                
                 return false;
             }
         });
