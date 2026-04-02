@@ -1,0 +1,218 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Alexander Friedrichsen",
+    "label": "Data Scientist & Applied AI Engineer",
+    "email": "alex.p.friedrichsen@gmail.com",
+    "phone": "1-802-922-8588",
+    "url": "https://honestafblog.com/Portfolio/",
+    "summary": "Data scientist building production AI systems at the intersection of machine learning, automation, and software engineering. Drove AI adoption at a mutual insurance company — standing up production ML pipelines, agentic workflows, and a modern dev environment. Published ML researcher with experience shipping full-stack data products, ETL pipelines, and dashboards. Open to relocation (NYC, SF). Secret clearance.",
+    "location": {
+      "city": "Burlington",
+      "region": "VT",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "Alex-Friedrichsen",
+        "url": "https://linkedin.com/in/Alex-Friedrichsen"
+      },
+      {
+        "network": "GitHub",
+        "username": "AlexanderFriedrichsen",
+        "url": "https://github.com/AlexanderFriedrichsen"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Union Mutual",
+      "position": "Data Scientist and Analyst",
+      "startDate": "2025-05-01",
+      "summary": "Data scientist and AI lead at a mutual insurance company. Co-built production ML systems and drove organization-wide AI adoption.",
+      "highlights": [
+        "Co-designed and deployed an AI-augmented inspection evaluation pipeline — computer vision model analyzes property and inspection images, rates risk, detects issues, and generates underwriter reports — reducing company losses by over $3M annually",
+        "Drove AI adoption company-wide as sole internal AI advocate: introduced version control (GitHub), established production vs. test environments, restructured codebases for agent integration, and delivered hands-on agentic coding workshops to technical and non-technical staff",
+        "Conduct exploratory modeling, feature engineering, and SQL querying across AWS (Redshift, S3) to support business decision-making and data accessibility",
+        "Automate dashboards and monthly reports in Power BI and Python, delivering actionable KPI insights to cross-functional stakeholders"
+      ]
+    },
+    {
+      "name": "BAE Systems",
+      "position": "Software Engineer II",
+      "startDate": "2023-08-01",
+      "endDate": "2024-05-01",
+      "highlights": [
+        "Built multi-source Power BI data models with DAX aggregations, delivering weekly dashboards that drove labor and product line decisions for senior stakeholders",
+        "Architected internal staffing solutions using SharePoint and MS Access, serving 16,000 employees",
+        "Spearheaded ETL pipeline integrating financial data, enabling transition from manual Excel analysis to predictive analytics"
+      ]
+    },
+    {
+      "name": "Social Ecological Gaming and Simulation Lab",
+      "position": "Software Developer",
+      "startDate": "2022-08-01",
+      "endDate": "2023-07-01",
+      "highlights": [
+        "Developed precision agriculture simulation software using Python, C#, and JavaScript in Unity Game Engine"
+      ]
+    },
+    {
+      "name": "Vermont Department of Health",
+      "position": "Public Health Analyst I",
+      "startDate": "2019-02-01",
+      "endDate": "2021-09-01",
+      "highlights": [
+        "Authored and disseminated data products (SAS, R) to key stakeholders, and automated monthly reporting workflows saving 10+ hours per month",
+        "Published monthly analyses of unintentional drowning data informing policy decisions for the state of Vermont",
+        "Processed and analyzed death certificate, CME, police, and toxicology data for CDC reporting systems"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Vermont, Complex Systems Center",
+      "area": "Data Science and Complex Systems",
+      "studyType": "M.S.",
+      "startDate": "2021-08-01",
+      "endDate": "2023-05-01",
+      "score": "Top 10% of program",
+      "courses": []
+    },
+    {
+      "institution": "University of Vermont, College of Engineering and Mathematics",
+      "area": "Data Science",
+      "studyType": "B.S.",
+      "startDate": "2018-08-01",
+      "endDate": "2022-05-01",
+      "courses": [
+        "Minor: Economics",
+        "Minor: Mathematics",
+        "Minor: Computer Science",
+        "Minor: Statistics"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "AI & Machine Learning",
+      "keywords": [
+        "LLM Integration",
+        "Agentic Workflows",
+        "Computer Vision",
+        "Prompt Engineering",
+        "RAG",
+        "A/B Testing",
+        "Causal Inference",
+        "Statistical Modeling",
+        "Scikit-learn"
+      ]
+    },
+    {
+      "name": "Programming",
+      "keywords": [
+        "Python",
+        "SQL",
+        "JavaScript",
+        "TypeScript",
+        "R",
+        "Julia",
+        "SAS"
+      ]
+    },
+    {
+      "name": "Data & Infrastructure",
+      "keywords": [
+        "AWS (Redshift, S3)",
+        "Power BI (DAX)",
+        "Tableau",
+        "Google BigQuery",
+        "PostgreSQL",
+        "Supabase",
+        "ETL Pipelines"
+      ]
+    },
+    {
+      "name": "Development Practices",
+      "keywords": [
+        "Git/GitHub",
+        "CI/CD",
+        "Agile",
+        "Unit Testing",
+        "MCP (Model Context Protocol)",
+        "Agent Orchestration"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "name": "Evolutionary Machine Learning for Robust Facility Placements",
+      "publisher": "GECCO '23 (Genetic and Evolutionary Computation Conference)",
+      "releaseDate": "2023-07-01",
+      "url": "",
+      "summary": "Published research on evolutionary algorithms for optimization under uncertainty. Also presented at JuliaCon."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Multi-Agent AI Orchestration System",
+      "description": "Built a production multi-agent system with 12 specialized AI agents coordinated through an Obsidian knowledge vault. Includes role-based task delegation, automated quality gates, persistent memory, MCP tool servers, and Discord-based always-on agent infrastructure.",
+      "highlights": [
+        "12 specialized agents with model routing (judgment/execution/support tiers)",
+        "Knowledge graph integration, automated vault search, session persistence",
+        "Custom hooks for quality enforcement, secret detection, and agent verification"
+      ],
+      "keywords": [
+        "LLM Agents",
+        "MCP",
+        "Python",
+        "TypeScript",
+        "Multi-agent Systems"
+      ],
+      "type": "application"
+    },
+    {
+      "name": "MTG Skill Analyzer",
+      "description": "Full-stack web application analyzing 20,000+ competitive Magic: The Gathering match outcomes. Deployed at honestafblog.com with Supabase backend.",
+      "highlights": [
+        "ELO rating system, player performance modeling, data-driven team strategy"
+      ],
+      "keywords": ["Python", "Supabase", "Data Analysis", "Web App"],
+      "url": "https://honestafblog.com",
+      "type": "application"
+    },
+    {
+      "name": "Deepfake Spread Agent-Based Model",
+      "description": "Simulated bad-actor content propagation across social networks to understand user behavior and mitigate spread. 2nd place, 2021 UVM CS Fair.",
+      "highlights": [
+        "Agent-based modeling with Python (Mesa)",
+        "Network simulation of misinformation dynamics"
+      ],
+      "keywords": ["Python", "Mesa", "Agent-Based Modeling", "Network Science"],
+      "type": "application"
+    },
+    {
+      "name": "Poker Hand-History Analysis",
+      "description": "Formulated and tested hypotheses on 50,000 hands via feature engineering and predictive modeling to optimize decision-making under uncertainty.",
+      "keywords": ["Python", "Pandas", "Scikit-learn", "Statistical Analysis"],
+      "type": "application"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Competitive Card Games",
+      "keywords": [
+        "Pro Tour Magic: The Gathering competitor ($500K events)",
+        "Team Captain — Team Handshake",
+        "World Champion — Wonders of the First"
+      ]
+    }
+  ],
+  "meta": {
+    "canonical": "https://honestafblog.com/Portfolio/resume/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-04-02",
+    "theme": "elegant"
+  }
+}
