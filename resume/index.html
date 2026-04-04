@@ -1018,25 +1018,34 @@ body {
   /* Also override via attribute selector for the inline style */
   [style*="min-height"] { min-height: 0 !important; }
 
-  /* Flatten sidebar to inline header */
-  section.col-md-3, .card-wrapper.profile-card-wrapper {
-    position: relative !important; width: 100% !important; float: none !important;
+  /* FLATTEN entire layout to single column */
+  .row.main { display: flex !important; flex-direction: column !important; }
+  section.col-md-3, .card-wrapper.profile-card-wrapper,
+  section.col-md-3.card-wrapper.profile-card-wrapper.affix,
+  .affix {
+    position: static !important; top: auto !important; bottom: auto !important;
+    width: 100% !important; float: none !important;
     display: block !important; padding: 0 !important; margin: 0 !important;
+    height: auto !important; min-height: 0 !important; max-height: none !important;
   }
-  .card-wrapper.profile-card-wrapper.affix { position: relative !important; top: auto !important; }
+  section.col-md-9 { order: 2 !important; }
+  .profile-card-wrapper { order: 1 !important; }
   .profile-card {
-    background: #fff !important; padding: 4px 0 !important; margin: 0 !important;
+    background: #fff !important; padding: 2px 0 !important; margin: 0 !important;
     border: none !important; box-shadow: none !important;
+    height: auto !important; min-height: 0 !important;
   }
+  .profile-pic-container { display: inline !important; }
   .name-and-profession { text-align: center !important; }
-  .name-and-profession h3 { font-size: 18px !important; margin: 0 !important; }
-  .name-and-profession h5 { font-size: 11px !important; margin: 2px 0 4px !important; }
-  .contact-details { text-align: center !important; }
-  .contact-details .detail { display: inline-block !important; margin-right: 15px !important; font-size: 9px !important; }
-  .contact-details .detail .icon { width: auto !important; }
-  .social-links { margin: 2px 0 !important; }
-  .social-links a { font-size: 14px !important; margin: 0 4px !important; }
-  .profile-card hr { margin: 3px 0 !important; }
+  .name-and-profession h3 { font-size: 16px !important; margin: 0 !important; }
+  .name-and-profession h5 { font-size: 10px !important; margin: 1px 0 2px !important; }
+  .contact-details { text-align: center !important; padding: 0 !important; margin: 0 !important; }
+  .contact-details .detail { display: inline-block !important; margin-right: 12px !important; font-size: 8.5px !important; padding: 0 !important; }
+  .contact-details .detail .icon { width: auto !important; min-width: 0 !important; }
+  .social-links { margin: 1px 0 !important; padding: 0 !important; }
+  .social-links a { font-size: 12px !important; margin: 0 3px !important; }
+  .profile-card hr { margin: 2px 0 !important; }
+  .profile-card-wrapper, .profile-card { page-break-after: avoid !important; }
 
   /* Main content — full width */
   section.col-md-9 { width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
@@ -1092,8 +1101,7 @@ body {
   /* Page setup */
   @page { margin: 0.35in 0.45in; size: letter; }
 
-  /* Prevent orphan pages */
-  section { page-break-inside: avoid; }
+  /* Allow sections to break across pages — only protect individual cards */
   .detail { page-break-inside: avoid; }
 }
 </style></head><body itemscope="itemscope" itemtype="http://schema.org/Person"><div class="container-fluid"><div class="row main clearfix"><a class="js-floating-nav-trigger floating-nav-trigger" href="#"><i class="icon-bars"></i><span class="close-icon">&times;</span></a><nav class="floating-nav js-floating-nav"><ul class="list-unstyled"><li><a href="#about"><i class="mr-10 icon-board"></i>About</a></li><li><a href="#work-experience"><i class="mr-10 icon-office"></i>Work Experience</a></li><li><a href="#projects-experience"><i class="mr-10 icon-code"></i>Projects Experience</a></li><li><a href="#skills"><i class="mr-10 icon-tools"></i>Skills</a></li><li><a href="#education"><i class="mr-10 icon-graduation-cap"></i>Education</a></li><li><a href="#publications"><i class="mr-10 icon-newspaper"></i>Publications</a></li><li><a href="#interests"><i class="mr-10 icon-heart"></i>Interests</a></li></ul></nav><section class="col-md-3 card-wrapper profile-card-wrapper affix"><div class="card profile-card"><span class="profile-pic-container"><div class="profile-pic"><img class="media-object img-circle center-block" data-src="holder.js/100x100" alt="Alexander Friedrichsen" src="https://s.gravatar.com/avatar/6fbcd721be91ac2d513d4152a24d1096?s=100&amp;r=pg&amp;d=mm" itemprop="image"/></div><div class="name-and-profession text-center"><h3 itemprop="name"><b>Alexander Friedrichsen</b></h3><h5 class="text-muted" itemprop="jobTitle">Data Scientist &amp; Applied AI Engineer</h5></div></span><hr/><div class="contact-details clearfix"><div class="detail"><span class="icon"><i class="icon fs-lg icon-location"></i></span><span class="info">Burlington, VT, US</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-phone"></i></span><span class="info" itemprop="telephone">1-802-922-8588</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-mail"></i></span><span class="info"><a class="link-disguise" href="mailto:alex.p.friedrichsen@gmail.com" itemprop="email">alex.p.friedrichsen@gmail.com</a></span></div></div><hr/><div class="social-links text-center"><div><a class="fs-2x social-link link-linkedin icon-linkedin" href="https://linkedin.com/in/Alex-Friedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on LinkedIn"></a><a class="fs-2x social-link link-github icon-github" href="https://github.com/AlexanderFriedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on GitHub"></a></div></div></div></section><section class="col-md-9 card-wrapper pull-right"><div class="card background-card"><h4 class="text-uppercase">Background</h4><hr/><div class="background-details"><div class="detail" id="about"><div class="icon"><i class="fs-lg icon-board"></i><span class="mobile-title">About</span></div><div class="info"><h4 class="title text-uppercase">About</h4><div class="card card-nested"><div class="content mop-wrapper" itemprop="description"><p>Data scientist building production AI systems at the intersection of machine learning, automation, and software engineering. Drove AI adoption at a mutual insurance company — standing up production ML pipelines, agentic workflows, and a modern dev environment. Published ML researcher with experience shipping full-stack data products, ETL pipelines, and dashboards. Open to relocation (NYC, SF). Secret clearance.</p>
