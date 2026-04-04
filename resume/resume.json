@@ -64,9 +64,7 @@
       "startDate": "2019-02-01",
       "endDate": "2021-09-01",
       "highlights": [
-        "Authored and disseminated data products (SAS, R) to key stakeholders, and automated monthly reporting workflows saving 10+ hours per month",
-        "Published monthly analyses of unintentional drowning data informing policy decisions for the state of Vermont",
-        "Processed and analyzed death certificate, CME, police, and toxicology data for CDC reporting systems"
+        "Automated reporting workflows (SAS, R) and published data products for CDC reporting systems, saving 10+ hours per month"
       ]
     }
   ],
@@ -180,22 +178,6 @@
       ],
       "keywords": ["Python", "Supabase", "Data Analysis", "Web App"],
       "url": "https://honestafblog.com",
-      "type": "application"
-    },
-    {
-      "name": "Deepfake Spread Agent-Based Model",
-      "description": "Simulated bad-actor content propagation across social networks to understand user behavior and mitigate spread. 2nd place, 2021 UVM CS Fair.",
-      "highlights": [
-        "Agent-based modeling with Python (Mesa)",
-        "Network simulation of misinformation dynamics"
-      ],
-      "keywords": ["Python", "Mesa", "Agent-Based Modeling", "Network Science"],
-      "type": "application"
-    },
-    {
-      "name": "Poker Hand-History Analysis",
-      "description": "Formulated and tested hypotheses on 50,000 hands via feature engineering and predictive modeling to optimize decision-making under uncertainty.",
-      "keywords": ["Python", "Pandas", "Scikit-learn", "Statistical Analysis"],
       "type": "application"
     }
   ],
