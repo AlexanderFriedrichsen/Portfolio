@@ -101,6 +101,8 @@
         "Computer Vision",
         "Prompt Engineering",
         "RAG",
+        "Structured Extraction",
+        "LLM Fine-Tuning",
         "A/B Testing",
         "Causal Inference",
         "Statistical Modeling",
@@ -123,8 +125,9 @@
       "name": "Data & Infrastructure",
       "keywords": [
         "AWS (Redshift, S3)",
+        "Docker",
+        "Cloud Infrastructure",
         "Power BI (DAX)",
-        "Tableau",
         "Google BigQuery",
         "PostgreSQL",
         "Supabase",
@@ -136,6 +139,7 @@
       "keywords": [
         "Git/GitHub",
         "CI/CD",
+        "Full-Stack Development",
         "Agile",
         "Unit Testing",
         "MCP (Model Context Protocol)",
