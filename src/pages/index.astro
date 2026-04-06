@@ -1,0 +1,190 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AgentCard from '../components/AgentCard.astro';
+
+const base = import.meta.env.BASE_URL;
+const img = (p: string) => `${base}${p.replace(/^\//, '')}`;
+
+const agents = [
+  { name: 'Atlas',    role: 'Chief Strategist',      description: "Turns ambiguous goals into concrete, assignable plans — decomposes the problem, picks the right specialists, and hands off clean briefs." },
+  { name: 'Forge',    role: 'Software Builder',      description: "Writes, refactors, and debugs production code across the stack — the agent that actually ships working software." },
+  { name: 'Cipher',   role: 'Quality Gate',          description: "Reviews every non-trivial piece of work before it ships — catches bugs, security holes, and lazy thinking, and says no when it needs to." },
+  { name: 'Gauntlet', role: 'Tester & QA',           description: "Thinks adversarially about software — writes test suites, hunts edge cases, and breaks things before users do." },
+  { name: 'Scout',    role: 'Researcher',            description: "Runs landscape scans, competitive intel, and technology evaluations — returns facts and sources, not vibes." },
+  { name: 'Lens',     role: 'Data Analyst',          description: "Owns the numbers — statistics, pipelines, dashboards, and honest insights when the data doesn't support the conclusion you wanted." },
+  { name: 'Quill',    role: 'Content Writer',        description: "Writes in my voice — blog posts, case studies, social copy — direct, analytical, and allergic to hype." },
+  { name: 'Pixel',    role: 'Visual Designer',       description: "Handles UI, CSS, SVG, and brand visuals — committed to a strong aesthetic instead of playing it safe." },
+  { name: 'Anchor',   role: 'Operations & Deploy',   description: "Runs CI/CD, infrastructure, and deployments — the agent that keeps the lights on so the rest of the team can ship." },
+  { name: 'Sage',     role: 'Knowledge Manager',     description: "Keeps the vault healthy — prunes stale notes, cross-links memory, and makes sure everything I learn stays findable." },
+  { name: 'Herald',   role: 'Project Intake',        description: "Interviews me before new work begins — captures requirements, surfaces trade-offs, and produces the brief the rest of the team executes against." },
+  { name: 'Prism',    role: 'Design Reviewer',       description: "Specialist design critic — reviews visual and UX work for aesthetic integrity and usability before it ships." },
+];
+---
+
+<Layout title="Alex Friedrichsen — Portfolio">
+
+  <!-- ============ MOVEMENT 1: PHILOSOPHY ============ -->
+  <section id="philosophy">
+    <div class="wrap">
+      <h1 class="triptych">
+        <span>Grow with friends<span class="period">.</span></span>
+        <span>Find joy in hard problems<span class="period">.</span></span>
+        <span>Build things that help people<span class="period">.</span></span>
+      </h1>
+      <p class="byline">
+        <strong>Alex Friedrichsen</strong>
+        <span class="sep">—</span>
+        Data scientist, builder, and occasional world-champion-adjacent nuisance.
+        <span class="sep">—</span>
+        <a href={`${base}resume/`}>Résumé</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ MOVEMENT 2: PROOF ============ -->
+  <section id="proof">
+    <div class="wrap">
+      <p class="section-label">Movement II — Proof</p>
+      <h2 class="section-title">The receipts.</h2>
+
+      <!-- MTG arc -->
+      <article class="beat">
+        <h3>The Magic arc</h3>
+        <p class="proves">Find joy in hard problems · Grow with friends</p>
+        <p>
+          I spent years grinding a game that punishes you for being wrong in public.
+          The path ran from open tournaments to regional championships to a <strong>Pro Tour Top 8</strong> —
+          not because I was the smartest player in any given room, but because I kept showing up
+          with the same small group of friends and we kept getting a little better.
+        </p>
+        <p>Hard problems are more fun when you're solving them with people you trust.</p>
+        <div class="gallery hero-arc">
+          <figure class="hero">
+            <img src={img('assets/pictures/beast_games/06_Pro_Tour_Fist_Pump.png')} alt="Pro Tour fist pump" />
+            <figcaption>The one where it finally clicked.</figcaption>
+          </figure>
+          <div class="supporting two">
+            <figure>
+              <img src={img('assets/pictures/beast_games/03_SCG_CON_Atlanta_Constructed_Champion.png')} alt="SCG CON Atlanta Constructed Champion" />
+              <figcaption>SCG CON Atlanta — Constructed Champion.</figcaption>
+            </figure>
+            <figure>
+              <img src={img('assets/pictures/beast_games/05_Pro_Tour_Top8_Group_Stage.png')} alt="Pro Tour Top 8" />
+              <figcaption>Pro Tour Top 8 — the room where it happens.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
+
+      <!-- Wonders of the First -->
+      <article class="beat">
+        <h3>Wonders of the First</h3>
+        <p class="proves">Build things that help people · Grow with friends</p>
+        <p>
+          I designed a card game, built the client, and ran a <strong>world championship</strong> for it — the Dragon Cup.
+          People flew in. Someone won a trophy. The game exists because I wanted
+          a thing my friends and I could share, and the championship exists because it turned out
+          other people wanted it too.
+        </p>
+        <p>The best proof that a thing helps people is that they show up for it.</p>
+        <div class="gallery three">
+          <figure>
+            <img src={img('assets/pictures/beast_games/01_Dragon_Cup_Winner_Official.png')} alt="Dragon Cup winner" />
+            <figcaption>Dragon Cup — the official winner shot.</figcaption>
+          </figure>
+          <figure>
+            <img src={img('assets/pictures/beast_games/02_Dragon_Cup_Group_Photo.png')} alt="Dragon Cup group photo" />
+            <figcaption>The crew who made the first world championship real.</figcaption>
+          </figure>
+          <figure>
+            <img src={img('assets/pictures/beast_games/04_Dragon_Cup_Winner_Candid.png')} alt="Dragon Cup candid" />
+            <figcaption>Candid, a moment after the finals.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <!-- MTG Skill Analyzer -->
+      <article class="beat">
+        <h3>MTG Skill Analyzer</h3>
+        <p class="proves">Build things that help people</p>
+        <p>
+          A live tool at <a href="https://honestafblog.com/mtg-skill-analyzer" target="_blank" rel="noopener">honestafblog.com/mtg-skill-analyzer</a> that
+          turns match history into an honest answer to the hardest question in a competitive hobby:
+          <em>am I actually getting better, or just getting lucky?</em>
+        </p>
+        <p>
+          Supabase backend, a custom ELO-style model, a UI that respects players who understand variance.
+          Built because I wanted it for myself and discovered a lot of other people wanted it too.
+        </p>
+        <div class="gallery two">
+          <figure>
+            <img src={img('assets/pictures/pokerHandsPortfolio.jpg')} alt="Data analysis work" />
+            <figcaption>Data work — pipelines that turn noise into signal.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <!-- Climbing -->
+      <article class="beat">
+        <h3>Climbing</h3>
+        <p class="proves">Find joy in hard problems · Grow with friends</p>
+        <p>
+          A puzzle you solve with your whole body, usually with a friend holding the other end of the rope.
+          Outdoors on real rock, indoors on plastic overhangs — climbing is the hobby that most directly
+          trained me to enjoy being stuck on something I can't yet do.
+        </p>
+        <div class="gallery two">
+          <figure>
+            <img src={img('assets/pictures/beast_games/08_Climbing_Ocean_Rock.jpg')} alt="Climbing on ocean rock" />
+            <figcaption>Outdoor — ocean rock.</figcaption>
+          </figure>
+          <figure>
+            <img src={img('assets/pictures/beast_games/09_Climbing_Walltopia_Overhang_1.jpg')} alt="Climbing Walltopia overhang" />
+            <figcaption>Walltopia overhang — a problem I didn't send the first time.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <!-- Piano -->
+      <article class="beat">
+        <h3>Piano</h3>
+        <p class="proves">Find joy in hard problems</p>
+        <p>
+          I picked up piano as an adult, which is a special kind of humbling.
+          The only way through is to sit with the uncomfortable parts long enough
+          that they stop being uncomfortable.
+        </p>
+        <div class="gallery two">
+          <figure>
+            <img src={img('assets/pictures/2022_06_keys_kyne_practice.jpg')} alt="Piano practice" />
+            <figcaption>Practice session, 2022 — Keys Kyne.</figcaption>
+          </figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ MOVEMENT 3: PRACTICE ============ -->
+  <section id="practice">
+    <div class="wrap">
+      <p class="section-label">Movement III — Practice</p>
+      <h2 class="section-title">The team I built to scale the philosophy.</h2>
+      <p style="max-width: 62ch; color: var(--ink-soft); margin: 0 0 1rem;">
+        Twelve specialist AI agents, each with a sharp role and a place in a larger workflow.
+        Together they let one human help more people, find joy in more hard problems,
+        and grow with more friends.
+      </p>
+      <div class="agent-grid">
+        {agents.map(a => <AgentCard name={a.name} role={a.role} description={a.description} />)}
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>Alex Friedrichsen · 2026</span>
+      <span><a href={`${base}resume/`}>Résumé</a> · <a href="https://honestafblog.com" target="_blank" rel="noopener">honestafblog.com</a></span>
+    </div>
+  </footer>
+
+</Layout>

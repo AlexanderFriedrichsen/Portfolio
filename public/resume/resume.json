@@ -1,0 +1,208 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Alexander Friedrichsen",
+    "label": "Applied AI Engineer",
+    "email": "alex.p.friedrichsen@gmail.com",
+    "phone": "1-802-922-8588",
+    "url": "https://honestafblog.com/Portfolio/",
+    "summary": "Applied AI engineer shipping production AI systems — from fine-tuned LLM vision pipelines to multi-agent orchestration platforms. Built and deployed a GPT-based inspection evaluation system generating structured risk reports, projected to save $3M+ annually. Designed a 12-agent AI orchestration platform with model routing, RAG-based knowledge retrieval, and automated quality gates. Published ML researcher (GECCO '23) with full-stack experience across Python, TypeScript, and cloud infrastructure. Open to relocation (NYC, SF).",
+    "location": {
+      "city": "Burlington",
+      "region": "VT",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "Alex-Friedrichsen",
+        "url": "https://linkedin.com/in/Alex-Friedrichsen"
+      },
+      {
+        "network": "GitHub",
+        "username": "AlexanderFriedrichsen",
+        "url": "https://github.com/AlexanderFriedrichsen"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Union Mutual",
+      "position": "Data Scientist and Analyst",
+      "startDate": "2025-05-01",
+      "summary": "AI lead at a mutual insurance company. Built production LLM systems and drove organization-wide AI adoption.",
+      "highlights": [
+        "Co-designed and deployed an AI inspection evaluation pipeline — fine-tuned GPT vision model processes property images against underwriter-designed rubrics, outputs structured risk assessments, and generates underwriter reports — projected to save $3M+ annually. Runs in automated batch mode across policies and on-demand per underwriter request",
+        "Restructured production codebases for LLM agent integration; established CI/CD, version control (GitHub), and isolated dev/prod environments",
+        "Led company-wide AI adoption: trained analytics team on agentic coding tools (Cursor, custom agents, MCP hooks), delivered company-wide lunch-and-learn demos, and represented the company at an agentic AI conference",
+        "Conduct exploratory modeling, feature engineering, and SQL querying across AWS (App Runner, Redshift, S3) to support business decision-making"
+      ]
+    },
+    {
+      "name": "BAE Systems",
+      "position": "Software Engineer II",
+      "startDate": "2023-08-01",
+      "endDate": "2024-05-01",
+      "highlights": [
+        "Built multi-source Power BI data models with DAX aggregations, delivering weekly dashboards that drove labor and product line decisions for senior stakeholders",
+        "Architected internal staffing solutions using SharePoint and MS Access, serving 16,000 employees",
+        "Spearheaded ETL pipeline integrating financial data, enabling transition from manual Excel analysis to predictive analytics"
+      ]
+    },
+    {
+      "name": "Social Ecological Gaming and Simulation Lab",
+      "position": "Software Developer",
+      "startDate": "2022-08-01",
+      "endDate": "2023-07-01",
+      "highlights": [
+        "Developed precision agriculture simulation software using Python, C#, and JavaScript in Unity Game Engine"
+      ]
+    },
+    {
+      "name": "Vermont Department of Health",
+      "position": "Public Health Analyst I",
+      "startDate": "2019-02-01",
+      "endDate": "2021-09-01",
+      "highlights": [
+        "Automated reporting workflows (SAS, R) and published data products for CDC reporting systems, saving 10+ hours per month"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Vermont, Complex Systems Center",
+      "area": "Data Science and Complex Systems",
+      "studyType": "M.S.",
+      "startDate": "2021-08-01",
+      "endDate": "2023-05-01",
+      "score": "Top 10% of program",
+      "courses": []
+    },
+    {
+      "institution": "University of Vermont, College of Engineering and Mathematics",
+      "area": "Data Science",
+      "studyType": "B.S.",
+      "startDate": "2018-08-01",
+      "endDate": "2022-05-01",
+      "courses": [
+        "Minor: Economics",
+        "Minor: Mathematics",
+        "Minor: Computer Science",
+        "Minor: Statistics"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "AI Systems",
+      "keywords": [
+        "LLM Integration",
+        "Agentic Workflows",
+        "RAG",
+        "Structured Extraction",
+        "LLM Fine-Tuning",
+        "Prompt Engineering",
+        "Computer Vision",
+        "Agent Orchestration",
+        "MCP (Model Context Protocol)"
+      ]
+    },
+    {
+      "name": "Engineering",
+      "keywords": [
+        "Python",
+        "TypeScript",
+        "JavaScript",
+        "SQL",
+        "Full-Stack Development",
+        "Docker",
+        "CI/CD",
+        "Git/GitHub",
+        "Unit Testing"
+      ]
+    },
+    {
+      "name": "Cloud & Data",
+      "keywords": [
+        "AWS (App Runner, Redshift, S3)",
+        "PostgreSQL",
+        "Supabase",
+        "Google BigQuery",
+        "Cloud Infrastructure",
+        "ETL Pipelines"
+      ]
+    },
+    {
+      "name": "ML & Analytics",
+      "keywords": [
+        "Statistical Modeling",
+        "Scikit-learn",
+        "A/B Testing",
+        "Causal Inference",
+        "R",
+        "Power BI (DAX)"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "name": "Evolutionary Machine Learning for Robust Facility Placements",
+      "publisher": "GECCO '23 (Genetic and Evolutionary Computation Conference)",
+      "releaseDate": "2023-07-01",
+      "url": "",
+      "summary": "Published research on evolutionary algorithms for optimization under uncertainty. Also presented at JuliaCon."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Multi-Agent AI Orchestration System",
+      "description": "Built a production multi-agent system with 12 specialized AI agents coordinated through an Obsidian knowledge vault. Implements RAG-based knowledge retrieval over 200+ documents, model routing across inference tiers for cost-optimized token usage, and structured output parsing for agent coordination.",
+      "highlights": [
+        "12 specialized agents with role-based task delegation, automated quality gates, and persistent memory",
+        "RAG pipeline: BM25 + vector search over knowledge vault, context injection at query time",
+        "MCP tool servers, Discord-based always-on infrastructure, custom hooks for secret detection and verification"
+      ],
+      "keywords": [
+        "LLM Agents",
+        "MCP",
+        "RAG",
+        "Python",
+        "TypeScript",
+        "Multi-agent Systems"
+      ],
+      "type": "application"
+    },
+    {
+      "name": "MTG Skill Analyzer",
+      "description": "Full-stack web application (JavaScript, Supabase, PostgreSQL) analyzing 20,000+ competitive Magic: The Gathering match outcomes. Deployed at honestafblog.com.",
+      "highlights": [
+        "ELO rating system with player performance modeling, deployed with Supabase backend and PostgreSQL"
+      ],
+      "keywords": [
+        "JavaScript",
+        "Supabase",
+        "PostgreSQL",
+        "Data Analysis",
+        "Web App"
+      ],
+      "url": "https://honestafblog.com",
+      "type": "application"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Competitive Card Games",
+      "keywords": [
+        "Pro Tour Magic: The Gathering competitor ($500K events)",
+        "Team Captain — Team Handshake",
+        "World Champion — Wonders of the First"
+      ]
+    }
+  ],
+  "meta": {
+    "canonical": "https://honestafblog.com/Portfolio/resume/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-04-02",
+    "theme": "elegant"
+  }
+}

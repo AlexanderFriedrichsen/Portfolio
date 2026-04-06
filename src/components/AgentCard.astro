@@ -1,0 +1,48 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  description: string;
+}
+const { name, role, description } = Astro.props;
+---
+<article class="agent-card">
+  <h4>{name}</h4>
+  <p class="role">{role}</p>
+  <p class="desc">{description}</p>
+</article>
+
+<style>
+  .agent-card {
+    background: #fdfbf6;
+    border: 1px solid var(--rule);
+    padding: 1.6rem 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .agent-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  h4 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.15rem;
+    color: var(--ink);
+  }
+  .role {
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 0.9rem;
+  }
+  .desc {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+</style>
