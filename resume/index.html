@@ -1002,23 +1002,12 @@ body {
 }
 </style><style>
 @media print {
-  /* Kill all decorative cruft */
   *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; }
   body { font-size: 9px !important; line-height: 1.25 !important; color: #000 !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
-
-  /* Hide nav, photo, header/footer chrome */
   .js-floating-nav, .js-floating-nav-trigger, .floating-nav { display: none !important; }
   .profile-pic, .profile-pic-container img { display: none !important; }
-
-  /* CRITICAL: Override the JS-set inline min-height on background-card */
-  .background-card, .card.background-card, div.card.background-card {
-    min-height: 0 !important; height: auto !important; background: #fff !important;
-    padding: 0 !important; margin: 0 !important;
-  }
-  /* Also override via attribute selector for the inline style */
+  .background-card, .card.background-card, div.card.background-card { min-height: 0 !important; height: auto !important; background: #fff !important; padding: 0 !important; margin: 0 !important; }
   [style*="min-height"] { min-height: 0 !important; }
-
-  /* FLATTEN entire layout to single column */
   .row.main { display: flex !important; flex-direction: column !important; }
   section.col-md-3, .card-wrapper.profile-card-wrapper,
   section.col-md-3.card-wrapper.profile-card-wrapper.affix,
@@ -1028,13 +1017,9 @@ body {
     display: block !important; padding: 0 !important; margin: 0 !important;
     height: auto !important; min-height: 0 !important; max-height: none !important;
   }
-  section.col-md-9 { order: 2 !important; }
+  section.col-md-9 { order: 2 !important; width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
   .profile-card-wrapper { order: 1 !important; }
-  .profile-card {
-    background: #fff !important; padding: 2px 0 !important; margin: 0 !important;
-    border: none !important; box-shadow: none !important;
-    height: auto !important; min-height: 0 !important;
-  }
+  .profile-card { background: #fff !important; padding: 2px 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; height: auto !important; min-height: 0 !important; }
   .profile-pic-container { display: inline !important; }
   .name-and-profession { text-align: center !important; }
   .name-and-profession h3 { font-size: 16px !important; margin: 0 !important; }
@@ -1046,114 +1031,83 @@ body {
   .social-links a { font-size: 12px !important; margin: 0 3px !important; }
   .profile-card hr { margin: 2px 0 !important; }
   .profile-card-wrapper, .profile-card { page-break-after: avoid !important; }
-
-  /* Main content — full width */
-  section.col-md-9 { width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
   .container-fluid { padding: 0 !important; margin: 0 !important; }
   .row { margin: 0 !important; padding: 0 !important; }
-  .row.main { display: block !important; }
-
-  /* Background heading */
   .background-card > h4:first-child { display: none !important; }
   .background-card > hr:first-of-type { display: none !important; }
-
-  /* Sections */
   .background-details { padding: 0 !important; }
   .detail { padding: 2px 0 !important; margin: 0 !important; }
   .detail .icon { display: none !important; }
   .detail .info { margin-left: 0 !important; padding-left: 0 !important; width: 100% !important; }
-
-  /* Section headings */
   h4.title { font-size: 11px !important; margin: 4px 0 2px !important; padding-bottom: 1px !important; border-bottom: 1px solid #999; text-transform: uppercase; }
-
-  /* Cards */
   .card, .card-nested { padding: 1px 0 !important; margin: 0 !important; page-break-inside: avoid; border: none !important; }
   .card .content { padding: 0 !important; }
   .card p { margin: 0 0 1px !important; font-size: 9px !important; }
   .mop-wrapper p { margin: 0 0 1px !important; font-size: 9px !important; }
   .mop-wrapper { margin: 0 !important; padding: 0 !important; }
   .space-bottom { margin-bottom: 1px !important; }
-
-  /* Work experience bullets */
   .card ul { margin: 1px 0 2px !important; padding-left: 14px !important; }
   .card ul li { margin-bottom: 0 !important; }
   .card ul li p { font-size: 8.5px !important; margin: 0 !important; }
-
-  /* Dates and durations */
   .text-muted, .text-muted small, small { font-size: 8px !important; }
   .badge { font-size: 7px !important; padding: 0 3px !important; }
-
-  /* Skills */
   .label-keyword { font-size: 7.5px !important; padding: 1px 3px !important; margin: 1px !important; display: inline-block !important; background: #eee !important; color: #000 !important; border: 0.5px solid #ccc !important; }
   .labels, .space-top.labels { margin-top: 1px !important; }
   .space-top { margin-top: 1px !important; }
-
-  /* Lists */
   ul.list-unstyled { margin: 0 !important; padding: 0 !important; }
   ul.list-unstyled > li { margin-bottom: 2px !important; }
-
-  /* Education courses/minors as inline */
   .card-nested .labels { margin-top: 0 !important; }
-
-  /* Current event icon */
   .icon-circle.current-event { font-size: 6px !important; }
-
-  /* Page setup */
   @page { margin: 0.35in 0.45in; size: letter; }
-
-  /* Allow sections to break across pages — only protect individual cards */
   .detail { page-break-inside: avoid; }
 }
-</style></head><body itemscope="itemscope" itemtype="http://schema.org/Person"><div class="container-fluid"><div class="row main clearfix"><a class="js-floating-nav-trigger floating-nav-trigger" href="#"><i class="icon-bars"></i><span class="close-icon">&times;</span></a><nav class="floating-nav js-floating-nav"><ul class="list-unstyled"><li><a href="#about"><i class="mr-10 icon-board"></i>About</a></li><li><a href="#work-experience"><i class="mr-10 icon-office"></i>Work Experience</a></li><li><a href="#projects-experience"><i class="mr-10 icon-code"></i>Projects Experience</a></li><li><a href="#skills"><i class="mr-10 icon-tools"></i>Skills</a></li><li><a href="#education"><i class="mr-10 icon-graduation-cap"></i>Education</a></li><li><a href="#publications"><i class="mr-10 icon-newspaper"></i>Publications</a></li><li><a href="#interests"><i class="mr-10 icon-heart"></i>Interests</a></li></ul></nav><section class="col-md-3 card-wrapper profile-card-wrapper affix"><div class="card profile-card"><span class="profile-pic-container"><div class="profile-pic"><img class="media-object img-circle center-block" data-src="holder.js/100x100" alt="Alexander Friedrichsen" src="https://s.gravatar.com/avatar/6fbcd721be91ac2d513d4152a24d1096?s=100&amp;r=pg&amp;d=mm" itemprop="image"/></div><div class="name-and-profession text-center"><h3 itemprop="name"><b>Alexander Friedrichsen</b></h3><h5 class="text-muted" itemprop="jobTitle">Data Scientist &amp; Applied AI Engineer</h5></div></span><hr/><div class="contact-details clearfix"><div class="detail"><span class="icon"><i class="icon fs-lg icon-location"></i></span><span class="info">Burlington, VT, US</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-phone"></i></span><span class="info" itemprop="telephone">1-802-922-8588</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-mail"></i></span><span class="info"><a class="link-disguise" href="mailto:alex.p.friedrichsen@gmail.com" itemprop="email">alex.p.friedrichsen@gmail.com</a></span></div></div><hr/><div class="social-links text-center"><div><a class="fs-2x social-link link-linkedin icon-linkedin" href="https://linkedin.com/in/Alex-Friedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on LinkedIn"></a><a class="fs-2x social-link link-github icon-github" href="https://github.com/AlexanderFriedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on GitHub"></a></div></div></div></section><section class="col-md-9 card-wrapper pull-right"><div class="card background-card"><h4 class="text-uppercase">Background</h4><hr/><div class="background-details"><div class="detail" id="about"><div class="icon"><i class="fs-lg icon-board"></i><span class="mobile-title">About</span></div><div class="info"><h4 class="title text-uppercase">About</h4><div class="card card-nested"><div class="content mop-wrapper" itemprop="description"><p>Data scientist building production AI systems at the intersection of machine learning, automation, and software engineering. Drove AI adoption at a mutual insurance company — standing up production ML pipelines, agentic workflows, and a modern dev environment. Published ML researcher with experience shipping full-stack data products, ETL pipelines, and dashboards. Open to relocation (NYC, SF). Secret clearance.</p>
-</div></div></div></div><div class="detail" id="work-experience"><div class="icon"><i class="fs-lg icon-office"></i><span class="mobile-title">Work Experience</span></div><div class="info"><h4 class="title text-uppercase">Work Experience</h4><ul class="list-unstyled clear-margin"><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><strong>Data Scientist and Analyst</strong>,&nbsp;Union Mutual</p><p class="text-muted"><small><span class="space-right">May, 2025 - Present</span></small></p><div class="mop-wrapper space-bottom"><p>Data scientist and AI lead at a mutual insurance company. Co-built production ML systems and drove organization-wide AI adoption.</p>
-</div><ul><li class="mop-wrapper"><p>Co-designed and deployed an AI-augmented inspection evaluation pipeline — computer vision model analyzes property and inspection images, rates risk, detects issues, and generates underwriter reports — reducing company losses by over $3M annually</p>
-</li><li class="mop-wrapper"><p>Drove AI adoption company-wide as sole internal AI advocate: introduced version control (GitHub), established production vs. test environments, restructured codebases for agent integration, and delivered hands-on agentic coding workshops to technical and non-technical staff</p>
-</li><li class="mop-wrapper"><p>Conduct exploratory modeling, feature engineering, and SQL querying across AWS (Redshift, S3) to support business decision-making and data accessibility</p>
-</li><li class="mop-wrapper"><p>Automate dashboards and monthly reports in Power BI and Python, delivering actionable KPI insights to cross-functional stakeholders</p>
+</style></head><body itemscope="itemscope" itemtype="http://schema.org/Person"><div class="container-fluid"><div class="row main clearfix"><a class="js-floating-nav-trigger floating-nav-trigger" href="#"><i class="icon-bars"></i><span class="close-icon">&times;</span></a><nav class="floating-nav js-floating-nav"><ul class="list-unstyled"><li><a href="#about"><i class="mr-10 icon-board"></i>About</a></li><li><a href="#work-experience"><i class="mr-10 icon-office"></i>Work Experience</a></li><li><a href="#projects-experience"><i class="mr-10 icon-code"></i>Projects Experience</a></li><li><a href="#skills"><i class="mr-10 icon-tools"></i>Skills</a></li><li><a href="#education"><i class="mr-10 icon-graduation-cap"></i>Education</a></li><li><a href="#publications"><i class="mr-10 icon-newspaper"></i>Publications</a></li><li><a href="#interests"><i class="mr-10 icon-heart"></i>Interests</a></li></ul></nav><section class="col-md-3 card-wrapper profile-card-wrapper affix"><div class="card profile-card"><span class="profile-pic-container"><div class="profile-pic"><img class="media-object img-circle center-block" data-src="holder.js/100x100" alt="Alexander Friedrichsen" src="https://s.gravatar.com/avatar/6fbcd721be91ac2d513d4152a24d1096?s=100&amp;r=pg&amp;d=mm" itemprop="image"/></div><div class="name-and-profession text-center"><h3 itemprop="name"><b>Alexander Friedrichsen</b></h3><h5 class="text-muted" itemprop="jobTitle">Applied AI Engineer</h5></div></span><hr/><div class="contact-details clearfix"><div class="detail"><span class="icon"><i class="icon fs-lg icon-location"></i></span><span class="info">Burlington, VT, US</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-phone"></i></span><span class="info" itemprop="telephone">1-802-922-8588</span></div><div class="detail"><span class="icon"><i class="icon fs-lg icon-mail"></i></span><span class="info"><a class="link-disguise" href="mailto:alex.p.friedrichsen@gmail.com" itemprop="email">alex.p.friedrichsen@gmail.com</a></span></div></div><hr/><div class="social-links text-center"><div><a class="fs-2x social-link link-linkedin icon-linkedin" href="https://linkedin.com/in/Alex-Friedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on LinkedIn"></a><a class="fs-2x social-link link-github icon-github" href="https://github.com/AlexanderFriedrichsen" target="_blank" data-toggle="tooltip" title="Alexander Friedrichsen on GitHub"></a></div></div></div></section><section class="col-md-9 card-wrapper pull-right"><div class="card background-card"><h4 class="text-uppercase">Background</h4><hr/><div class="background-details"><div class="detail" id="about"><div class="icon"><i class="fs-lg icon-board"></i><span class="mobile-title">About</span></div><div class="info"><h4 class="title text-uppercase">About</h4><div class="card card-nested"><div class="content mop-wrapper" itemprop="description"><p>Applied AI engineer shipping production AI systems — from fine-tuned LLM vision pipelines to multi-agent orchestration platforms. Built and deployed a GPT-based inspection evaluation system generating structured risk reports, projected to save $3M+ annually. Designed a 12-agent AI orchestration platform with model routing, RAG-based knowledge retrieval, and automated quality gates. Published ML researcher (GECCO '23) with full-stack experience across Python, TypeScript, and cloud infrastructure. Open to relocation (NYC, SF). Secret clearance.</p>
+</div></div></div></div><div class="detail" id="work-experience"><div class="icon"><i class="fs-lg icon-office"></i><span class="mobile-title">Work Experience</span></div><div class="info"><h4 class="title text-uppercase">Work Experience</h4><ul class="list-unstyled clear-margin"><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><strong>Data Scientist and Analyst</strong>,&nbsp;Union Mutual</p><p class="text-muted"><small><span class="space-right">May, 2025 - Present</span></small></p><div class="mop-wrapper space-bottom"><p>AI lead at a mutual insurance company. Built production LLM systems and drove organization-wide AI adoption.</p>
+</div><ul><li class="mop-wrapper"><p>Co-designed and deployed an AI inspection evaluation pipeline — fine-tuned GPT vision model processes property images against underwriter-designed rubrics, outputs structured risk assessments, and generates underwriter reports — projected to save $3M+ annually. Runs in automated batch mode across policies and on-demand per underwriter request</p>
+</li><li class="mop-wrapper"><p>Restructured production codebases for LLM agent integration; established CI/CD, version control (GitHub), and isolated dev/prod environments</p>
+</li><li class="mop-wrapper"><p>Led company-wide AI adoption: trained analytics team on agentic coding tools (Cursor, custom agents, MCP hooks), delivered company-wide lunch-and-learn demos, and represented the company at an agentic AI conference</p>
+</li><li class="mop-wrapper"><p>Conduct exploratory modeling, feature engineering, and SQL querying across AWS (Redshift, S3) to support business decision-making</p>
 </li></ul></div></li><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><strong>Software Engineer II</strong>,&nbsp;BAE Systems</p><p class="text-muted"><small><span class="space-right">Aug, 2023 - May, 2024</span><span><i class="icon-clock mr-5"></i>9 months</span></small></p><div class="mop-wrapper space-bottom"></div><ul><li class="mop-wrapper"><p>Built multi-source Power BI data models with DAX aggregations, delivering weekly dashboards that drove labor and product line decisions for senior stakeholders</p>
 </li><li class="mop-wrapper"><p>Architected internal staffing solutions using SharePoint and MS Access, serving 16,000 employees</p>
 </li><li class="mop-wrapper"><p>Spearheaded ETL pipeline integrating financial data, enabling transition from manual Excel analysis to predictive analytics</p>
 </li></ul></div></li><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><strong>Software Developer</strong>,&nbsp;Social Ecological Gaming and Simulation Lab</p><p class="text-muted"><small><span class="space-right">Aug, 2022 - Jul, 2023</span><span><i class="icon-clock mr-5"></i>11 months</span></small></p><div class="mop-wrapper space-bottom"></div><ul><li class="mop-wrapper"><p>Developed precision agriculture simulation software using Python, C#, and JavaScript in Unity Game Engine</p>
 </li></ul></div></li><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><strong>Public Health Analyst I</strong>,&nbsp;Vermont Department of Health</p><p class="text-muted"><small><span class="space-right">Feb, 2019 - Sep, 2021</span><span><i class="icon-clock mr-5"></i>2 years 7 months</span></small></p><div class="mop-wrapper space-bottom"></div><ul><li class="mop-wrapper"><p>Automated reporting workflows (SAS, R) and published data products for CDC reporting systems, saving 10+ hours per month</p>
-</li></ul></div></li></ul></div></div><div class="detail" id="projects-experience"><div class="icon"><i class="fs-lg icon-code"></i><span class="mobile-title">Projects Experience</span></div><div class="info"><h4 class="title text-uppercase">Projects Experience</h4><ul class="list-unstyled clear-margin"><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><strong>Multi-Agent AI Orchestration System</strong></p><p class="text-muted"><small><span class="space-right"> - Present</span></small></p><div class="mop-wrapper space-bottom"><p>Built a production multi-agent system with 12 specialized AI agents coordinated through an Obsidian knowledge vault. Includes role-based task delegation, automated quality gates, persistent memory, MCP tool servers, and Discord-based always-on agent infrastructure.</p>
-</div><ul><li class="mop-wrapper"><p>12 specialized agents with model routing (judgment/execution/support tiers)</p>
-</li><li class="mop-wrapper"><p>Knowledge graph integration, automated vault search, session persistence</p>
-</li><li class="mop-wrapper"><p>Custom hooks for quality enforcement, secret detection, and agent verification</p>
-</li></ul></div></li><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><a href="https://honestafblog.com" target="_blank"><strong>MTG Skill Analyzer</strong></a></p><p class="text-muted"><small><span class="space-right"> - Present</span></small></p><div class="mop-wrapper space-bottom"><p>Full-stack web application analyzing 20,000+ competitive Magic: The Gathering match outcomes. Deployed at honestafblog.com with Supabase backend.</p>
-</div><ul><li class="mop-wrapper"><p>ELO rating system, player performance modeling, data-driven team strategy</p>
-</li></ul></div></li></ul></div></div><div class="detail" id="skills"><div class="icon"><i class="fs-lg icon-tools"></i><span class="mobile-title">Skills</span></div><div class="info"><h4 class="title text-uppercase">Skills</h4><div class="content"><ul class="list-unstyled clear-margin"><li class="card card-nested card-skills"><div class="skill-info"><strong>AI &amp; Machine Learning</strong><div class="space-top labels"><span class="label label-keyword"><p>LLM Integration</p>
+</li></ul></div></li></ul></div></div><div class="detail" id="projects-experience"><div class="icon"><i class="fs-lg icon-code"></i><span class="mobile-title">Projects Experience</span></div><div class="info"><h4 class="title text-uppercase">Projects Experience</h4><ul class="list-unstyled clear-margin"><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><strong>Multi-Agent AI Orchestration System</strong></p><p class="text-muted"><small><span class="space-right"> - Present</span></small></p><div class="mop-wrapper space-bottom"><p>Built a production multi-agent system with 12 specialized AI agents coordinated through an Obsidian knowledge vault. Implements RAG-based knowledge retrieval over 200+ documents, model routing across inference tiers for cost-optimized token usage, and structured output parsing for agent coordination.</p>
+</div><ul><li class="mop-wrapper"><p>12 specialized agents with role-based task delegation, automated quality gates, and persistent memory</p>
+</li><li class="mop-wrapper"><p>RAG pipeline: BM25 + vector search over knowledge vault, context injection at query time</p>
+</li><li class="mop-wrapper"><p>MCP tool servers, Discord-based always-on infrastructure, custom hooks for secret detection and verification</p>
+</li></ul></div></li><li class="card card-nested clearfix"><div class="content"><p class="clear-margin relative"><i class="icon-circle current-event" rel="tooltip" title="Currently Working" data-placement="left"></i><a href="https://honestafblog.com" target="_blank"><strong>MTG Skill Analyzer</strong></a></p><p class="text-muted"><small><span class="space-right"> - Present</span></small></p><div class="mop-wrapper space-bottom"><p>Full-stack web application (JavaScript, Supabase, PostgreSQL) analyzing 20,000+ competitive Magic: The Gathering match outcomes. Deployed at honestafblog.com.</p>
+</div><ul><li class="mop-wrapper"><p>ELO rating system with player performance modeling, deployed with Supabase backend and PostgreSQL</p>
+</li></ul></div></li></ul></div></div><div class="detail" id="skills"><div class="icon"><i class="fs-lg icon-tools"></i><span class="mobile-title">Skills</span></div><div class="info"><h4 class="title text-uppercase">Skills</h4><div class="content"><ul class="list-unstyled clear-margin"><li class="card card-nested card-skills"><div class="skill-info"><strong>AI Systems</strong><div class="space-top labels"><span class="label label-keyword"><p>LLM Integration</p>
 </span><span class="label label-keyword"><p>Agentic Workflows</p>
-</span><span class="label label-keyword"><p>Computer Vision</p>
-</span><span class="label label-keyword"><p>Prompt Engineering</p>
 </span><span class="label label-keyword"><p>RAG</p>
 </span><span class="label label-keyword"><p>Structured Extraction</p>
 </span><span class="label label-keyword"><p>LLM Fine-Tuning</p>
-</span><span class="label label-keyword"><p>A/B Testing</p>
-</span><span class="label label-keyword"><p>Causal Inference</p>
-</span><span class="label label-keyword"><p>Statistical Modeling</p>
-</span><span class="label label-keyword"><p>Scikit-learn</p>
-</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>Programming</strong><div class="space-top labels"><span class="label label-keyword"><p>Python</p>
-</span><span class="label label-keyword"><p>SQL</p>
-</span><span class="label label-keyword"><p>JavaScript</p>
+</span><span class="label label-keyword"><p>Prompt Engineering</p>
+</span><span class="label label-keyword"><p>Computer Vision</p>
+</span><span class="label label-keyword"><p>Agent Orchestration</p>
+</span><span class="label label-keyword"><p>MCP (Model Context Protocol)</p>
+</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>Engineering</strong><div class="space-top labels"><span class="label label-keyword"><p>Python</p>
 </span><span class="label label-keyword"><p>TypeScript</p>
-</span><span class="label label-keyword"><p>R</p>
-</span><span class="label label-keyword"><p>Julia</p>
-</span><span class="label label-keyword"><p>SAS</p>
-</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>Data &amp; Infrastructure</strong><div class="space-top labels"><span class="label label-keyword"><p>AWS (Redshift, S3)</p>
+</span><span class="label label-keyword"><p>JavaScript</p>
+</span><span class="label label-keyword"><p>SQL</p>
+</span><span class="label label-keyword"><p>Full-Stack Development</p>
 </span><span class="label label-keyword"><p>Docker</p>
-</span><span class="label label-keyword"><p>Cloud Infrastructure</p>
-</span><span class="label label-keyword"><p>Power BI (DAX)</p>
-</span><span class="label label-keyword"><p>Google BigQuery</p>
+</span><span class="label label-keyword"><p>CI/CD</p>
+</span><span class="label label-keyword"><p>Git/GitHub</p>
+</span><span class="label label-keyword"><p>Unit Testing</p>
+</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>Cloud &amp; Data</strong><div class="space-top labels"><span class="label label-keyword"><p>AWS (Redshift, S3)</p>
 </span><span class="label label-keyword"><p>PostgreSQL</p>
 </span><span class="label label-keyword"><p>Supabase</p>
+</span><span class="label label-keyword"><p>Google BigQuery</p>
+</span><span class="label label-keyword"><p>Cloud Infrastructure</p>
 </span><span class="label label-keyword"><p>ETL Pipelines</p>
-</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>Development Practices</strong><div class="space-top labels"><span class="label label-keyword"><p>Git/GitHub</p>
-</span><span class="label label-keyword"><p>CI/CD</p>
-</span><span class="label label-keyword"><p>Full-Stack Development</p>
-</span><span class="label label-keyword"><p>Agile</p>
-</span><span class="label label-keyword"><p>Unit Testing</p>
-</span><span class="label label-keyword"><p>MCP (Model Context Protocol)</p>
-</span><span class="label label-keyword"><p>Agent Orchestration</p>
+</span></div></div></li><li class="card card-nested card-skills"><div class="skill-info"><strong>ML &amp; Analytics</strong><div class="space-top labels"><span class="label label-keyword"><p>Statistical Modeling</p>
+</span><span class="label label-keyword"><p>Scikit-learn</p>
+</span><span class="label label-keyword"><p>A/B Testing</p>
+</span><span class="label label-keyword"><p>Causal Inference</p>
+</span><span class="label label-keyword"><p>R</p>
+</span><span class="label label-keyword"><p>Power BI (DAX)</p>
 </span></div></div></li></ul></div></div></div><div class="detail" id="education"><div class="icon"><i class="fs-lg icon-graduation-cap"></i><span class="mobile-title">Education</span></div><div class="info"><h4 class="title text-uppercase">Education</h4><div class="content"><ul class="list-unstyled clear-margin"><li class="card card-nested"><div class="content"><p class="clear-margin relative"><strong>Data Science and Complex Systems, M.S.,&nbsp;</strong>University of Vermont, Complex Systems Center</p><p class="text-muted clear-margin"><small>Aug, 2021 - May, 2023</small></p><i></i></div></li><li class="card card-nested"><div class="content"><p class="clear-margin relative"><strong>Data Science, B.S.,&nbsp;</strong>University of Vermont, College of Engineering and Mathematics</p><p class="text-muted"><small>Aug, 2018 - May, 2022</small></p><i></i><div class="space-top labels"><span class="label label-keyword"><p>Minor: Economics</p>
 </span><span class="label label-keyword"><p>Minor: Mathematics</p>
 </span><span class="label label-keyword"><p>Minor: Computer Science</p>
