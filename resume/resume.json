@@ -35,7 +35,7 @@
         "Co-designed and deployed an AI inspection evaluation pipeline — fine-tuned GPT vision model processes property images against underwriter-designed rubrics, outputs structured risk assessments, and generates underwriter reports — projected to save $3M+ annually. Runs in automated batch mode across policies and on-demand per underwriter request",
         "Restructured production codebases for LLM agent integration; established CI/CD, version control (GitHub), and isolated dev/prod environments",
         "Led company-wide AI adoption: trained analytics team on agentic coding tools (Cursor, custom agents, MCP hooks), delivered company-wide lunch-and-learn demos, and represented the company at an agentic AI conference",
-        "Conduct exploratory modeling, feature engineering, and SQL querying across AWS (Redshift, S3) to support business decision-making"
+        "Conduct exploratory modeling, feature engineering, and SQL querying across AWS (App Runner, Redshift, S3) to support business decision-making"
       ]
     },
     {
@@ -124,7 +124,7 @@
     {
       "name": "Cloud & Data",
       "keywords": [
-        "AWS (Redshift, S3)",
+        "AWS (App Runner, Redshift, S3)",
         "PostgreSQL",
         "Supabase",
         "Google BigQuery",
