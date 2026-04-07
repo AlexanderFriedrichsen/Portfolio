@@ -196,5 +196,135 @@ const { title } = Astro.props;
 
   @media (prefers-reduced-motion: reduce) {
     .triptych span { animation: none; opacity: 1; transform: none; }
+    .fake-popup { animation: none !important; }
+  }
+
+  /* ---------- Decorative Win9x fake popup (the joke) ---------- */
+  #philosophy { position: relative; overflow: hidden; }
+  .fake-popup {
+    position: absolute;
+    top: 5rem;
+    right: 3rem;
+    width: 340px;
+    z-index: 5;
+    font-family: 'Tahoma', 'MS Sans Serif', Geneva, sans-serif;
+    font-size: 12px;
+    color: #000;
+    background: #c3c3c3;
+    /* Classic chiseled bevel */
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #555;
+    border-bottom: 2px solid #555;
+    box-shadow:
+      inset -1px -1px 0 #818181,
+      inset 1px 1px 0 #dfdfdf,
+      4px 4px 0 rgba(0,0,0,0.18);
+    transform: rotate(-1.4deg);
+    animation: fp-wobble 0.9s cubic-bezier(.2,.7,.2,1) 0.4s both;
+    user-select: none;
+  }
+  @keyframes fp-wobble {
+    0%   { opacity: 0; transform: rotate(-1.4deg) translateY(-30px) scale(0.9); }
+    60%  { opacity: 1; transform: rotate(-2.2deg) translateY(4px) scale(1.02); }
+    100% { opacity: 1; transform: rotate(-1.4deg) translateY(0) scale(1); }
+  }
+  .fp-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+    color: #fff;
+    padding: 3px 4px 3px 6px;
+    font-weight: 700;
+  }
+  .fp-title { letter-spacing: 0.02em; }
+  .fp-controls { display: flex; gap: 2px; }
+  .fp-controls button {
+    width: 18px;
+    height: 16px;
+    padding: 0;
+    font-family: inherit;
+    font-size: 10px;
+    line-height: 1;
+    color: #000;
+    background: #c3c3c3;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #555;
+    border-bottom: 1px solid #555;
+    cursor: default;
+  }
+  .fp-body {
+    display: flex;
+    gap: 14px;
+    padding: 18px 16px 14px;
+    align-items: flex-start;
+  }
+  .fp-icon {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1084d0;
+    color: #fff;
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #555;
+    border-bottom: 2px solid #555;
+  }
+  .fp-message p { margin: 0 0 4px; max-width: none; color: #000; line-height: 1.35; }
+  .fp-message p:last-child { margin-bottom: 0; }
+  .fp-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px 14px;
+  }
+  .fp-btn {
+    min-width: 90px;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-size: 12px;
+    color: #000;
+    background: #c3c3c3;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #555;
+    border-bottom: 1px solid #555;
+    box-shadow: inset -1px -1px 0 #818181, inset 1px 1px 0 #dfdfdf;
+    cursor: default;
+  }
+  .fp-btn-primary {
+    border-top-color: #555;
+    border-left-color: #555;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
+    box-shadow: inset 1px 1px 0 #818181, inset -1px -1px 0 #dfdfdf;
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .fake-popup { right: 1.4rem; top: 3rem; width: 280px; transform: rotate(-1deg); }
+  }
+  @media (max-width: 680px) {
+    .fake-popup {
+      position: relative;
+      top: auto;
+      right: auto;
+      margin: 0 auto 2rem;
+      width: 100%;
+      max-width: 320px;
+      transform: rotate(-1deg);
+    }
   }
 </style>

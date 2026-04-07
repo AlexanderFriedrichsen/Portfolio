@@ -25,6 +25,38 @@ const agents = [
 
   <!-- ============ MOVEMENT 1: PHILOSOPHY ============ -->
   <section id="philosophy">
+    <!-- Decorative fake popup. aria-hidden so screen readers skip the gag. -->
+    <aside class="fake-popup" aria-hidden="true">
+      <div class="fp-titlebar">
+        <span class="fp-title">⚠ honestafblog.com says</span>
+        <div class="fp-controls">
+          <button type="button" tabindex="-1">_</button>
+          <button type="button" tabindex="-1">▢</button>
+          <button type="button" class="fp-x" tabindex="-1">✕</button>
+        </div>
+      </div>
+      <div class="fp-body">
+        <div class="fp-icon">i</div>
+        <div class="fp-message">
+          <p><strong>This site uses cookies.</strong></p>
+          <p>And vibes. Mostly vibes.</p>
+        </div>
+      </div>
+      <div class="fp-buttons">
+        <button type="button" class="fp-btn fp-btn-primary fp-close" tabindex="-1">Accept All</button>
+        <button type="button" class="fp-btn fp-close" tabindex="-1">Accept All Harder</button>
+      </div>
+    </aside>
+
+    <script>
+      const popup = document.querySelector('.fake-popup');
+      if (popup) {
+        popup.querySelectorAll('.fp-close, .fp-x').forEach((b) =>
+          b.addEventListener('click', () => popup.remove())
+        );
+      }
+    </script>
+
     <div class="wrap">
       <h1 class="triptych">
         <span>Grow with friends<span class="period">.</span></span>
