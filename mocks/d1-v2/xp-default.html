@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 v2 — XP Desktop (Default)</title>
+<link rel="stylesheet" href="https://unpkg.com/xp.css">
+<style>
+  :root { --taskbar-h: 30px; --xp-blue: #245edb; --xp-blue-dk: #0a246a; --xp-green: #3c9a3c; }
+  html, body { margin: 0; padding: 0; height: 100%; font-family: Tahoma, "MS Sans Serif", sans-serif; overflow: hidden; }
+
+  /* ───── Bliss wallpaper (CSS gradient stand-in) ───── */
+  .desktop {
+    position: fixed; inset: 0;
+    background:
+      /* sky */
+      linear-gradient(180deg, #4a90e2 0%, #87ceeb 35%, #c8e4f5 55%, #e8f3fb 60%, transparent 60%),
+      /* hill */
+      radial-gradient(ellipse 140% 70% at 50% 110%, #6fbf3c 0%, #5aa830 40%, #3f8a22 70%, #2e6b18 100%);
+    background-color: #6fbf3c;
+  }
+  .desktop::before {
+    /* horizon haze + cloud whisps */
+    content: "";
+    position: absolute; left: 0; right: 0; top: 38%; height: 22%;
+    background:
+      radial-gradient(ellipse 30% 60% at 20% 50%, rgba(255,255,255,0.55), transparent 70%),
+      radial-gradient(ellipse 25% 50% at 60% 40%, rgba(255,255,255,0.45), transparent 70%),
+      radial-gradient(ellipse 20% 40% at 85% 60%, rgba(255,255,255,0.4), transparent 70%);
+    pointer-events: none;
+  }
+  .desktop::after {
+    /* hill curve highlight */
+    content: "";
+    position: absolute; left:0; right:0; bottom:0; height: 45%;
+    background: radial-gradient(ellipse 90% 55% at 50% 100%, rgba(255,255,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ───── Desktop icons ───── */
+  .desk-icons {
+    position: absolute; top: 14px; left: 14px;
+    display: grid; grid-template-columns: repeat(2, 76px); gap: 8px 4px;
+    z-index: 2;
+  }
+  .desk-icon {
+    width: 76px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; cursor: pointer; user-select: none;
+    padding: 4px 2px; background: transparent; border: 1px dotted transparent;
+  }
+  .desk-icon.selected { background: rgba(49, 106, 197, 0.45); border: 1px dotted #fff; }
+  .desk-icon .glyph {
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    filter: drop-shadow(1px 2px 1px rgba(0,0,0,0.55));
+    position: relative;
+  }
+  .desk-icon .label {
+    margin-top: 4px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9);
+    line-height: 1.15;
+  }
+  .desk-icon .ext {
+    position: absolute; right: -2px; bottom: -2px;
+    width: 14px; height: 14px;
+    background: #fff; border: 1px solid #333;
+    display: grid; place-items: center;
+    font-size: 9px; color: #245edb; font-weight: bold;
+  }
+
+  /* SVG icon look — chunky XP-flavored fills */
+  .ic { width: 36px; height: 36px; }
+
+  /* ───── Taskbar (Luna blue, segmented) ───── */
+  .taskbar {
+    position: fixed; left: 0; right: 0; bottom: 0; height: var(--taskbar-h);
+    display: flex; align-items: stretch;
+    background: linear-gradient(180deg, #2461d8 0%, #235bcf 8%, #3275e0 50%, #1a4fc4 90%, #08266e 100%);
+    border-top: 1px solid #0a246a;
+    box-shadow: 0 -1px 0 #5b8cea inset;
+    z-index: 100;
+    font-family: Tahoma, sans-serif;
+  }
+
+  /* Start button */
+  .start-btn {
+    position: relative;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 22px 0 12px;
+    height: 100%;
+    background:
+      radial-gradient(ellipse 80% 110% at 30% 30%, #7ed957 0%, #4caf21 35%, #2e7a14 75%, #1c4f0a 100%);
+    border: none;
+    border-right: 1px solid #0a3a05;
+    border-top-right-radius: 14px 18px;
+    border-bottom-right-radius: 14px 18px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      inset 0 -3px 6px rgba(0,0,0,0.25),
+      inset -2px 0 4px rgba(0,0,0,0.3);
+    color: #fff;
+    font-family: Tahoma, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 17px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    cursor: pointer;
+  }
+  .start-btn .orb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #c9f5b4 20%, #5fbf2e 60%, #2c6e0f 100%);
+    box-shadow: 0 0 0 1px #1d4d08, inset 0 0 4px rgba(255,255,255,0.6);
+  }
+
+  .tb-tasks { display: flex; align-items: center; gap: 3px; padding: 3px 6px; flex: 1; min-width: 0; }
+  .tb-task {
+    height: 22px; max-width: 168px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 10px;
+    background: linear-gradient(180deg, #4a8bf0 0%, #2f6ad8 50%, #1a4fc4 100%);
+    border: 1px solid #0a2a78;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+    color: #fff; font-size: 11px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    cursor: pointer;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .tb-task.active {
+    background: linear-gradient(180deg, #1a3a8a 0%, #1f4cb0 50%, #2a5fcf 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .tb-tray {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px 0 8px;
+    background: linear-gradient(180deg, #18a0e6 0%, #1281c8 50%, #0a5da0 100%);
+    border-left: 1px solid #5b8cea;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.35);
+    color: #fff;
+    font-size: 11px;
+  }
+  .tb-tray .icon { width: 14px; height: 14px; opacity: 0.95; }
+  .tb-clock {
+    color: #fff; font-family: Tahoma, sans-serif; font-size: 11px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    text-align: center; line-height: 1.1;
+  }
+
+  /* ───── Windows (xp.css supplies most chrome; we just position) ───── */
+  .win-floating { position: absolute; }
+  .window { box-shadow: 2px 2px 8px rgba(0,0,0,0.35); }
+  .window-body p { font-family: Tahoma, sans-serif; font-size: 11px; line-height: 1.5; }
+  .window-body h3 { font-family: Tahoma, sans-serif; font-size: 13px; margin: 0 0 6px; color: #0a246a; }
+
+  /* About Me default */
+  .w-about { top: 70px; left: 280px; width: 520px; }
+  .w-about .window-body { padding: 14px; }
+  .about-grid { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: start; }
+  .about-photo {
+    width: 110px; height: 130px; object-fit: cover;
+    border: 2px inset #c0c0c0;
+  }
+
+  /* Cookies dialog */
+  .w-cookies { top: 470px; left: 720px; width: 280px; }
+  .w-cookies .window-body { padding: 12px; }
+  .cookie-row { display: flex; gap: 10px; align-items: flex-start; }
+  .cookie-icon {
+    flex: 0 0 32px; width: 32px; height: 32px;
+    background: radial-gradient(circle at 35% 30%, #d4a064 0%, #a26a2c 60%, #5a3a14 100%);
+    border-radius: 50%;
+    box-shadow:
+      inset -2px -3px 4px rgba(0,0,0,0.4),
+      0 1px 2px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .cookie-icon::before, .cookie-icon::after {
+    content: ""; position: absolute; background: #3a1f0a; border-radius: 50%;
+  }
+  .cookie-icon::before { width: 4px; height: 4px; top: 8px; left: 7px; }
+  .cookie-icon::after { width: 5px; height: 5px; top: 14px; left: 18px; box-shadow: -3px 6px 0 -1px #3a1f0a, 6px -2px 0 -1px #3a1f0a; }
+  .dialog-buttons { margin-top: 10px; text-align: right; }
+
+  /* mock-only annotation */
+  .mock-note {
+    position: fixed; top: 6px; right: 8px;
+    background: rgba(0,0,0,0.65); color: #fff; padding: 4px 8px;
+    font-family: Tahoma, sans-serif; font-size: 10px; z-index: 999;
+    border: 1px solid #fff;
+  }
+</style>
+</head>
+<body>
+<div class="desktop">
+
+  <!-- Mock annotation -->
+  <div class="mock-note">D1 v2 mock — xp-default.html (XP Luna, Bliss CSS stand-in)</div>
+
+  <!-- Desktop icons -->
+  <div class="desk-icons">
+    <button class="desk-icon selected">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><circle cx="18" cy="13" r="6" fill="#ffe0b2" stroke="#5a3a14" stroke-width="1.5"/><path d="M6 32c0-7 6-11 12-11s12 4 12 11" fill="#4a8bf0" stroke="#0a246a" stroke-width="1.5"/></svg>
+      </span>
+      <span class="label">About Me</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><path d="M3 10h12l3 3h15v18H3z" fill="#ffd95a" stroke="#7a5800" stroke-width="1.5"/><path d="M3 13h30v18H3z" fill="#ffe98a" stroke="#7a5800" stroke-width="1.5"/></svg>
+      </span>
+      <span class="label">Research Vault</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="6" y="14" width="24" height="16" fill="#bfbfbf" stroke="#333" stroke-width="1.5"/><path d="M10 14l4-8 8 0 4 8" fill="#4a8bf0" stroke="#0a246a" stroke-width="1.5"/><circle cx="12" cy="22" r="2" fill="#333"/><circle cx="18" cy="22" r="2" fill="#333"/><circle cx="24" cy="22" r="2" fill="#333"/></svg>
+      </span>
+      <span class="label">Tools I've Tried</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="5" y="8" width="26" height="24" fill="#e0e0e0" stroke="#333" stroke-width="1.5"/><rect x="9" y="12" width="4" height="4" fill="#4a8bf0"/><rect x="16" y="12" width="4" height="4" fill="#4a8bf0"/><rect x="23" y="12" width="4" height="4" fill="#4a8bf0"/><rect x="9" y="19" width="4" height="4" fill="#4a8bf0"/><rect x="16" y="19" width="4" height="4" fill="#4a8bf0"/><rect x="23" y="19" width="4" height="4" fill="#4a8bf0"/><rect x="14" y="26" width="8" height="6" fill="#7a5800"/></svg>
+      </span>
+      <span class="label">HonestAlexF LLC</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><circle cx="11" cy="14" r="5" fill="#ffd95a" stroke="#7a5800" stroke-width="1.5"/><circle cx="25" cy="14" r="5" fill="#ff8a8a" stroke="#7a0000" stroke-width="1.5"/><circle cx="18" cy="24" r="5" fill="#9aff9a" stroke="#0a5a0a" stroke-width="1.5"/><line x1="13" y1="17" x2="22" y2="22" stroke="#fff" stroke-width="1.5"/><line x1="23" y1="17" x2="18" y2="22" stroke="#fff" stroke-width="1.5"/></svg>
+      </span>
+      <span class="label">Agent Team</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="6" y="4" width="24" height="28" rx="2" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="18" y="22" text-anchor="middle" font-family="Tahoma" font-size="14" font-weight="bold" fill="#c00">M</text></svg>
+      </span>
+      <span class="label">MTG Skill Analyzer</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><polygon points="18,3 33,12 28,30 8,30 3,12" fill="#7a3aa8" stroke="#2a0d4a" stroke-width="1.5"/><circle cx="18" cy="18" r="5" fill="#ffd95a" stroke="#7a5800" stroke-width="1.5"/></svg>
+      </span>
+      <span class="label">Wonders of First</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="6" y="4" width="24" height="28" fill="#fff" stroke="#333" stroke-width="1.5"/><line x1="10" y1="10" x2="26" y2="10" stroke="#333" stroke-width="1.2"/><line x1="10" y1="14" x2="26" y2="14" stroke="#333" stroke-width="1.2"/><line x1="10" y1="18" x2="22" y2="18" stroke="#333" stroke-width="1.2"/><line x1="10" y1="22" x2="26" y2="22" stroke="#333" stroke-width="1.2"/><text x="18" y="31" text-anchor="middle" font-family="Tahoma" font-size="6" font-weight="bold" fill="#333">GECCO</text></svg>
+      </span>
+      <span class="label">GECCO Paper</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="4" y="6" width="28" height="24" fill="#4a8bf0" stroke="#0a246a" stroke-width="1.5"/><rect x="4" y="6" width="28" height="6" fill="#fff" stroke="#0a246a" stroke-width="1.5"/><circle cx="8" cy="9" r="1" fill="#ff5252"/><circle cx="11" cy="9" r="1" fill="#ffd95a"/><circle cx="14" cy="9" r="1" fill="#5fbf2e"/><line x1="8" y1="16" x2="28" y2="16" stroke="#fff" stroke-width="1"/><line x1="8" y1="20" x2="28" y2="20" stroke="#fff" stroke-width="1"/><line x1="8" y1="24" x2="22" y2="24" stroke="#fff" stroke-width="1"/></svg>
+      </span>
+      <span class="label">Blog</span>
+    </button>
+    <button class="desk-icon">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><path d="M4 18 L14 14 L20 20 L28 12 L32 18 L28 26 L18 22 L8 28 Z" fill="#ff8a3a" stroke="#7a3a00" stroke-width="1.5"/><circle cx="18" cy="20" r="2" fill="#fff"/></svg>
+      </span>
+      <span class="label">Team Handshake</span>
+    </button>
+    <button class="desk-icon" style="grid-column: span 2; width: 76px;">
+      <span class="glyph">
+        <svg class="ic" viewBox="0 0 36 36"><rect x="6" y="3" width="24" height="30" fill="#fff" stroke="#333" stroke-width="1.5"/><line x1="10" y1="9" x2="26" y2="9" stroke="#333" stroke-width="1"/><line x1="10" y1="13" x2="26" y2="13" stroke="#333" stroke-width="1"/><line x1="10" y1="17" x2="22" y2="17" stroke="#333" stroke-width="1"/><line x1="10" y1="21" x2="26" y2="21" stroke="#333" stroke-width="1"/><line x1="10" y1="25" x2="20" y2="25" stroke="#333" stroke-width="1"/></svg>
+        <span class="ext" title="Opens in new tab">↗</span>
+      </span>
+      <span class="label">Resume</span>
+    </button>
+  </div>
+
+  <!-- About Me window (open by default) -->
+  <div class="window win-floating w-about">
+    <div class="title-bar">
+      <div class="title-bar-text">About Me — Alex Friedrichsen</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="about-grid">
+        <img class="about-photo" src="/assets/pictures/alex_pics/IMG_0294.jpg" alt="Alex" onerror="this.style.background='#88a';this.style.display='block';this.removeAttribute('src');">
+        <div>
+          <h3>Movement I — Philosophy</h3>
+          <p><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</em> I build with AI as a collaborator, not a tool. Solo dev, full stack, full commitment to the craft. Every project is a small bet on what one person plus a team of agents can ship.</p>
+          <p>Currently shipping: HonestAlexF LLC, MTG Skill Analyzer, Wonders of the First, and an agent economy experiment. Previously: GECCO 2024 paper on adversarial AI negotiation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cookies dialog (relocated inside desktop, XP-styled) -->
+  <div class="window win-floating w-cookies">
+    <div class="title-bar">
+      <div class="title-bar-text">cookies and vibes</div>
+      <div class="title-bar-controls">
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="cookie-row">
+        <div class="cookie-icon"></div>
+        <div>
+          <p style="margin:0 0 4px;"><strong>This site serves cookies and vibes.</strong></p>
+          <p style="margin:0;">By continuing to browse, you accept both. The vibes are non-optional.</p>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <button>OK</button>
+        <button>More info</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Taskbar -->
+  <div class="taskbar" role="toolbar">
+    <button class="start-btn">
+      <span class="orb"></span>
+      <span>start</span>
+    </button>
+    <div class="tb-tasks">
+      <button class="tb-task active">
+        <svg width="14" height="14" viewBox="0 0 36 36"><circle cx="18" cy="13" r="6" fill="#ffe0b2" stroke="#5a3a14" stroke-width="2"/><path d="M6 32c0-7 6-11 12-11s12 4 12 11" fill="#4a8bf0" stroke="#0a246a" stroke-width="2"/></svg>
+        About Me
+      </button>
+      <button class="tb-task">
+        cookies and vibes
+      </button>
+    </div>
+    <div class="tb-tray">
+      <svg class="icon" viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="8" fill="#c0c0c0" stroke="#333"/><rect x="3" y="5" width="8" height="4" fill="#4a8bf0"/></svg>
+      <svg class="icon" viewBox="0 0 14 14"><path d="M2 7l3 3 7-7" stroke="#5fbf2e" stroke-width="2" fill="none"/></svg>
+      <div class="tb-clock">
+        <div>3:47 PM</div>
+        <div>4/7/2026</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -14,7 +14,92 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SRC = resolve(__dirname, "../node_modules/xp.css/dist/XP.css");
 const OUT = resolve(__dirname, "../src/components/desktop/xp.scoped.css");
 
-const css = readFileSync(SRC, "utf8");
+let css = readFileSync(SRC, "utf8");
+
+// ─── Strip ::-webkit-scrollbar* rules ────────────────────────────────────
+// XP.css bundles a huge scrollbar skin with ~50 inlined data-URI bitmaps.
+// That's ~20 KB gz of weight we don't need: the desktop component doesn't
+// depend on XP scrollbar styling for layout (Cipher verified round-1), and
+// default OS scrollbars look fine inside the windows. We rip them out before
+// scoping so they never reach xp.scoped.css.
+//
+// IMPORTANT FOR FUTURE xp.css UPGRADERS: the scoper below uses comma-split
+// selector-list prefixing. If a future xp.css release introduces a
+// selector-list like `body, body.foo` where `.foo` is a *descendant* marker
+// on body, our `/^(body|html)/` rewrite will silently drop the descendant
+// relationship. Current XP.css (0.2.6) has 0 such occurrences, but if you
+// upgrade and the desktop chrome breaks, grep for `body\.` in the raw
+// XP.css and handle it explicitly.
+{
+  // Parse top-level rules; drop any whose selector list contains a
+  // ::-webkit-scrollbar* or ::-webkit-resizer pseudo-element.
+  const scrollbarPseudo =
+    /::-webkit-(scrollbar(-button|-track(-piece)?|-thumb|-corner)?|resizer)\b/;
+  let stripped = "";
+  let p = 0;
+  const L = css.length;
+  while (p < L) {
+    // preserve comments verbatim
+    if (css[p] === "/" && css[p + 1] === "*") {
+      const end = css.indexOf("*/", p + 2);
+      if (end === -1) {
+        stripped += css.slice(p);
+        break;
+      }
+      stripped += css.slice(p, end + 2);
+      p = end + 2;
+      continue;
+    }
+    // at-rules pass through verbatim (the inner contents may contain
+    // scrollbar rules, but XP.css doesn't wrap them in @media/@supports).
+    if (css[p] === "@") {
+      // find end of at-rule header
+      let q = p;
+      while (q < L && css[q] !== "{" && css[q] !== ";") q++;
+      if (q >= L || css[q] === ";") {
+        stripped += css.slice(p, q + 1);
+        p = q + 1;
+        continue;
+      }
+      // block at-rule: read to matching brace
+      let depth = 0;
+      let r = q;
+      for (; r < L; r++) {
+        if (css[r] === "{") depth++;
+        else if (css[r] === "}") {
+          depth--;
+          if (depth === 0) break;
+        }
+      }
+      stripped += css.slice(p, r + 1);
+      p = r + 1;
+      continue;
+    }
+    // normal rule: selector { body }
+    const braceIdx = css.indexOf("{", p);
+    if (braceIdx === -1) {
+      stripped += css.slice(p);
+      break;
+    }
+    let depth = 0;
+    let r = braceIdx;
+    for (; r < L; r++) {
+      if (css[r] === "{") depth++;
+      else if (css[r] === "}") {
+        depth--;
+        if (depth === 0) break;
+      }
+    }
+    const sel = css.slice(p, braceIdx);
+    if (scrollbarPseudo.test(sel)) {
+      // drop this rule entirely
+    } else {
+      stripped += css.slice(p, r + 1);
+    }
+    p = r + 1;
+  }
+  css = stripped;
+}
 
 // Walk the CSS, finding selector lists outside braces and at-rules.
 // We tokenize at top level only — nested at-rules like @media still work because

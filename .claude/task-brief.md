@@ -1,186 +1,86 @@
-## Project Brief: Portfolio Site Redesign — "Philosophy First" (v2, locked 2026-04-06)
+# D7: Integrate retro-desktop into index.astro + rollback dry-run
 
-**Status**: Intake complete. All open questions answered. Ready to build.
-**Deadline**: SHIP TODAY (2026-04-06) — job application is the forcing function.
-**Repo**: `/mnt/c/vault/dev/Portfolio` (existing). Deploys via GitHub Pages → `honestafblog.com/Portfolio/`.
+Repo: `/mnt/c/vault/dev/Portfolio`
+Branch: `feat/retro-desktop-d2` HEAD `0ce4a43`
+Prior phases D2-D6 green. Bundle 112.9 KB gz / 146.5 KB.
 
----
+**Read first**:
 
-### The Spine (in stone)
+- `/mnt/c/vault/brain/projects/portfolio-site-desktop-section.md` (D7 phase spec, R7 rule, locked decisions)
+- `src/pages/index.astro` (find Movement I → Movement II seam)
+- `src/components/desktop/Desktop.astro`, `MobileFallback.astro`, `desktop.css`
+- `src/pages/desktop-preview.astro` (integration pattern: gating + sibling layout)
 
-> **Grow with friends. Find joy in hard problems. Build things that help people.**
+## R7 hard constraint
 
-This triptych is the entire philosophy. Every beat on the page must visibly ladder to one of the three sentences. The cold open IS this triptych — text + visual effect, no hero photo, no name plate above it.
+`Desktop.tsx`'s root `<div>` IS the `bounds="parent"` target. NO Astro element may sit between `<section id="desktop">` and the React island. Do not wrap `<Desktop>` in any extra div between the section and the island.
 
----
+## Part 1 — CSS dedup investigation (DO FIRST)
 
-### Locked Decisions (do not relitigate)
+Cipher flagged ~43 KB gz duplicated CSS chunks (`desktop-preview.*.css` × 2 at ~21 KB each).
 
-| Decision                   | Locked value                                                                                                                                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Stack**                  | **Astro** (Alex wants to learn it). Option A passthrough — see below.                                                                                                                             |
-| **Astro config**           | `site: 'https://honestafblog.com'`, `base: '/Portfolio/'`. Every internal link MUST respect base.                                                                                                 |
-| **Resume page**            | Lives at `public/resume/` as **byte-identical static passthrough**. DO NOT port to .astro syntax. DO NOT edit print CSS. The resume was Cipher-reviewed yesterday and is out of scope.            |
-| **Deploy**                 | GitHub Action builds and deploys to `gh-pages` branch. Pages serves from that branch. Astro provides the workflow template.                                                                       |
-| **CNAME cleanup**          | Delete the bogus root `CNAME` file containing `AlexanderFriedrichsen.github.io` — it's cruft, not a real custom domain entry. The honestafblog.com binding lives on the user-site repo, not here. |
-| **Agent team**             | **Option (b) explicit cards only**. Per-agent name + role + one-line description. Sigils/icons are deferred to Phase 5. Text-first.                                                               |
-| **Cold open**              | Triptych as type + visual effect. No hero photo. Pixel/Forge picks the visual treatment — typographic weight, subtle motion, gradient, whatever lands. Bryn-Loftness-style gravity.               |
-| **"The train" pull-quote** | **CUT**. Removed from spec entirely. Do not include.                                                                                                                                              |
-| **Timeline**               | Ship today.                                                                                                                                                                                       |
-| **CEO gates**              | **2 only**: (1) design approval (Alex previews local build), (2) final ship approval before push. No interim phase reviews.                                                                       |
+- Reproduce: `npm run build`, then `ls -la dist/_astro/desktop-preview*.css` and `gzip -c <each> | wc -c`
+- Diff the two files (`diff <(sort file1) <(sort file2)`) — confirm overlap
+- Investigate root cause: (a) Astro emitting CSS for both route + island, (b) Vite chunk-split bug, (c) `Desktop.tsx` importing 7.css at module level vs `Desktop.astro` frontmatter
+- Try: move `import "7.css/dist/7.scoped.css"` from `Desktop.tsx` into `Desktop.astro` frontmatter (if not already), OR a single shared CSS file, OR `vite.build.cssCodeSplit: false`
+- Goal: cut ~20 KB gz. If can't safely dedupe, document why and leave note for follow-up — don't make it worse.
+- Re-run `node tests/d6-gating.mjs` after fix — nothing should break.
 
----
+## Part 2 — Rename `desktop-preview.astro` → `_desktop-preview.astro`
 
-### The Three Movements
+Astro convention: leading underscore = non-routable.
 
-#### Movement 1 — Philosophy (cold open)
+- `git mv src/pages/desktop-preview.astro src/pages/_desktop-preview.astro`
+- After rebuild, `dist/desktop-preview/` should NOT exist
+- Update `tests/d6-gating.mjs` — point at `http://localhost:4321/Portfolio/#desktop` after Part 3 integration so D6 tests run against the real production page
 
-The triptych is the hero. Three sentences, large, weighted, clean. Alex's name and a one-line role descriptor sit subordinate (smaller, below or beside). No ambient particle field. Visual effect should enhance the type, not compete with it — gradient, subtle reveal, maybe a slow line-by-line fade-in on load. Must work with JS disabled (text is real text, not an image).
+## Part 3 — Integrate into `index.astro`
 
-#### Movement 2 — Proof
+Per plan, desktop section sits **between Movement I (philosophy) and Movement II (proof)**.
 
-Each beat tagged to which sentence(s) it proves. Beat order is curated for narrative — recommend opening with MTG arc (the longest-running receipt) and closing with the agent team segue.
+- Find seam between Movement I and Movement II
+- Insert `<section id="desktop">` containing:
+  - `<Desktop client:visible />` wrapped in `<div class="desktop-only">` (gated `(min-width: 1024px) and (pointer: fine)`)
+  - `<MobileFallback />` wrapped in `<div class="mobile-only">` (inverse)
+- Use SAME CSS gating as `_desktop-preview.astro` — extract into shared place if helpful
+- MUST NOT break Movement III or anything below
+- R7 applies — no extra wrapper divs between section and island
+- Add `#desktop` anchor so research detail "← Back to desktop" link lands correctly
 
-| Beat                                  | Proves                                                | Imagery (in-repo, in `assets/pictures/beast_games/`)                                                                                                                                                                                                                                                                                                        |
-| ------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **MTG arc**                           | "Find joy in hard problems" + "Grow with friends"     | `03_SCG_CON_Atlanta_Constructed_Champion.png`, `05_Pro_Tour_Top8_Group_Stage.png`, `06_Pro_Tour_Fist_Pump.png`. Hero shot is the Pro Tour Fist Pump. The arc is Dragon Cup → SCG CON Atlanta → Pro Tour. Years of grinding, the arc upward.                                                                                                                 |
-| **Wonders of the First**              | "Build things that help people" + "Grow with friends" | `01_Dragon_Cup_Winner_Official.png`, `02_Dragon_Cup_Group_Photo.png`, `04_Dragon_Cup_Winner_Candid.png`. **CRITICAL: Dragon Cup = Wonders of the First world championship, NOT MTG.** A CCG Alex built, a championship was held, friends came, someone won it. This is the strongest "build things that help people + grow with friends" proof on the page. |
-| **MTG Skill Analyzer / data science** | "Build things that help people"                       | Screenshot from honestafblog.com/mtg-skill-analyzer (or pull from existing Portfolio assets). Link to live tool.                                                                                                                                                                                                                                            |
-| **Climbing**                          | "Find joy in hard problems" + "Grow with friends"     | `08_Climbing_Ocean_Rock.jpg` (best — outdoor), `09_Climbing_Walltopia_Overhang_1.jpg` as supporting. Skip the gym selfie unless layout demands.                                                                                                                                                                                                             |
-| **Piano**                             | "Find joy in hard problems"                           | Existing Keys Kyne 2022 photo from `assets/pictures/`.                                                                                                                                                                                                                                                                                                      |
-| **Health/data instincts**             | "Build things that help people"                       | Optional. Cut if it doesn't strengthen the spine or if layout feels crowded.                                                                                                                                                                                                                                                                                |
+## Part 4 — Carry-forward fixes
 
-**Imagery rule**: every Movement 2 beat gets at least one image. Pictures are connective tissue.
-
-**Additional photos** at `assets/pictures/alex_pics/` — 27 unlabeled candidates from Alex's Drive. Use any that visibly fit a beat. If a strong portrait is among them, it MAY be used as a secondary image alongside the cold open (but the cold open primary is still type + visual effect, not a photo).
-
-#### Movement 3 — Practice (the agent team)
-
-Explicit per-agent treatment. Says: _"Here is the team I built to scale my philosophy — every agent exists so one human can help more people, find joy in more hard problems, and grow with more friends."_
-
-For each of the 12 native agents (read source: `/mnt/c/vault/brain/.claude/agents/`):
-
-- **Atlas** — Chief strategist
-- **Forge** — Software builder
-- **Cipher** — Quality gate / reviewer
-- **Gauntlet** — Tester / QA
-- **Scout** — Researcher
-- **Lens** — Data analyst
-- **Quill** — Content writer
-- **Pixel** — Visual designer
-- **Anchor** — Operations / deployment
-- **Sage** — Knowledge manager
-- **Herald** — Project intake
-- **Prism** — Design reviewer
-
-Each card: name, role (one line), one-line description in Alex's voice. No sigils/icons (deferred). Pull descriptions from the agent definitions in `/mnt/c/vault/brain/.claude/agents/*.md` — read them, condense each to one sentence in plain language a hiring manager would understand.
-
-The Movement 3 framing is the closer: the agent team is _how_ Alex now builds things that help people. It's the receipt that the philosophy scales beyond one human.
-
----
-
-### Stack & Build Specifics
-
-**Astro setup** (Forge — do these in this order):
-
-1. `npm create astro@latest` in a temp dir, copy minimal scaffold into Portfolio repo root. Don't blow away existing files. Existing `index.html` becomes `index copy 2.html` (preserve as backup) before scaffold touches it.
-2. Move existing `assets/`, `resume/` into `public/` so they ship as passthrough static files. Verify resume still loads at `/resume/`.
-3. Configure `astro.config.mjs`:
-   ```js
-   export default {
-     site: "https://honestafblog.com",
-     base: "/Portfolio/",
-   };
+1. `package.json` add scripts:
    ```
-4. Build `src/pages/index.astro` with the three movements. Use Astro components for the agent card (one component, called 12 times with props).
-5. Add GitHub Action workflow at `.github/workflows/deploy.yml` using Astro's official template (`withastro/action`). Configure to deploy to `gh-pages` branch.
-6. Delete root `CNAME` file (the bogus `AlexanderFriedrichsen.github.io` one).
-7. Test local build (`npm run build`) and local preview (`npm run preview`). Verify all internal links work with `/Portfolio/` base.
-8. Verify resume at `/Portfolio/resume/` loads byte-identical to before.
+   "check-bundle": "node scripts/check-bundle.mjs",
+   "verify": "npm run build && npm run check-bundle"
+   ```
+2. `.gitignore` add `.playwright-mcp/`
+3. `research-index.json` `updated` vs schema `published` — reconcile to one (recommend keep `published`, drop/rename `updated`). Don't break the build.
 
-**Visual direction** (Pixel territory but baked in here for speed):
+## Part 5 — Build, verify, ship dry-run
 
-- Type-forward. Big, confident, generous white space.
-- Triptych in the cold open: each sentence on its own line, large, with deliberate rhythm.
-- Color palette: keep it restrained. Off-white background, dark gray text, ONE accent color. Pick something that isn't Bootstrap blue. Suggestion: deep green or burnt orange — Forge picks, Alex approves at gate 1.
-- Photos: full-bleed within their beat's column, generous borders, no rounded-corners-cliché. Treat them like exhibits in a gallery, not thumbnails.
-- Mobile: single column, photos stack, cold open triptych scales to viewport.
-- Dark mode: nice-to-have, not required for ship.
-- Font: a real serif for the philosophy triptych (something with weight — Fraunces, EB Garamond, or similar) + a clean sans for body. NO system font stack on the cold open — the type IS the design.
+1. `npm run build` — must be green
+2. `npm run check-bundle` — report new total
+3. `node tests/d6-gating.mjs` against new `/Portfolio/` integrated route — all checks pass (drag, close, gating, mobile no-overflow, CLS)
+4. **Rollback dry-run**: write to `/mnt/c/vault/dev/Portfolio/.claude/d7-rollback-plan.md`:
+   - Where prior build artifact lives
+   - Exact `git revert` / branch-reset commands
+   - How long it would take
+   - Who to notify
+5. Playwright screenshot: integrated `index.astro` at 1280×800 showing desktop section in context. Save to `.playwright-mcp/d7-integrated-1280.png`
+6. Commit in logical commits (DO NOT push, DO NOT deploy):
+   - `D7: dedupe CSS chunks` (Part 1)
+   - `D7: rename _desktop-preview, update test target` (Part 2)
+   - `D7: integrate desktop section into index.astro` (Part 3)
+   - `D7: wire check-bundle, gitignore .playwright-mcp, reconcile schema` (Part 4)
 
-**Out of scope (do not build)**:
+## Report (return to orchestrator)
 
-- Contact form
-- Blog
-- CMS
-- Astro content collections
-- Any animation library beyond CSS
-- Per-agent sigils/icons (Phase 5)
-- A new color system for the resume page (resume is untouched)
-- Dark mode toggle (nice-to-have, only if zero-cost)
-
----
-
-### CEO Gates
-
-**Gate 1 — Design approval**
-
-- Trigger: Forge has cold open + Movement 2 first beat rendering locally
-- Forge runs `npm run preview` and reports the preview URL
-- Alex previews, approves direction OR requests changes
-- Forge proceeds to finish the build
-
-**Gate 2 — Ship approval**
-
-- Trigger: Full build done, all 3 movements rendered, resume passthrough verified, local preview clean
-- Alex previews the full site locally
-- On approval: Forge commits, pushes to main, GitHub Action deploys, Anchor verifies live URL
-
----
-
-### Verification (deterministic checks for SubagentStop)
-
-```bash
-# Repo location is correct
-test -d /mnt/c/vault/dev/Portfolio
-test -f /mnt/c/vault/dev/Portfolio/astro.config.mjs
-
-# Astro config has the right base + site
-grep -q "base.*'/Portfolio/'" /mnt/c/vault/dev/Portfolio/astro.config.mjs
-grep -q "site.*'https://honestafblog.com'" /mnt/c/vault/dev/Portfolio/astro.config.mjs
-
-# Resume passthrough preserved (in public/resume/)
-test -f /mnt/c/vault/dev/Portfolio/public/resume/index.html
-
-# Bogus CNAME deleted
-test ! -f /mnt/c/vault/dev/Portfolio/CNAME
-
-# Source page exists
-test -f /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-
-# Philosophy triptych is in the source — all three sentences must appear
-grep -qi "grow with friends"            /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-grep -qi "find joy in hard problems"    /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-grep -qi "build things that help people" /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-
-# Three-movement structure
-grep -Eqi 'id="(philosophy|movement-1|cold-open)"' /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-grep -Eqi 'id="(proof|movement-2)"'                /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-grep -Eqi 'id="(practice|agents|movement-3|agent-team)"' /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-
-# All 12 agents named on page
-agent_hits=$(grep -ioE 'atlas|forge|cipher|gauntlet|scout|lens|quill|pixel|anchor|sage|herald|prism' /mnt/c/vault/dev/Portfolio/src/pages/index.astro | sort -u | wc -l)
-test "$agent_hits" -ge 12
-
-# Beast Games photos referenced (Movement 2 imagery)
-grep -q "beast_games" /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-
-# Dropped framings stay dropped
-! grep -qi "peak vs consistency\|two.track" /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-! grep -qi "the train" /mnt/c/vault/dev/Portfolio/src/pages/index.astro
-
-# Build succeeds
-cd /mnt/c/vault/dev/Portfolio && npm run build
-test -d /mnt/c/vault/dev/Portfolio/dist
-test -f /mnt/c/vault/dev/Portfolio/dist/Portfolio/index.html || test -f /mnt/c/vault/dev/Portfolio/dist/index.html
-```
+- CSS dedup result (before/after KB, root cause, what changed)
+- New bundle total
+- D6 test results post-integration
+- Files touched per commit
+- Rollback plan summary (3-4 lines from doc)
+- Screenshot path
+- Anything surprising or needing CEO input
+- VERDICT: READY TO PUSH or NEEDS WORK (with blockers)
