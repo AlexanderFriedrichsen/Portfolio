@@ -9,8 +9,10 @@ const TABS = [
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
-export default function AboutMe() {
-  const [tab, setTab] = useState<TabId>("general");
+export default function AboutMe({
+  initialTab = "general",
+}: { initialTab?: TabId } = {}) {
+  const [tab, setTab] = useState<TabId>(initialTab);
   const baseId = useId();
   const tabId = (id: string) => `${baseId}-tab-${id}`;
   const panelId = (id: string) => `${baseId}-panel-${id}`;

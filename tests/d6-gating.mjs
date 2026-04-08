@@ -340,6 +340,13 @@ for (const v of [
   t.startMenuOpenAfterClick = await page
     .locator(".desktop-only .start-menu")
     .count();
+  // v2 r2: Start menu should live inside .retro-desktop (parallel to
+  // cookiesInsideDesktop).
+  t.startMenuInsideDesktop = await page.evaluate(() => {
+    const sm = document.querySelector(".start-menu");
+    if (!sm) return false;
+    return !!sm.closest(".retro-desktop");
+  });
   // BSOD via Shut Down menuitem. Use raw .click() on the DOM node so we
   // bypass any overlapping element / click-outside handler timing weirdness.
   await page.evaluate(() => {
@@ -348,6 +355,12 @@ for (const v of [
   });
   await page.waitForTimeout(250);
   t.bsodVisible = (await page.locator(".desktop-only .bsod").count()) === 1;
+  // v2 r2: BSOD should live inside .retro-desktop.
+  t.bsodInsideDesktop = await page.evaluate(() => {
+    const b = document.querySelector(".bsod");
+    if (!b) return false;
+    return !!b.closest(".retro-desktop");
+  });
   // Click anywhere dismisses
   await page.mouse.click(400, 400);
   await page.waitForTimeout(200);

@@ -19,4 +19,12 @@ import "./desktop.css";
 import Desktop from "./Desktop";
 ---
 
-<Desktop client:load />
+<!--
+  client:media gates hydration to the same MQ as the CSS .desktop-only
+  reveal and desktop.css scroll lock. On mobile/touch the React island
+  never hydrates at all — save ~25 KB gz of JS execution on phones.
+  Round-1 note: client:visible was abandoned because the zero-height
+  parent (before the :has hack landed) broke IntersectionObserver.
+  client:media sidesteps IO entirely.
+-->
+<Desktop client:media="(min-width: 1024px) and (pointer: fine)" />

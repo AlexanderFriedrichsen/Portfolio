@@ -243,8 +243,16 @@ const agents = [
 
 <script>
   // Mark <html> so the global no-scroll rule in desktop.css can latch on.
-  // Only affects ≥1024 fine — the CSS itself is media-query gated.
+  // Gate on the same media query the desktop island uses so mobile/touch
+  // viewports never get the class (cheap insurance against future
+  // un-gated rules consuming it) and so rotating/resizing into desktop
+  // mid-session works too.
   if (typeof window !== 'undefined') {
-    document.documentElement.classList.add('has-xp-desktop');
+    const mq = window.matchMedia('(min-width: 1024px) and (pointer: fine)');
+    const apply = (matches: boolean) => {
+      document.documentElement.classList.toggle('has-xp-desktop', matches);
+    };
+    apply(mq.matches);
+    mq.addEventListener('change', (e) => apply(e.matches));
   }
 </script>

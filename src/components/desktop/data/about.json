@@ -15,7 +15,11 @@
     "Background tab placeholder — Quill drafts the real copy in D3. Career arc, education, the path from competitive Magic to data science to solo dev studio."
   ],
   "contact": [
-    "Contact tab placeholder — Quill drafts the real copy in D3. Email, GitHub, scheduling link."
+    "Email: alex@honestafblog.com",
+    "GitHub: https://github.com/AlexanderFriedrichsen",
+    "LinkedIn: https://www.linkedin.com/in/alexander-friedrichsen/",
+    "X / Twitter: https://x.com/Apfriedr",
+    "Blog: https://honestafblog.com"
   ],
   "facts": [
     { "k": "Based in", "v": "Boston, MA" },

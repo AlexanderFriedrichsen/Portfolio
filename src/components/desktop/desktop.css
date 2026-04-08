@@ -380,12 +380,12 @@
   justify-content: flex-end;
 }
 
-/* ─── Start menu ─── */
+/* ─── Start menu (two-column, matches mocks/d1-v2/xp-start-menu.html) ─── */
 .xp-scope .start-menu {
   position: absolute;
   left: 0;
   bottom: var(--xp-taskbar-h);
-  width: 320px;
+  width: 380px;
   z-index: 1100;
   background: #fff;
   border: 1px solid #0a246a;
@@ -394,8 +394,8 @@
   border-top-right-radius: 8px;
   box-shadow: 4px -4px 12px rgba(0, 0, 0, 0.4);
   font-family: Tahoma, sans-serif;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 60px 1fr 36px;
   overflow: hidden;
 }
 .xp-scope .sm-header {
@@ -426,8 +426,51 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 .xp-scope .sm-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: #fff;
-  padding: 6px 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.xp-scope .sm-col {
+  padding: 8px 0;
+  overflow-y: auto;
+}
+.xp-scope .sm-col.left {
+  background: #fff;
+}
+.xp-scope .sm-col.right {
+  background: #d3e5fa;
+  border-left: 1px solid #b6d0f0;
+}
+.xp-scope .sm-ext {
+  margin-left: auto;
+  font-size: 10px;
+  color: inherit;
+}
+.xp-scope .sm-label {
+  flex: 1;
+  text-align: left;
+}
+.xp-scope .sm-logoff {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  margin-right: 14px;
+}
+.xp-scope .sm-logoff:focus-visible,
+.xp-scope .sm-shutdown:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: 2px;
 }
 .xp-scope .sm-item {
   appearance: none;
