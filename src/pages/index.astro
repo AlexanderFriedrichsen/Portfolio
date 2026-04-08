@@ -25,39 +25,42 @@ const agents = [
 
 <Layout title="Alex Friedrichsen — Portfolio">
 
-  <!-- ============ MOVEMENT 1: PHILOSOPHY ============ -->
-  <section id="philosophy">
-    <!-- Decorative fake popup. aria-hidden so screen readers skip the gag. -->
-    <aside class="fake-popup" aria-hidden="true">
-      <div class="fp-titlebar">
-        <span class="fp-title">⚠ honestafblog.com says</span>
-        <div class="fp-controls">
-          <button type="button" tabindex="-1">_</button>
-          <button type="button" tabindex="-1">▢</button>
-          <button type="button" class="fp-x" tabindex="-1">✕</button>
-        </div>
-      </div>
-      <div class="fp-body">
-        <div class="fp-icon">i</div>
-        <div class="fp-message">
-          <p><strong>This site uses cookies.</strong></p>
-          <p>And vibes. Mostly vibes.</p>
-        </div>
-      </div>
-      <div class="fp-buttons">
-        <button type="button" class="fp-btn fp-btn-primary fp-close" tabindex="-1">Accept All</button>
-        <button type="button" class="fp-btn fp-close" tabindex="-1">Accept All Harder</button>
-      </div>
-    </aside>
+  <!--
+    v2 — XP retro desktop is the full-page hero.
+    On ≥1024px + fine pointer:
+      - the React desktop island is fixed/100vh and OWNS the viewport
+      - the rest of the page (Movement III, footer) is reachable below it
+        ONLY by closing/minimizing or via keyboard. The body scroll is
+        locked while the island is mounted (handled by .has-xp-desktop CSS).
+    On smaller viewports / coarse pointer:
+      - MobileFallback.astro renders a normal flowing editorial page,
+        and Movement III still appears below it.
 
-    <script>
-      const popup = document.querySelector('.fake-popup');
-      if (popup) {
-        popup.querySelectorAll('.fp-close, .fp-x').forEach((b) =>
-          b.addEventListener('click', () => popup.remove())
-        );
-      }
-    </script>
+    Movement I (philosophy) was folded into the About Me window's
+    Philosophy tab. Movement II (proof) was converted to desktop icons
+    that open windows or external links. See data/icons.json.
+
+    The #desktop anchor is the destination for the research-detail
+    "← Back to desktop" link.
+  -->
+  <section id="desktop" class="desktop-section">
+    <div class="desktop-only">
+      <Desktop />
+    </div>
+    <div class="mobile-only">
+      <MobileFallback />
+    </div>
+  </section>
+
+  <!-- ============ HIDDEN-ON-XP: legacy editorial movements ============ -->
+  <!-- Mobile fallback shows these inline; on the XP desktop they sit below
+       the fixed 100vh hero and are still accessible via screen readers / scroll
+       once the desktop is dismissed. They are hidden from the XP viewport via
+       html.has-xp-desktop body > section { display: none } in Layout. -->
+  <section id="philosophy" class="legacy-section">
+    <!-- v2: cookies popup moved INSIDE the XP desktop (Desktop.tsx CookiesDialog).
+         Movement I prose folded into About Me window's Philosophy tab. The
+         editorial markup below remains for the mobile fallback experience. -->
 
     <div class="wrap">
       <h1 class="triptych">
@@ -75,25 +78,8 @@ const agents = [
     </div>
   </section>
 
-  <!-- ============ INTERLUDE: RETRO DESKTOP ============ -->
-  <!--
-    Sits between Movement I and Movement II. Gated by CSS so that:
-      - ≥1024px + fine pointer → React desktop island hydrates
-      - anything else         → D4 editorial mobile fallback renders
-    The #desktop anchor is the destination for the research-detail
-    "← Back to desktop" link.
-  -->
-  <section id="desktop" class="desktop-section">
-    <div class="desktop-only">
-      <Desktop />
-    </div>
-    <div class="mobile-only">
-      <MobileFallback />
-    </div>
-  </section>
-
-  <!-- ============ MOVEMENT 2: PROOF ============ -->
-  <section id="proof">
+  <!-- ============ MOVEMENT 2: PROOF (legacy / mobile only) ============ -->
+  <section id="proof" class="legacy-section">
     <div class="wrap">
       <p class="section-label">Movement II — Proof</p>
       <h2 class="section-title">The receipts.</h2>
@@ -247,5 +233,18 @@ const agents = [
   @media (min-width: 1024px) and (pointer: fine) {
     .desktop-section .desktop-only { display: block; }
     .desktop-section .mobile-only  { display: none; }
+    /* When the XP desktop hero is active, hide the legacy editorial sections
+       and footer. The desktop IS the page on this viewport. */
+    .legacy-section,
+    body > footer { display: none; }
+    html, body { overflow: hidden; height: 100%; }
   }
 </style>
+
+<script>
+  // Mark <html> so the global no-scroll rule in desktop.css can latch on.
+  // Only affects ≥1024 fine — the CSS itself is media-query gated.
+  if (typeof window !== 'undefined') {
+    document.documentElement.classList.add('has-xp-desktop');
+  }
+</script>

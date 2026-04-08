@@ -6,6 +6,11 @@
     "I'm an AI-augmented software builder running HonestAlexF LLC out of Boston. Most of what I do sits at the intersection of three things I can't shake: hard problems I find joyful, friends I want to grow with, and tools that make somebody's day better.",
     "Before code, it was Magic — years on the grind, one Pro Tour Top 8, one SCG Constructed Champion. The same instincts that worked there (study, iterate, ship, ask better questions) are the ones I bring to building software now."
   ],
+  "philosophy": [
+    "Grow with friends. Find joy in hard problems. Build things that help people.",
+    "Three sentences I keep coming back to. Everything I build is a small bet on whether one person plus a team of agents can hold all three at once.",
+    "Hard problems are more fun in good company. Joy in the struggle is the only sustainable engine. And the work only matters if it helps somebody on the other end."
+  ],
   "background": [
     "Background tab placeholder — Quill drafts the real copy in D3. Career arc, education, the path from competitive Magic to data science to solo dev studio."
   ],

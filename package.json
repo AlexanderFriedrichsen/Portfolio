@@ -18,7 +18,8 @@
     "astro": "^4.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-rnd": "^10.5.3"
+    "react-rnd": "^10.5.3",
+    "xp.css": "^0.2.6"
   },
   "devDependencies": {
     "jsonresume-theme-elegant": "^1.16.1",
