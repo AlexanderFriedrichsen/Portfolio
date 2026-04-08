@@ -3,13 +3,16 @@ import about from "../data/about.json";
 
 const TABS = [
   { id: "general", label: "General" },
+  { id: "philosophy", label: "Philosophy" },
   { id: "background", label: "Background" },
   { id: "contact", label: "Contact" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
-export default function AboutMe() {
-  const [tab, setTab] = useState<TabId>("general");
+export default function AboutMe({
+  initialTab = "general",
+}: { initialTab?: TabId } = {}) {
+  const [tab, setTab] = useState<TabId>(initialTab);
   const baseId = useId();
   const tabId = (id: string) => `${baseId}-tab-${id}`;
   const panelId = (id: string) => `${baseId}-panel-${id}`;
@@ -60,6 +63,24 @@ export default function AboutMe() {
             ))}
           </dl>
         </div>
+      </div>
+
+      {/* Philosophy panel — folded in from index.astro Movement I */}
+      <div
+        role="tabpanel"
+        id={panelId("philosophy")}
+        aria-labelledby={tabId("philosophy")}
+        hidden={tab !== "philosophy"}
+        className="about-simple"
+      >
+        <h2 className="philosophy-triptych">
+          <span>Grow with friends.</span>
+          <span>Find joy in hard problems.</span>
+          <span>Build things that help people.</span>
+        </h2>
+        {(about as { philosophy?: string[] }).philosophy?.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
       </div>
 
       {/* Background panel */}

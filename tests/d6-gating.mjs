@@ -72,9 +72,9 @@ async function probeGating(page) {
     const m = document.querySelector(".mobile-only");
     const dDisp = d ? getComputedStyle(d).display : "missing";
     const mDisp = m ? getComputedStyle(m).display : "missing";
-    const win7 = document.querySelector(".desktop-only .win7");
+    const xp = document.querySelector(".desktop-only .xp-scope");
     const mfRoot = document.querySelector(".mobile-only .mf-root");
-    return { dDisp, mDisp, hasWin7: !!win7, hasMfRoot: !!mfRoot };
+    return { dDisp, mDisp, hasXp: !!xp, hasMfRoot: !!mfRoot };
   });
 }
 
@@ -218,7 +218,7 @@ for (const v of [
   page.on("pageerror", (e) => errs.push(e.message));
   await page.goto(URL, { waitUntil: "networkidle" });
   // wait for island hydration
-  await page.waitForSelector(".desktop-only .win7 .desk-icon", {
+  await page.waitForSelector(".desktop-only .xp-scope .desk-icon", {
     timeout: 10000,
   });
   await page.waitForTimeout(800); // rnd init
@@ -308,6 +308,69 @@ for (const v of [
   const afterEnter = await page.locator(".desktop-only .window").count();
   t.enterOpens = afterEnter;
   t.enterIncreased = afterEnter > t.afterClose;
+
+  // ---- v2 assertions ----
+  // Visible close X (regression: v1 had an invisible-X bug from 7.css).
+  // Re-open a window so we have a fresh close button to inspect.
+  const reIcon = page.locator(".desk-icons .desk-icon").nth(0);
+  await reIcon.dblclick();
+  await page.waitForTimeout(300);
+  const xBtn = page
+    .locator(
+      ".desktop-only .window .title-bar-controls button[aria-label^='Close']",
+    )
+    .first();
+  t.closeXBox = await xBtn.boundingBox().catch(() => null);
+  t.closeXVisible =
+    !!t.closeXBox && t.closeXBox.width >= 8 && t.closeXBox.height >= 8;
+
+  // Cookies popup is INSIDE the desktop bounds (child of .retro-desktop, not body).
+  await page.waitForTimeout(1700); // 1.5s mount delay
+  t.cookiesInsideDesktop = await page.evaluate(() => {
+    const c = document.querySelector(".cookies-dialog");
+    if (!c) return false;
+    return !!c.closest(".retro-desktop");
+  });
+
+  // Start button toggles the menu.
+  const startBtn = page.locator(".desktop-only .start-btn").first();
+  t.startBtnCount = await startBtn.count();
+  await startBtn.click();
+  await page.waitForTimeout(150);
+  t.startMenuOpenAfterClick = await page
+    .locator(".desktop-only .start-menu")
+    .count();
+  // v2 r2: Start menu should live inside .retro-desktop (parallel to
+  // cookiesInsideDesktop).
+  t.startMenuInsideDesktop = await page.evaluate(() => {
+    const sm = document.querySelector(".start-menu");
+    if (!sm) return false;
+    return !!sm.closest(".retro-desktop");
+  });
+  // BSOD via Shut Down menuitem. Use raw .click() on the DOM node so we
+  // bypass any overlapping element / click-outside handler timing weirdness.
+  await page.evaluate(() => {
+    const b = document.querySelector(".sm-shutdown");
+    if (b) b.click();
+  });
+  await page.waitForTimeout(250);
+  t.bsodVisible = (await page.locator(".desktop-only .bsod").count()) === 1;
+  // v2 r2: BSOD should live inside .retro-desktop.
+  t.bsodInsideDesktop = await page.evaluate(() => {
+    const b = document.querySelector(".bsod");
+    if (!b) return false;
+    return !!b.closest(".retro-desktop");
+  });
+  // Click anywhere dismisses
+  await page.mouse.click(400, 400);
+  await page.waitForTimeout(200);
+  t.bsodDismissed = (await page.locator(".desktop-only .bsod").count()) === 0;
+
+  // No vertical scroll on the html element at >=1024 fine.
+  t.noScroll = await page.evaluate(() => {
+    const root = document.documentElement;
+    return root.scrollHeight <= root.clientHeight + 1;
+  });
 
   t.pageErrors = errs;
   await ctx.close();

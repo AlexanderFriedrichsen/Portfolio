@@ -1,0 +1,80 @@
+[
+  {
+    "id": "about-me",
+    "label": "About Me",
+    "kind": "window",
+    "openByDefault": true,
+    "iconKey": "user"
+  },
+  {
+    "id": "research-vault",
+    "label": "Research Vault",
+    "kind": "window",
+    "iconKey": "folder"
+  },
+  {
+    "id": "tools",
+    "label": "Tools I've Tried",
+    "kind": "window",
+    "iconKey": "tools"
+  },
+  {
+    "id": "llc",
+    "label": "HonestAlexF LLC",
+    "kind": "window",
+    "iconKey": "company"
+  },
+  {
+    "id": "agent-team",
+    "label": "Agent Team",
+    "kind": "window",
+    "iconKey": "agents"
+  },
+  {
+    "id": "mtg-analyzer",
+    "label": "MTG Skill Analyzer",
+    "kind": "window",
+    "iconKey": "mtg"
+  },
+  {
+    "id": "wonders",
+    "label": "Wonders of First",
+    "kind": "link",
+    "href": "#",
+    "iconKey": "wonders",
+    "todo": "Q6: confirm Wonders of the First URL"
+  },
+  {
+    "id": "gecco",
+    "label": "GECCO Paper",
+    "kind": "link",
+    "href": "#",
+    "iconKey": "gecco",
+    "todo": "Q6: confirm GECCO paper URL"
+  },
+  {
+    "id": "blog",
+    "label": "Blog",
+    "kind": "link",
+    "href": "https://honestafblog.com",
+    "external": true,
+    "iconKey": "blog"
+  },
+  {
+    "id": "team-handshake",
+    "label": "Team Handshake",
+    "kind": "link",
+    "href": "#",
+    "iconKey": "handshake",
+    "todo": "Q6: confirm Moxfield/Team Handshake URL"
+  },
+  {
+    "id": "resume",
+    "label": "Resume",
+    "kind": "link",
+    "href": "/Portfolio/resume/",
+    "external": true,
+    "extBadge": true,
+    "iconKey": "resume"
+  }
+]
