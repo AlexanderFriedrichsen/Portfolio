@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
-import "7.css/dist/7.scoped.css";
-import "./desktop.css";
+// NOTE: 7.css and desktop.css are imported from Desktop.astro (Astro frontmatter)
+// instead of here, to avoid duplicating ~90 KB of CSS across both the SSR
+// route chunk and the client island JS chunk. See Desktop.astro for details.
 
 import AgentTeam from "./windows/AgentTeam";
 import ResearchVault from "./windows/ResearchVault";
