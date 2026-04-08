@@ -85,6 +85,19 @@ const DESKTOP_ICONS: {
 
 const SECTION_HEIGHT = 720;
 
+// D5: Clock formatters. "h:mm AM/PM" / "M/D/YYYY" to match prior hardcoded text.
+function formatClockTime(d: Date): string {
+  let h = d.getHours();
+  const m = d.getMinutes();
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}:${m.toString().padStart(2, "0")} ${ampm}`;
+}
+function formatClockDate(d: Date): string {
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+}
+
 export default function Desktop() {
   // Initial state per CEO decision: Agent Team open, others as icons.
   const [openWindows, setOpenWindows] = useState<WindowId[]>(["agent-team"]);
@@ -92,6 +105,14 @@ export default function Desktop() {
   const [focused, setFocused] = useState<WindowId | null>("agent-team");
   // Track windows that just opened so we can autofocus their first focusable.
   const [justOpened, setJustOpened] = useState<WindowId | null>(null);
+
+  // D5: live clock. Client-only (island is client:visible, no SSR mismatch).
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const id = window.setInterval(() => setNow(new Date()), 30_000);
+    return () => window.clearInterval(id);
+  }, []);
 
   const open = useCallback((id: WindowId) => {
     setOpenWindows((prev) => (prev.includes(id) ? prev : [...prev, id]));
@@ -171,8 +192,8 @@ export default function Desktop() {
         })}
         <div className="tb-spacer" />
         <div className="tb-clock" aria-hidden="true">
-          <div>3:14 PM</div>
-          <div>4/7/2026</div>
+          <div>{now ? formatClockTime(now) : ""}</div>
+          <div>{now ? formatClockDate(now) : ""}</div>
         </div>
       </div>
     </div>
@@ -235,8 +256,10 @@ function WindowFrame({
 
   useEffect(() => {
     if (!autofocus) return;
+    // D5: include form fields so windows containing inputs/selects/textareas
+    // autofocus something real instead of falling through to the next button.
     const el = bodyRef.current?.querySelector<HTMLElement>(
-      'button:not([disabled]):not([tabindex="-1"]), [href], [tabindex]:not([tabindex="-1"])',
+      'button:not([disabled]):not([tabindex="-1"]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
     );
     el?.focus();
     clearAutofocus();
@@ -276,17 +299,19 @@ function WindowFrame({
             {def.title}
           </div>
           <div className="title-bar-controls">
-            {/* Min/max are visual-only in v1 per plan */}
+            {/* Min/max are visual-only in v1 per plan.
+                D5: use real `disabled` so sighted mouse users get the disabled
+                cursor and clicks are genuine no-ops (not just aria-disabled). */}
             <button
               type="button"
               aria-label="Minimize"
-              aria-disabled="true"
+              disabled
               tabIndex={-1}
             />
             <button
               type="button"
               aria-label="Maximize"
-              aria-disabled="true"
+              disabled
               tabIndex={-1}
             />
             <button

@@ -14,12 +14,19 @@ export default function ResearchVault() {
     }
     return out;
   }, []);
-  const [selected, setSelected] = useState<Entry>(index[0]);
+  // D5: guard empty-index crash — null-safe initial state + conditional preview.
+  const [selected, setSelected] = useState<Entry | null>(index[0] ?? null);
 
   return (
     <>
       <div className="crumb">
-        My Computer › Research Vault › {selected.category} › {selected.slug}.md
+        My Computer › Research Vault
+        {selected && (
+          <>
+            {" "}
+            › {selected.category} › {selected.slug}.md
+          </>
+        )}
       </div>
       <div className="explorer">
         <nav className="tree" aria-label="Research files">
@@ -31,7 +38,7 @@ export default function ResearchVault() {
               </div>
               <ul>
                 {entries.map((e) => {
-                  const isSel = e.slug === selected.slug;
+                  const isSel = selected?.slug === e.slug;
                   return (
                     <li key={e.slug}>
                       <button
@@ -50,23 +57,29 @@ export default function ResearchVault() {
           ))}
         </nav>
         <article className="preview">
-          <h2>{selected.title}</h2>
-          <div className="meta">
-            research/{selected.category} · updated {selected.updated} ·{" "}
-            {selected.readMin} min read
-          </div>
-          <p>{selected.summary}</p>
-          <p>
-            Full content lives in{" "}
-            <code>src/content/research/{selected.slug}.md</code>. Quill drafts
-            the long-form copy in D3; this D2 stub renders the index summary so
-            the window shape and selection flow are real.
-          </p>
+          {selected ? (
+            <>
+              <h2>{selected.title}</h2>
+              <div className="meta">
+                research/{selected.category} · updated {selected.updated} ·{" "}
+                {selected.readMin} min read
+              </div>
+              <p>{selected.summary}</p>
+              <p>
+                Full content lives in{" "}
+                <code>src/content/research/{selected.slug}.md</code>.
+              </p>
+            </>
+          ) : (
+            <p className="empty">No research entries yet.</p>
+          )}
         </article>
       </div>
       <div className="status-bar">
         <p className="status-bar-field">{index.length} items</p>
-        <p className="status-bar-field">1 selected</p>
+        <p className="status-bar-field">
+          {selected ? "1 selected" : "0 selected"}
+        </p>
         <p className="status-bar-field">12 KB</p>
       </div>
     </>

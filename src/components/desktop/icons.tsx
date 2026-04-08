@@ -8,29 +8,35 @@ export function FolderIcon({ size = 48 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
       <defs>
-        <linearGradient id="folderTop" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-folderTop" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#ffe79a" />
           <stop offset="1" stopColor="#e8a724" />
         </linearGradient>
-        <linearGradient id="folderBody" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-folderBody" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#ffd564" />
           <stop offset="0.55" stopColor="#e89c12" />
           <stop offset="1" stopColor="#9b5e07" />
         </linearGradient>
-        <filter id="folderShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <filter
+          id="desk-folderShadow"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
           <feDropShadow dx="0" dy="2" stdDeviation="1.4" floodOpacity="0.55" />
         </filter>
       </defs>
-      <g filter="url(#folderShadow)">
+      <g filter="url(#desk-folderShadow)">
         <path
           d="M4 14 h13 l4 4 h23 v22 a2 2 0 0 1 -2 2 H6 a2 2 0 0 1 -2 -2 z"
-          fill="url(#folderBody)"
+          fill="url(#desk-folderBody)"
           stroke="#5a3505"
           strokeWidth="0.8"
         />
         <path
           d="M4 14 h13 l4 4 h23 v3 H4 z"
-          fill="url(#folderTop)"
+          fill="url(#desk-folderTop)"
           stroke="#5a3505"
           strokeWidth="0.5"
         />
@@ -47,24 +53,30 @@ export function UserIcon({ size = 48 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
       <defs>
-        <linearGradient id="userBody" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-userBody" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#eaf6ff" />
           <stop offset="0.5" stopColor="#9cc7ee" />
           <stop offset="1" stopColor="#3a6f9e" />
         </linearGradient>
-        <radialGradient id="userHead" cx="0.4" cy="0.35" r="0.7">
+        <radialGradient id="desk-userHead" cx="0.4" cy="0.35" r="0.7">
           <stop offset="0" stopColor="#ffffff" />
           <stop offset="0.6" stopColor="#cfe6ff" />
           <stop offset="1" stopColor="#5a85b2" />
         </radialGradient>
-        <filter id="userShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <filter
+          id="desk-userShadow"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
           <feDropShadow dx="0" dy="2" stdDeviation="1.4" floodOpacity="0.55" />
         </filter>
       </defs>
-      <g filter="url(#userShadow)">
+      <g filter="url(#desk-userShadow)">
         <path
           d="M6 44 c2-12 12-16 18-16 s16 4 18 16 z"
-          fill="url(#userBody)"
+          fill="url(#desk-userBody)"
           stroke="#1f3a5f"
           strokeWidth="1"
         />
@@ -72,7 +84,7 @@ export function UserIcon({ size = 48 }: IconProps) {
           cx="24"
           cy="16"
           r="9"
-          fill="url(#userHead)"
+          fill="url(#desk-userHead)"
           stroke="#1f3a5f"
           strokeWidth="1"
         />
@@ -86,27 +98,33 @@ export function ToolsIcon({ size = 48 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
       <defs>
-        <linearGradient id="wrenchBody" x1="0" x2="1" y1="0" y2="1">
+        <linearGradient id="desk-wrenchBody" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stopColor="#dfe7ef" />
           <stop offset="0.5" stopColor="#8a98a8" />
           <stop offset="1" stopColor="#3a4452" />
         </linearGradient>
-        <linearGradient id="screwHandle" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-screwHandle" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#ff7a5e" />
           <stop offset="1" stopColor="#7a1c08" />
         </linearGradient>
-        <filter id="toolShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <filter
+          id="desk-toolShadow"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
           <feDropShadow dx="0" dy="2" stdDeviation="1.4" floodOpacity="0.55" />
         </filter>
       </defs>
-      <g filter="url(#toolShadow)">
+      <g filter="url(#desk-toolShadow)">
         <rect
           x="4"
           y="28"
           width="32"
           height="6"
           rx="1"
-          fill="url(#wrenchBody)"
+          fill="url(#desk-wrenchBody)"
           stroke="#1f2a36"
           strokeWidth="0.8"
         />
@@ -123,7 +141,7 @@ export function ToolsIcon({ size = 48 }: IconProps) {
           width="6"
           height="22"
           rx="1"
-          fill="url(#screwHandle)"
+          fill="url(#desk-screwHandle)"
           stroke="#400a02"
           strokeWidth="0.8"
         />
@@ -146,30 +164,36 @@ export function CompanyIcon({ size = 48 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
       <defs>
-        <linearGradient id="bldgBody" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-bldgBody" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#f2f7fc" />
           <stop offset="0.5" stopColor="#9cb8d6" />
           <stop offset="1" stopColor="#324f73" />
         </linearGradient>
-        <linearGradient id="bldgRoof" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="desk-bldgRoof" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#5b8bbd" />
           <stop offset="1" stopColor="#1a3656" />
         </linearGradient>
-        <filter id="bldgShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <filter
+          id="desk-bldgShadow"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
           <feDropShadow dx="0" dy="2" stdDeviation="1.4" floodOpacity="0.55" />
         </filter>
       </defs>
-      <g filter="url(#bldgShadow)">
+      <g filter="url(#desk-bldgShadow)">
         <rect
           x="6"
           y="12"
           width="36"
           height="32"
-          fill="url(#bldgBody)"
+          fill="url(#desk-bldgBody)"
           stroke="#0f2238"
           strokeWidth="0.9"
         />
-        <rect x="6" y="12" width="36" height="4" fill="url(#bldgRoof)" />
+        <rect x="6" y="12" width="36" height="4" fill="url(#desk-bldgRoof)" />
         <g fill="#1f5fa0" stroke="#0f2238" strokeWidth="0.4">
           <rect x="10" y="19" width="5" height="5" />
           <rect x="17" y="19" width="5" height="5" />
