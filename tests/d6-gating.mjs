@@ -324,6 +324,50 @@ for (const v of [
   t.closeXVisible =
     !!t.closeXBox && t.closeXBox.width >= 8 && t.closeXBox.height >= 8;
 
+  // Regression guard: the v1 invisible-X bug was caused by `aria-label`
+  // including the window title (e.g. "Close My Window"), which broke the
+  // xp.css selector `[aria-label=Close]` so the SVG glyph background-image
+  // never applied. The button still had a 21x21 bbox from the generic
+  // `.title-bar-controls button` rule, so a bbox-only check was insufficient.
+  // Assert all three control glyphs actually have a background-image set.
+  t.controlGlyphs = await page.evaluate(() => {
+    // Inspect EVERY window's title-bar-controls — every window must have all
+    // three glyphs painted, not just the first one in DOM order.
+    const wins = Array.from(document.querySelectorAll(".desktop-only .window"));
+    if (wins.length === 0) return { error: "no windows" };
+    const summary = { windowCount: wins.length, perWindow: [] };
+    summary.allButtons = Array.from(
+      document.querySelectorAll(
+        ".desktop-only .window .title-bar-controls button",
+      ),
+    ).map((b) => b.getAttribute("aria-label"));
+    let allGood = true;
+    for (const win of wins) {
+      const row = { title: "" };
+      const titleEl = win.querySelector(".title-bar-text");
+      row.title = titleEl ? titleEl.textContent : "(no title)";
+      for (const label of ["Close", "Minimize", "Maximize"]) {
+        const btn = win.querySelector(
+          `.title-bar-controls button[aria-label="${label}"]`,
+        );
+        if (!btn) {
+          row[label] = "missing";
+          // Cookies dialog only has Close, so missing Min/Max is OK there.
+          if (label === "Close") allGood = false;
+          continue;
+        }
+        const bg = getComputedStyle(btn).backgroundImage;
+        const ok = bg && bg !== "none" && bg.includes("url(");
+        row[label] = ok ? "ok" : `BAD:${(bg || "").slice(0, 30)}`;
+        if (!ok) allGood = false;
+      }
+      summary.perWindow.push(row);
+    }
+    summary.allGood = allGood;
+    return summary;
+  });
+  t.controlGlyphsAllPresent = !!t.controlGlyphs.allGood;
+
   // Cookies popup is INSIDE the desktop bounds (child of .retro-desktop, not body).
   await page.waitForTimeout(1700); // 1.5s mount delay
   t.cookiesInsideDesktop = await page.evaluate(() => {
