@@ -2,7 +2,8 @@
 // Run: node tests/d6-gating.mjs  (requires http-server on :4321 serving dist at /Portfolio/)
 import { chromium, devices } from "playwright";
 
-const URL = "http://localhost:4321/Portfolio/desktop-preview/";
+// D7: now points at the integrated #desktop section on the real index page.
+const URL = "http://localhost:4321/Portfolio/#desktop";
 
 const viewports = [
   {
