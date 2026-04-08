@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 Mock 06 — HonestAlexF LLC window</title>
+<link rel="stylesheet" href="https://unpkg.com/7.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:"Segoe UI",Tahoma,sans-serif;}
+  .stage{
+    min-height:100vh;padding:48px;
+    background: radial-gradient(ellipse at 30% 30%, #5fbfff 0%, #2a78c2 35%, #0e2f5c 80%, #061528 100%);
+  }
+  .window.aero-stage{ width: 700px; margin: 0 auto; }
+  .llc-body{ padding: 18px 22px; font-size:12px; color:#1f2a3a; line-height:1.55; }
+  .llc-body header{
+    display:flex; align-items:center; gap:14px;
+    border-bottom: 1px solid #b8c8dc; padding-bottom: 12px; margin-bottom: 14px;
+  }
+  .logo{
+    width: 56px; height: 56px; flex: 0 0 56px;
+    background: linear-gradient(135deg, #2a78c2 0%, #0e2f5c 100%);
+    border: 1px solid #0a1a2a;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(0,0,0,0.3);
+    display:grid; place-items:center;
+    color: #fff; font-weight: 800; font-size: 22px; font-family: Georgia, serif;
+  }
+  .llc-body h2{ margin:0; font-size: 20px; color:#0e3766; }
+  .llc-body .sub{ margin: 2px 0 0 0; color:#4870a0; font-style: italic; font-size:12px; }
+  .llc-body h3{
+    margin: 14px 0 6px 0; font-size: 12px; color:#14406b;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    border-bottom: 1px dotted #b8c8dc; padding-bottom: 2px;
+  }
+  .services{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .svc{
+    border: 1px solid #b8c8dc;
+    background: linear-gradient(to bottom, #f6faff, #e2ecf8);
+    padding: 8px 10px;
+  }
+  .svc b{ display:block; color:#14406b; font-size: 12px; margin-bottom: 2px; }
+  .svc span{ font-size: 11px; color:#334b6b; }
+  .contact-grid{ display:grid; grid-template-columns: 110px 1fr; row-gap: 4px; font-size:11px; }
+  .contact-grid dt{ color:#14406b; font-weight:700; }
+  .contact-grid dd{ margin:0; color:#334b6b; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="window glass active aero-stage" role="dialog" aria-label="HonestAlexF LLC">
+    <div class="title-bar">
+      <div class="title-bar-text">HonestAlexF LLC — Company Info</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <div class="llc-body">
+        <header>
+          <div class="logo">H</div>
+          <div>
+            <h2>HonestAlexF LLC</h2>
+            <p class="sub">An AI-augmented solo dev studio. One human, twelve agents, real ship dates.</p>
+          </div>
+        </header>
+
+        <h3>What it is</h3>
+        <p>HonestAlexF is the company I run to build software that helps people — using a small army of specialist AI agents instead of a small army of humans. Every project goes through the same pipeline: intake, plan, spec tests, build, verify, review, ship.</p>
+
+        <h3>Services</h3>
+        <div class="services">
+          <div class="svc"><b>Custom tools & dashboards</b><span>Internal apps, data pipelines, analytics surfaces.</span></div>
+          <div class="svc"><b>AI workflow design</b><span>Standing up agent teams that fit your existing process.</span></div>
+          <div class="svc"><b>Web & game clients</b><span>Astro / TypeScript sites and Phaser-based browser games.</span></div>
+          <div class="svc"><b>Research & analysis</b><span>Deep research engagements + statistical modeling.</span></div>
+        </div>
+
+        <h3>Contact</h3>
+        <dl class="contact-grid">
+          <dt>Email</dt><dd>alex@honestalexf.com</dd>
+          <dt>Site</dt><dd>honestafblog.com</dd>
+          <dt>GitHub</dt><dd>github.com/AlexanderFriedrichsen</dd>
+          <dt>Based</dt><dd>Boston, MA · remote-friendly</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="status-bar">
+      <p class="status-bar-field">HonestAlexF LLC</p>
+      <p class="status-bar-field">Est. 2025</p>
+      <p class="status-bar-field">Status: Open for work</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "handoff-protocol",
+    "category": "agent-teams",
+    "title": "Handoff Protocol Between Agents",
+    "summary": "Most multi-agent failure I've seen comes from sloppy handoff. Here's the four-block contract.",
+    "published": "2026-04-04",
+    "readMin": 3
+  },
+  {
+    "slug": "failure-modes",
+    "category": "agent-teams",
+    "title": "Failure Modes in Multi-Agent Systems",
+    "summary": "Where agent teams quietly break: context drift, mock divergence, and unowned escalations.",
+    "published": "2026-03-28",
+    "readMin": 4
+  },
+  {
+    "slug": "landscape-2026",
+    "category": "agent-teams",
+    "title": "Agentic Workflows: Landscape 2026",
+    "summary": "State of the art in agentic workflows, Q1 2026: what's working, what's overhyped, what's next.",
+    "published": "2026-03-15",
+    "readMin": 4
+  },
+  {
+    "slug": "7css-viability",
+    "category": "retro-desktop-web",
+    "title": "7.css Viability Audit",
+    "summary": "Three-tier fallback plan for shipping a Win7 Aero look on the modern web.",
+    "published": "2026-04-06",
+    "readMin": 3
+  },
+  {
+    "slug": "tcg-gap-fills",
+    "category": "high-ev-competitions",
+    "title": "TCG Gap Fills & Adjacent Opportunities",
+    "summary": "High-EV competitions where the supply side is thin and the prize pool is real.",
+    "published": "2026-03-20",
+    "readMin": 4
+  },
+  {
+    "slug": "agent-economies",
+    "category": "agent-economies",
+    "title": "Agent Economies Landscape",
+    "summary": "Structures, sandboxes, crypto economies, and protocols for autonomous agent markets.",
+    "published": "2026-02-14",
+    "readMin": 4
+  }
+]

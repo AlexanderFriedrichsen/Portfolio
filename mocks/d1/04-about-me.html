@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 Mock 04 — About Me window</title>
+<link rel="stylesheet" href="https://unpkg.com/7.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:"Segoe UI",Tahoma,sans-serif;}
+  .stage{
+    min-height:100vh;padding:48px;
+    background: radial-gradient(ellipse at 30% 30%, #5fbfff 0%, #2a78c2 35%, #0e2f5c 80%, #061528 100%);
+  }
+  .window.aero-stage{ width: 680px; margin: 0 auto; }
+  .about{
+    display:grid;
+    grid-template-columns: 180px 1fr;
+    gap: 18px;
+    padding: 18px;
+  }
+  .photo-frame{
+    width: 160px; height: 200px;
+    border: 1px solid #4a6890;
+    background: linear-gradient(135deg, #cfe0f5 0%, #7ea7d4 100%);
+    box-shadow: inset 0 0 0 4px #fff, 0 2px 8px rgba(0,0,0,0.3);
+    display:grid; place-items:center;
+    color:#1f3a5f; font-size:11px;
+  }
+  .photo-frame svg{ width: 90px; height: 90px; }
+  .about-body{ font-size: 12px; color:#1f2a3a; line-height:1.55; }
+  .about-body h2{ margin:0 0 2px 0; font-size: 20px; color:#0e3766; }
+  .about-body .tagline{ margin:0 0 12px 0; font-style: italic; color:#4870a0; font-size: 12px; }
+  .quick-facts{
+    margin-top: 14px;
+    border: 1px solid #b8c8dc;
+    background: linear-gradient(to bottom, #f6faff, #e4eef9);
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  .quick-facts dt{ font-weight: 700; color:#14406b; display:inline-block; min-width:90px; }
+  .quick-facts dd{ display:inline; margin: 0 0 0 4px; color:#334b6b; }
+  .quick-facts div{ padding: 2px 0; border-bottom: 1px dotted #cfdbe9; }
+  .quick-facts div:last-child{ border:none; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="window glass active aero-stage" role="dialog" aria-label="About Me">
+    <div class="title-bar">
+      <div class="title-bar-text">About Me — Properties</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <menu role="tablist" style="margin:0;">
+        <li role="tab" aria-selected="true"><a href="#about">General</a></li>
+        <li role="tab"><a href="#about">Background</a></li>
+        <li role="tab"><a href="#about">Contact</a></li>
+      </menu>
+      <div class="about" role="tabpanel">
+        <div class="photo-frame" aria-label="Photo placeholder">
+          <svg viewBox="0 0 48 48">
+            <circle cx="24" cy="18" r="9" fill="#fff" stroke="#1f3a5f" stroke-width="1.5"/>
+            <path d="M6 44 c3-12 13-16 18-16 s15 4 18 16 z" fill="#fff" stroke="#1f3a5f" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="about-body">
+          <h2>Alex Friedrichsen</h2>
+          <p class="tagline">Solo dev, MTG pro, Wonders of the First creator. Builds tools that help people.</p>
+          <p>I'm an AI-augmented software builder running HonestAlexF LLC out of Boston. Most of what I do sits at the intersection of three things I can't shake: hard problems I find joyful, friends I want to grow with, and tools that make somebody's day better.</p>
+          <p>Before code, it was Magic — years on the grind, one Pro Tour Top 8, one SCG Constructed Champion. The same instincts that worked there (study, iterate, ship, ask better questions) are the ones I bring to building software now.</p>
+          <dl class="quick-facts">
+            <div><dt>Based in</dt><dd>Boston, MA</dd></div>
+            <div><dt>Currently</dt><dd>Running HonestAlexF LLC / open to senior IC roles</dd></div>
+            <div><dt>Stack</dt><dd>TypeScript, Python, Astro, Supabase, Claude Code agent teams</dd></div>
+            <div><dt>Off the keyboard</dt><dd>Climbing, piano, MTG, building card games</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <p class="status-bar-field">Type: Person</p>
+      <p class="status-bar-field">Status: Available</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

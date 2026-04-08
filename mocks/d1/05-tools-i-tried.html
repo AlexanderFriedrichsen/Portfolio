@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 Mock 05 — Tools I've Tried window</title>
+<link rel="stylesheet" href="https://unpkg.com/7.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:"Segoe UI",Tahoma,sans-serif;}
+  .stage{
+    min-height:100vh;padding:48px;
+    background: radial-gradient(ellipse at 30% 30%, #5fbfff 0%, #2a78c2 35%, #0e2f5c 80%, #061528 100%);
+  }
+  .window.aero-stage{ width: 760px; margin: 0 auto; }
+  table.tools{
+    width:100%; border-collapse: collapse; font-size: 12px;
+  }
+  table.tools thead th{
+    background: linear-gradient(to bottom, #eef4fc, #d8e4f4);
+    border-bottom: 1px solid #98b3d4;
+    padding: 6px 8px;
+    text-align: left;
+    color: #14406b;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  table.tools tbody td{
+    padding: 6px 8px;
+    border-bottom: 1px solid #e3ecf6;
+    color: #1f2a3a;
+    vertical-align: top;
+  }
+  table.tools tbody tr:nth-child(even) td{ background:#f6faff; }
+  table.tools tbody tr:hover td{ background:#dceaff; }
+  .rating{ color:#d99a1f; letter-spacing:1px; }
+  .cat{
+    display:inline-block; font-size:10px; padding: 1px 6px;
+    border:1px solid #98b3d4; background:#eef4fc; color:#14406b;
+    border-radius: 2px;
+  }
+  .crumb{ padding:6px 12px; border-bottom:1px solid #b8c8dc; background: linear-gradient(to bottom, #eef4fc, #dde7f4); font-size:11px; color:#2a4d7a; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="window glass active aero-stage" role="dialog" aria-label="Tools I have tried">
+    <div class="title-bar">
+      <div class="title-bar-text">Tools I've Tried</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <div class="crumb">My Computer › About Me › Tools I've Tried · sorted by Verdict</div>
+      <table class="tools">
+        <thead>
+          <tr><th style="width:140px">Tool</th><th style="width:80px">Category</th><th style="width:90px">Verdict</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Claude Code</b></td>
+            <td><span class="cat">Agent</span></td>
+            <td class="rating">★★★★★</td>
+            <td>The whole reason I can run a 12-agent team solo. Subagent isolation + hooks made the workflow real.</td>
+          </tr>
+          <tr>
+            <td><b>Astro</b></td>
+            <td><span class="cat">Web</span></td>
+            <td class="rating">★★★★☆</td>
+            <td>Great for content-shaped sites. This portfolio is built on it. Less great when you actually need a SPA.</td>
+          </tr>
+          <tr>
+            <td><b>Supabase</b></td>
+            <td><span class="cat">Backend</span></td>
+            <td class="rating">★★★★☆</td>
+            <td>Postgres + auth + storage in one. Powers the MTG Skill Analyzer. Edge functions are the weak link.</td>
+          </tr>
+          <tr>
+            <td><b>Phaser</b></td>
+            <td><span class="cat">Game</span></td>
+            <td class="rating">★★★★☆</td>
+            <td>Picked it for the Wonders of the First client. Solid 2D engine, friendlier than Godot for web targets.</td>
+          </tr>
+          <tr>
+            <td><b>D3.js</b></td>
+            <td><span class="cat">Viz</span></td>
+            <td class="rating">★★★☆☆</td>
+            <td>Powerful but the API is its own little language. Great when the chart you need doesn't exist anywhere else.</td>
+          </tr>
+          <tr>
+            <td><b>Obsidian</b></td>
+            <td><span class="cat">Notes</span></td>
+            <td class="rating">★★★★★</td>
+            <td>The vault every agent reads from. Plain markdown means no tool can ever lock me out of my own brain.</td>
+          </tr>
+          <tr>
+            <td><b>ComfyUI</b></td>
+            <td><span class="cat">AI</span></td>
+            <td class="rating">★★★☆☆</td>
+            <td>For ad creatives where CSS/SVG can't reach. Steep ramp, but the node graph rewards investment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="status-bar">
+      <p class="status-bar-field">7 items</p>
+      <p class="status-bar-field">Sorted: Verdict ↓</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

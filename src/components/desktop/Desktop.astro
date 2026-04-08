@@ -1,0 +1,16 @@
+---
+// Astro wrapper for the React desktop island.
+// Gated by media query in the surrounding section so the island only
+// hydrates on desktop viewports with a fine pointer.
+//
+// CSS STRATEGY: 7.css and desktop.css are imported here (Astro frontmatter),
+// NOT inside Desktop.tsx. This keeps the ~90 KB of 7.css in a single
+// route-level CSS chunk instead of duplicating it into the React island's
+// client JS chunk. Astro will emit one <link> per route that uses this
+// wrapper; the hydrated island finds the styles already in the document.
+import "7.css/dist/7.scoped.css";
+import "./desktop.css";
+import Desktop from "./Desktop";
+---
+
+<Desktop client:visible />

@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AgentCard from '../components/AgentCard.astro';
+import Desktop from '../components/desktop/Desktop.astro';
+import MobileFallback from '../components/desktop/MobileFallback.astro';
 
 const base = import.meta.env.BASE_URL;
 const img = (p: string) => `${base}${p.replace(/^\//, '')}`;
@@ -70,6 +72,23 @@ const agents = [
         <span class="sep">—</span>
         <a href={`${base}resume/`}>Résumé</a>
       </p>
+    </div>
+  </section>
+
+  <!-- ============ INTERLUDE: RETRO DESKTOP ============ -->
+  <!--
+    Sits between Movement I and Movement II. Gated by CSS so that:
+      - ≥1024px + fine pointer → React desktop island hydrates
+      - anything else         → D4 editorial mobile fallback renders
+    The #desktop anchor is the destination for the research-detail
+    "← Back to desktop" link.
+  -->
+  <section id="desktop" class="desktop-section">
+    <div class="desktop-only">
+      <Desktop />
+    </div>
+    <div class="mobile-only">
+      <MobileFallback />
     </div>
   </section>
 
@@ -220,3 +239,13 @@ const agents = [
   </footer>
 
 </Layout>
+
+<style>
+  /* Retro desktop section gating: ≥1024px + fine pointer = island, else fallback. */
+  .desktop-section .desktop-only { display: none; }
+  .desktop-section .mobile-only  { display: block; }
+  @media (min-width: 1024px) and (pointer: fine) {
+    .desktop-section .desktop-only { display: block; }
+    .desktop-section .mobile-only  { display: none; }
+  }
+</style>

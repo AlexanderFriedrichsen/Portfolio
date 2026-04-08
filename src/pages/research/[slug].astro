@@ -1,0 +1,141 @@
+---
+// D5: Research detail route. Serves the mobile fallback links and any
+// future desktop "open in new tab" affordance. Plain content page — does
+// NOT load 7.css or the desktop island.
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("research");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"research">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, category, published, readMin, summary } = entry.data;
+---
+
+<Layout title={`${title} — Research — Alex Friedrichsen`}>
+  <main class="research-page">
+    <div class="wrap-narrow">
+      <a class="back" href="/Portfolio/#desktop">← Back to desktop</a>
+      <header class="research-head">
+        <div class="badge">{category}</div>
+        <h1>{title}</h1>
+        <p class="summary">{summary}</p>
+        <div class="meta">
+          <time datetime={published}>{published}</time>
+          {readMin && (<><span class="dot">·</span><span>{readMin} min read</span></>)}
+        </div>
+      </header>
+      <article class="prose">
+        <Content />
+      </article>
+      <footer class="research-foot">
+        <a class="back" href="/Portfolio/#desktop">← Back to desktop</a>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .research-page { padding: 4rem 1.5rem 6rem; }
+  .wrap-narrow { max-width: 720px; margin: 0 auto; }
+  .back {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    border-bottom: none;
+    margin-bottom: 2rem;
+  }
+  .back:hover { color: var(--accent); }
+  .research-head { margin-bottom: 3rem; border-bottom: 1px solid var(--rule); padding-bottom: 2rem; }
+  .badge {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .research-head h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.8rem;
+    color: var(--ink);
+  }
+  .summary {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0 0 1.2rem;
+    font-style: italic;
+  }
+  .meta {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 0.5rem;
+  }
+  .meta .dot { color: var(--rule); }
+  .prose { font-family: var(--serif); font-size: 1.08rem; line-height: 1.7; color: var(--ink); }
+  .prose :global(h2) {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 2.5rem 0 0.8rem;
+    letter-spacing: -0.01em;
+  }
+  .prose :global(h3) {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 2rem 0 0.6rem;
+  }
+  .prose :global(p) { margin: 0 0 1.1rem; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 1.2rem; padding-left: 1.4rem; }
+  .prose :global(li) { margin: 0.3rem 0; }
+  .prose :global(code) {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    font-size: 0.92em;
+    background: #efeae0;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  .prose :global(pre) {
+    background: #2a2a2a;
+    color: #f0ede3;
+    padding: 1rem 1.2rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: 1.2rem 0;
+  }
+  .prose :global(pre code) { background: none; padding: 0; color: inherit; }
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--accent-soft);
+    margin: 1.2rem 0;
+    padding: 0.2rem 0 0.2rem 1.2rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .prose :global(a) { color: var(--accent); border-bottom: 1px solid var(--accent-soft); }
+  .prose :global(a:hover) { border-bottom-color: var(--accent); }
+  .research-foot { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+</style>

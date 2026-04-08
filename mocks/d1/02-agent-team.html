@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 Mock 02 — Agent Team window</title>
+<link rel="stylesheet" href="https://unpkg.com/7.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:"Segoe UI",Tahoma,sans-serif;}
+  .stage{
+    min-height:100vh;
+    padding:48px;
+    background: radial-gradient(ellipse at 30% 30%, #5fbfff 0%, #2a78c2 35%, #0e2f5c 80%, #061528 100%);
+  }
+  .window.aero-stage{ width: 760px; margin: 0 auto; }
+  .agent-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+  .agent-card{
+    border: 1px solid #b8c8dc;
+    background: linear-gradient(to bottom, #f8fbff 0%, #e4eef9 60%, #d2e1f3 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #1f3a5f;
+  }
+  .agent-card h4{
+    margin:0 0 2px 0;
+    font-size: 13px;
+    color: #0e3766;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .agent-card .role{
+    display:block;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #4870a0;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .agent-card p{ margin:0; font-size: 11px; line-height: 1.35; color: #334b6b; }
+  .crumb{
+    padding: 6px 12px;
+    border-bottom: 1px solid #b8c8dc;
+    background: linear-gradient(to bottom, #eef4fc, #dde7f4);
+    font-size: 11px;
+    color: #2a4d7a;
+  }
+  .status-bar{ font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="window glass active aero-stage" role="dialog" aria-label="Agent Team">
+    <div class="title-bar">
+      <div class="title-bar-text">Agent Team — 12 specialists</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <div class="crumb">My Computer › HonestAlexF LLC › Agent Team</div>
+      <div class="agent-grid">
+        <div class="agent-card"><h4>Atlas</h4><span class="role">Chief Strategist</span><p>Breaks fuzzy goals into concrete plans the rest of the team can execute.</p></div>
+        <div class="agent-card"><h4>Forge</h4><span class="role">Software Builder</span><p>Writes, refactors, and debugs production code across whatever stack the project needs.</p></div>
+        <div class="agent-card"><h4>Cipher</h4><span class="role">Quality Reviewer</span><p>The mandatory code review gate — nothing ships until Cipher signs off.</p></div>
+        <div class="agent-card"><h4>Gauntlet</h4><span class="role">Tester / QA</span><p>Writes specs first, then verifies the build holds up under them.</p></div>
+        <div class="agent-card"><h4>Scout</h4><span class="role">Researcher</span><p>Runs deep web + vault research before we commit to a direction.</p></div>
+        <div class="agent-card"><h4>Lens</h4><span class="role">Data Analyst</span><p>Statistics, modeling, and turning raw numbers into a clear answer.</p></div>
+        <div class="agent-card"><h4>Quill</h4><span class="role">Content Writer</span><p>Drafts blog posts, social copy, and long-form writing in a real human voice.</p></div>
+        <div class="agent-card"><h4>Pixel</h4><span class="role">Visual Designer</span><p>CSS/SVG-first design — UI, brand assets, and ad creatives.</p></div>
+        <div class="agent-card"><h4>Anchor</h4><span class="role">Operations</span><p>Deploys, infrastructure, CI/CD, and the boring-but-critical glue.</p></div>
+        <div class="agent-card"><h4>Sage</h4><span class="role">Knowledge Manager</span><p>Keeps the vault clean so the team's memory stays useful instead of stale.</p></div>
+        <div class="agent-card"><h4>Herald</h4><span class="role">Project Intake</span><p>Interviews me until a fuzzy idea becomes a real, shippable brief.</p></div>
+        <div class="agent-card"><h4>Prism</h4><span class="role">Design Reviewer</span><p>The taste check — calls out anything that looks generic or off-brand.</p></div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <p class="status-bar-field">12 items</p>
+      <p class="status-bar-field">All systems green</p>
+      <p class="status-bar-field">Last sync 3:14 PM</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+---
+// D2 isolated preview route. NOT linked from index.astro — D7 handles integration.
+import Layout from "../layouts/Layout.astro";
+import Desktop from "../components/desktop/Desktop.astro";
+import MobileFallback from "../components/desktop/MobileFallback.astro";
+---
+
+<Layout title="Desktop Preview — D2/D4">
+  <main style="padding: 24px; max-width: 1280px; margin: 0 auto;">
+    <h1 style="font-family: system-ui, sans-serif; margin: 0 0 8px;">Retro Desktop — D2/D4 Preview</h1>
+    <p style="font-family: system-ui, sans-serif; color: #555; margin: 0 0 16px;">
+      Isolated preview. ≥1024px + fine pointer hydrates the React desktop island.
+      Anything else renders the D4 editorial mobile fallback.
+    </p>
+    <div class="desktop-only">
+      <Desktop />
+    </div>
+    <div class="mobile-only">
+      <MobileFallback />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
+  @media (min-width: 1024px) and (pointer: fine) {
+    .desktop-only {
+      display: block;
+    }
+    .mobile-only {
+      display: none;
+    }
+  }
+</style>

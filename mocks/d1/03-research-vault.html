@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D1 Mock 03 — Research Vault window</title>
+<link rel="stylesheet" href="https://unpkg.com/7.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:"Segoe UI",Tahoma,sans-serif;}
+  .stage{
+    min-height:100vh;padding:48px;
+    background: radial-gradient(ellipse at 30% 30%, #5fbfff 0%, #2a78c2 35%, #0e2f5c 80%, #061528 100%);
+  }
+  .window.aero-stage{ width: 820px; margin: 0 auto; }
+  .explorer{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 380px;
+  }
+  .tree{
+    border-right:1px solid #b8c8dc;
+    background: linear-gradient(to right, #eef4fc, #e2ecf8);
+    font-size: 12px;
+    padding: 8px 6px;
+    color:#1f3a5f;
+  }
+  .tree ul{ list-style:none; margin:0; padding-left: 14px; }
+  .tree > ul { padding-left: 4px; }
+  .tree li{ padding: 2px 4px; cursor:pointer; border-radius:2px; }
+  .tree li:hover{ background: rgba(120,180,255,0.25); }
+  .tree li.selected{ background: linear-gradient(to bottom, #b8d8ff, #7eb1ee); color:#08243f; }
+  .tree li::before{ content:"📄 "; }
+  .tree li.folder::before{ content:"📁 "; }
+  .preview{ padding: 14px 18px; font-size: 12px; color:#1f2a3a; line-height:1.5; overflow:auto; }
+  .preview h2{ font-size: 18px; margin: 0 0 4px 0; color: #0e3766; font-weight:700; }
+  .preview .meta{ font-size: 10px; color:#6a7a90; margin-bottom: 12px; text-transform: uppercase; letter-spacing:0.5px; }
+  .preview p{ margin: 0 0 10px 0; }
+  .preview blockquote{ border-left: 3px solid #2a78c2; margin: 8px 0; padding: 4px 10px; background:#eef4fc; color:#2a4d7a; font-style: italic; }
+  .crumb{ padding:6px 12px; border-bottom:1px solid #b8c8dc; background: linear-gradient(to bottom, #eef4fc, #dde7f4); font-size:11px; color:#2a4d7a; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="window glass active aero-stage" role="dialog" aria-label="Research Vault">
+    <div class="title-bar">
+      <div class="title-bar-text">Research Vault</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <div class="crumb">My Computer › Research Vault › agent-teams › handoff-protocol.md</div>
+      <div class="explorer">
+        <nav class="tree" aria-label="Research files">
+          <ul>
+            <li class="folder">agent-teams
+              <ul>
+                <li class="selected">handoff-protocol.md</li>
+                <li>failure-modes.md</li>
+              </ul>
+            </li>
+            <li class="folder">ai-video-ads
+              <ul><li>landscape-2026.md</li></ul>
+            </li>
+            <li class="folder">retro-desktop-web
+              <ul><li>7css-viability.md</li></ul>
+            </li>
+            <li class="folder">high-ev-competitions
+              <ul><li>tcg-gap-fills.md</li></ul>
+            </li>
+          </ul>
+        </nav>
+        <article class="preview">
+          <h2>Handoff Protocol Between Agents</h2>
+          <div class="meta">research/agent-teams · updated 2026-04-04 · 6 min read</div>
+          <p>Most multi-agent failure I've seen comes from sloppy handoff. The agent finishes its slice, dumps a wall of text into the parent, and the parent has to re-read everything to figure out what was actually decided.</p>
+          <p>The protocol I landed on: every agent ends with four blocks — what was completed, what needs to happen next, blockers, and whether Cipher review is required. No exceptions.</p>
+          <blockquote>"The cost of a structured handoff is one minute of agent time. The cost of an unstructured one is the entire next session re-deriving context."</blockquote>
+          <p>Pairing this with deterministic verification hooks (a SubagentStop script that runs grep/test commands) means an agent literally cannot mark itself done if its output doesn't pass the contract.</p>
+        </article>
+      </div>
+    </div>
+    <div class="status-bar">
+      <p class="status-bar-field">6 items</p>
+      <p class="status-bar-field">1 selected</p>
+      <p class="status-bar-field">12 KB</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
