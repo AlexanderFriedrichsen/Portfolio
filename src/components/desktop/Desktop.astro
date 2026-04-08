@@ -1,0 +1,8 @@
+---
+// Astro wrapper for the React desktop island.
+// Gated by media query in the surrounding section so the island only
+// hydrates on desktop viewports with a fine pointer.
+import Desktop from "./Desktop";
+---
+
+<Desktop client:visible />

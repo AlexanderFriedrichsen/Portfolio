@@ -1,0 +1,44 @@
+[
+  {
+    "tool": "Claude Code",
+    "category": "Agent",
+    "rating": 5,
+    "notes": "The whole reason I can run a 12-agent team solo. Subagent isolation + hooks made the workflow real."
+  },
+  {
+    "tool": "Astro",
+    "category": "Web",
+    "rating": 4,
+    "notes": "Great for content-shaped sites. This portfolio is built on it. Less great when you actually need a SPA."
+  },
+  {
+    "tool": "Supabase",
+    "category": "Backend",
+    "rating": 4,
+    "notes": "Postgres + auth + storage in one. Powers the MTG Skill Analyzer. Edge functions are the weak link."
+  },
+  {
+    "tool": "Phaser",
+    "category": "Game",
+    "rating": 4,
+    "notes": "Picked it for the Wonders of the First client. Solid 2D engine, friendlier than Godot for web targets."
+  },
+  {
+    "tool": "D3.js",
+    "category": "Viz",
+    "rating": 3,
+    "notes": "Powerful but the API is its own little language. Great when the chart you need doesn't exist anywhere else."
+  },
+  {
+    "tool": "Obsidian",
+    "category": "Notes",
+    "rating": 5,
+    "notes": "The vault every agent reads from. Plain markdown means no tool can ever lock me out of my own brain."
+  },
+  {
+    "tool": "ComfyUI",
+    "category": "AI",
+    "rating": 3,
+    "notes": "For ad creatives where CSS/SVG can't reach. Steep ramp, but the node graph rewards investment."
+  }
+]

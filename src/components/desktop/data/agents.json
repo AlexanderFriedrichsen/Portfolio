@@ -1,0 +1,74 @@
+[
+  {
+    "id": "atlas",
+    "name": "Atlas",
+    "role": "Chief Strategist",
+    "desc": "Breaks fuzzy goals into concrete plans the rest of the team can execute."
+  },
+  {
+    "id": "forge",
+    "name": "Forge",
+    "role": "Software Builder",
+    "desc": "Writes, refactors, and debugs production code across whatever stack the project needs."
+  },
+  {
+    "id": "cipher",
+    "name": "Cipher",
+    "role": "Quality Reviewer",
+    "desc": "The mandatory code review gate — nothing ships until Cipher signs off."
+  },
+  {
+    "id": "gauntlet",
+    "name": "Gauntlet",
+    "role": "Tester / QA",
+    "desc": "Writes specs first, then verifies the build holds up under them."
+  },
+  {
+    "id": "scout",
+    "name": "Scout",
+    "role": "Researcher",
+    "desc": "Runs deep web + vault research before we commit to a direction."
+  },
+  {
+    "id": "lens",
+    "name": "Lens",
+    "role": "Data Analyst",
+    "desc": "Statistics, modeling, and turning raw numbers into a clear answer."
+  },
+  {
+    "id": "quill",
+    "name": "Quill",
+    "role": "Content Writer",
+    "desc": "Drafts blog posts, social copy, and long-form writing in a real human voice."
+  },
+  {
+    "id": "pixel",
+    "name": "Pixel",
+    "role": "Visual Designer",
+    "desc": "CSS/SVG-first design — UI, brand assets, and ad creatives."
+  },
+  {
+    "id": "anchor",
+    "name": "Anchor",
+    "role": "Operations",
+    "desc": "Deploys, infrastructure, CI/CD, and the boring-but-critical glue."
+  },
+  {
+    "id": "sage",
+    "name": "Sage",
+    "role": "Knowledge Manager",
+    "desc": "Keeps the vault clean so the team's memory stays useful instead of stale."
+  },
+  {
+    "id": "herald",
+    "name": "Herald",
+    "role": "Project Intake",
+    "desc": "Interviews me until a fuzzy idea becomes a real, shippable brief."
+  },
+  {
+    "id": "prism",
+    "name": "Prism",
+    "role": "Design Reviewer",
+    "desc": "The taste check — calls out anything that looks generic or off-brand."
+  }
+]
