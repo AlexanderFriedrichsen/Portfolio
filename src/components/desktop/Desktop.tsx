@@ -284,8 +284,7 @@ function WindowFrame({
     >
       <div
         className={"window glass" + (isFocused ? " active" : "")}
-        role="dialog"
-        aria-modal="false"
+        role="region"
         aria-labelledby={titleId}
         style={{
           width: "100%",

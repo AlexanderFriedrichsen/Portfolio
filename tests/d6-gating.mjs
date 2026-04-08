@@ -306,7 +306,7 @@ for (const v of [
   await page.waitForTimeout(400);
   const afterEnter = await page.locator(".desktop-only .window").count();
   t.enterOpens = afterEnter;
-  t.enterIncreased = afterEnter > t.afterDblClick;
+  t.enterIncreased = afterEnter > t.afterClose;
 
   t.pageErrors = errs;
   await ctx.close();

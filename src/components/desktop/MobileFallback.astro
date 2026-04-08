@@ -145,7 +145,12 @@ const research = (await getCollection("research")).sort(
     gap: 2rem;
     font-family: var(--sans);
     color: var(--ink);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
+  .mf-root *, .mf-card, .mf-card * { min-width: 0; }
+  .mf-card { overflow-wrap: anywhere; word-break: break-word; }
   .mf-card {
     background: #fffdf9;
     border: 1px solid var(--rule);
@@ -229,7 +234,7 @@ const research = (await getCollection("research")).sort(
 
   /* Facts (key-value) */
   .mf-facts { margin: 1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-  .mf-fact-row { display: flex; gap: 0.6rem; font-size: 0.92rem; }
-  .mf-fact-row dt { color: var(--ink-soft); min-width: 7rem; margin: 0; }
-  .mf-fact-row dd { margin: 0; color: var(--ink); }
+  .mf-fact-row { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; font-size: 0.92rem; }
+  .mf-fact-row dt { color: var(--ink-soft); min-width: 7rem; margin: 0; flex-shrink: 0; }
+  .mf-fact-row dd { margin: 0; color: var(--ink); min-width: 0; overflow-wrap: anywhere; word-break: break-word; flex: 1 1 0; }
 </style>
