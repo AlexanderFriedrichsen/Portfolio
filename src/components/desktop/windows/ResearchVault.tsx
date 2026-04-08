@@ -61,7 +61,7 @@ export default function ResearchVault() {
             <>
               <h2>{selected.title}</h2>
               <div className="meta">
-                research/{selected.category} · updated {selected.updated} ·{" "}
+                research/{selected.category} · published {selected.published} ·{" "}
                 {selected.readMin} min read
               </div>
               <p>{selected.summary}</p>

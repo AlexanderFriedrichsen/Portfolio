@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check-bundle": "node scripts/check-bundle.mjs",
+    "verify": "npm run build && npm run check-bundle"
   },
   "dependencies": {
     "@astrojs/react": "^3.6.3",
