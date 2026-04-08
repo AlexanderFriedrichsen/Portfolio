@@ -475,7 +475,8 @@ function WindowFrame({
             />
             <button
               type="button"
-              aria-label={`Close ${def.title}`}
+              aria-label="Close"
+              title={`Close ${def.title}`}
               onClick={(e) => {
                 e.stopPropagation();
                 onClose();
@@ -508,7 +509,8 @@ function CookiesDialog({ onClose }: { onClose: () => void }) {
         <div className="title-bar-controls">
           <button
             type="button"
-            aria-label="Close cookies dialog"
+            aria-label="Close"
+            title="Close cookies dialog"
             onClick={onClose}
           />
         </div>
