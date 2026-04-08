@@ -1,0 +1,235 @@
+---
+// MobileFallback.astro — D4
+// Clean editorial mobile/coarse-pointer fallback for the retro desktop section.
+// Pure Astro, ZERO JS, NO 7.css. Reads the same JSON SoT as Desktop.tsx.
+// Gating happens in the parent (.mobile-only wrapper). This component
+// renders unconditionally; only one of desktop/mobile is visible at a time.
+import { getCollection } from "astro:content";
+import agents from "./data/agents.json";
+import about from "./data/about.json";
+import llc from "./data/llc.json";
+import tools from "./data/tools.json";
+
+const research = (await getCollection("research")).sort(
+  (a, b) => (a.data.published < b.data.published ? 1 : -1),
+);
+---
+
+<div class="mf-root">
+  <!-- Agent Team -->
+  <article class="mf-card" id="mf-agents">
+    <header class="mf-card-h">
+      <h3>The Agent Team</h3>
+      <p class="mf-sub">Twelve specialist agents. One human running the pipeline.</p>
+    </header>
+    <ul class="mf-agent-list">
+      {agents.map((a) => (
+        <li>
+          <div class="mf-agent-name">{a.name} <span class="mf-agent-role">— {a.role}</span></div>
+          <p class="mf-agent-desc">{a.desc}</p>
+        </li>
+      ))}
+    </ul>
+  </article>
+
+  <!-- Research Vault -->
+  <article class="mf-card" id="mf-research">
+    <header class="mf-card-h">
+      <h3>Research Vault</h3>
+      <p class="mf-sub">Notes I keep open while I work. Updated when I learn something worth keeping.</p>
+    </header>
+    <ul class="mf-research-list">
+      {research.map((r) => (
+        <li>
+          <a class="mf-research-title" href={`/Portfolio/research/${r.slug}/`}>{r.data.title}</a>
+          <div class="mf-meta">
+            <span>{r.data.category}</span>
+            <span>·</span>
+            <span>{r.data.published}</span>
+            {r.data.readMin && (<><span>·</span><span>{r.data.readMin} min read</span></>)}
+          </div>
+          <p class="mf-research-summary">{r.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+  </article>
+
+  <!-- About Me -->
+  <article class="mf-card" id="mf-about">
+    <header class="mf-card-h">
+      <h3>About Me</h3>
+      <p class="mf-sub">{about.tagline}</p>
+    </header>
+    <div class="mf-about-body">
+      <img class="mf-photo" src={about.photo} alt={about.name} loading="lazy" width="280" height="280" />
+      <section class="mf-about-section">
+        <h4>General</h4>
+        {about.general.map((p) => <p>{p}</p>)}
+      </section>
+      <section class="mf-about-section">
+        <h4>Background</h4>
+        {about.background.map((p) => <p>{p}</p>)}
+      </section>
+      <section class="mf-about-section">
+        <h4>Contact</h4>
+        {about.contact.map((p) => <p>{p}</p>)}
+      </section>
+      <dl class="mf-facts">
+        {about.facts.map((f) => (
+          <div class="mf-fact-row">
+            <dt>{f.k}</dt>
+            <dd>{f.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </article>
+
+  <!-- Tools I've Tried -->
+  <article class="mf-card" id="mf-tools">
+    <header class="mf-card-h">
+      <h3>Tools I've Tried</h3>
+      <p class="mf-sub">Honest verdicts. Stars are out of five.</p>
+    </header>
+    <ul class="mf-tools-list">
+      {tools.map((t) => (
+        <li>
+          <div class="mf-tool-head">
+            <span class="mf-tool-name">{t.tool}</span>
+            <span class="mf-tool-cat">{t.category}</span>
+            <span class="mf-tool-rating" aria-label={`${t.rating} out of 5`}>
+              {"★".repeat(t.rating)}<span class="mf-stars-empty">{"★".repeat(5 - t.rating)}</span>
+            </span>
+          </div>
+          <p class="mf-tool-notes">{t.notes}</p>
+        </li>
+      ))}
+    </ul>
+  </article>
+
+  <!-- HonestAlexF LLC -->
+  <article class="mf-card" id="mf-llc">
+    <header class="mf-card-h">
+      <h3>{llc.name}</h3>
+      <p class="mf-sub">{llc.tagline}</p>
+    </header>
+    <p class="mf-llc-what">{llc.what}</p>
+    <h4 class="mf-llc-h">Services</h4>
+    <ul class="mf-services">
+      {llc.services.map((s) => (
+        <li>
+          <strong>{s.title}</strong>
+          <span> — {s.desc}</span>
+        </li>
+      ))}
+    </ul>
+    <h4 class="mf-llc-h">Contact</h4>
+    <dl class="mf-facts">
+      {llc.contact.map((c) => (
+        <div class="mf-fact-row">
+          <dt>{c.k}</dt>
+          <dd>{c.v}</dd>
+        </div>
+      ))}
+    </dl>
+  </article>
+</div>
+
+<style>
+  .mf-root {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    font-family: var(--sans);
+    color: var(--ink);
+  }
+  .mf-card {
+    background: #fffdf9;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.04);
+    padding: 1.75rem 1.5rem;
+  }
+  .mf-card-h { margin: 0 0 1.25rem; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
+  .mf-card-h h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+    color: var(--ink);
+  }
+  .mf-sub { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+  .mf-card h4 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 1.5rem 0 0.5rem;
+  }
+  .mf-card p { margin: 0.5rem 0; line-height: 1.6; }
+
+  /* Agents */
+  .mf-agent-list, .mf-research-list, .mf-tools-list, .mf-services { list-style: none; padding: 0; margin: 0; }
+  .mf-agent-list li { padding: 0.85rem 0; border-bottom: 1px dashed var(--rule); }
+  .mf-agent-list li:last-child { border-bottom: none; }
+  .mf-agent-name { font-weight: 600; font-size: 1rem; }
+  .mf-agent-role { font-weight: 400; color: var(--ink-soft); }
+  .mf-agent-desc { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+  /* Research */
+  .mf-research-list li { padding: 1rem 0; border-bottom: 1px dashed var(--rule); }
+  .mf-research-list li:last-child { border-bottom: none; }
+  .mf-research-title {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: none;
+    line-height: 1.25;
+  }
+  .mf-research-title:hover { color: var(--accent); }
+  .mf-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0.3rem 0; display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .mf-research-summary { margin: 0.35rem 0 0; color: var(--ink-soft); }
+
+  /* About */
+  .mf-about-body { display: flex; flex-direction: column; gap: 0.5rem; }
+  .mf-photo {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    margin: 0 auto 0.75rem;
+  }
+  .mf-about-section { margin-top: 0.5rem; }
+
+  /* Tools */
+  .mf-tools-list li { padding: 0.85rem 0; border-bottom: 1px dashed var(--rule); }
+  .mf-tools-list li:last-child { border-bottom: none; }
+  .mf-tool-head { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+  .mf-tool-name { font-weight: 600; font-size: 1.05rem; }
+  .mf-tool-cat { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+  .mf-tool-rating { color: var(--accent); letter-spacing: 0.05em; }
+  .mf-stars-empty { color: var(--accent-soft); }
+  .mf-tool-notes { margin: 0.3rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+  /* LLC */
+  .mf-llc-what { color: var(--ink-soft); }
+  .mf-llc-h { margin-top: 1.25rem !important; }
+  .mf-services li { padding: 0.5rem 0; border-bottom: 1px dashed var(--rule); }
+  .mf-services li:last-child { border-bottom: none; }
+
+  /* Facts (key-value) */
+  .mf-facts { margin: 1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .mf-fact-row { display: flex; gap: 0.6rem; font-size: 0.92rem; }
+  .mf-fact-row dt { color: var(--ink-soft); min-width: 7rem; margin: 0; }
+  .mf-fact-row dd { margin: 0; color: var(--ink); }
+</style>
