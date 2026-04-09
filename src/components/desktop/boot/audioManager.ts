@@ -15,10 +15,15 @@
 
 export type SoundName = "login" | "logoff" | "balloon";
 
+// Base URL is injected by Vite from astro.config.mjs (base: "/Portfolio/").
+// Using import.meta.env.BASE_URL keeps the audio paths in sync with any
+// future base change without duplicating the path literal here.
+const BASE = import.meta.env.BASE_URL; // always has a trailing slash
+
 const SOURCES: Record<SoundName, string> = {
-  login: "/Portfolio/sounds/login.wav",
-  logoff: "/Portfolio/sounds/logoff.wav",
-  balloon: "/Portfolio/sounds/balloon.wav",
+  login: `${BASE}sounds/login.wav`,
+  logoff: `${BASE}sounds/logoff.wav`,
+  balloon: `${BASE}sounds/balloon.wav`,
 };
 
 const cache: Partial<Record<SoundName, HTMLAudioElement>> = {};

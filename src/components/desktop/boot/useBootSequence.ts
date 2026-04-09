@@ -27,8 +27,17 @@ const BOOT_HOLD_MS = 2000;
 // ceremony is deliberately client-side only: on mount, if the visitor has
 // not seen it before, we flip to 'boot' and let the state machine run.
 // Return visitors stay on 'desktop' forever.
+//
+// firstDesktopVisit: true ONLY after we reach desktop via a user gesture
+// (avatar click on LoginScreen, or a Phase C Restart chain from the shutdown
+// menu). The return-visit localStorage short-circuit leaves it false, which
+// means the welcome balloon — and its autoplay-gated balloon.wav — must be
+// gated on this flag, not on `phase === 'desktop'` alone. Without this
+// guard, return visits silently fail the autoplay policy and the balloon
+// would visually re-appear on every page load, breaking mitchivin parity.
 export function useBootSequence() {
   const [phase, setPhase] = useState<BootPhase>("desktop");
+  const [firstDesktopVisit, setFirstDesktopVisit] = useState(false);
 
   // Client-mount: start the ceremony if this is a first-time visitor.
   useEffect(() => {
@@ -46,18 +55,24 @@ export function useBootSequence() {
   }, []);
 
   const advanceToDesktop = useCallback(() => {
+    // This is the user-gesture path (avatar click). Mark the gesture-chained
+    // flag so the balloon + balloon.wav can fire inside the same gesture.
+    setFirstDesktopVisit(true);
     setPhase("desktop");
   }, []);
 
   const playBootSequence = useCallback(() => {
-    // Phase C entry point: replay the ceremony. Also clears the visited flag
-    // so the boot screen actually renders (otherwise readInitialPhase would
-    // immediately short-circuit on any state reset).
+    // Phase C entry point: replay the ceremony. Clear the visited flag so the
+    // boot screen actually renders on the next reach-desktop, and reset the
+    // gesture flag to false — it will be set back to true when the user
+    // clicks the avatar on the replayed login screen, so the balloon and its
+    // sound fire again on that gesture.
     try {
       window.localStorage.removeItem(VISITED_KEY);
     } catch {
       /* ignore */
     }
+    setFirstDesktopVisit(false);
     setPhase("boot");
   }, []);
 
@@ -80,5 +95,11 @@ export function useBootSequence() {
     }
   }, [phase]);
 
-  return { phase, advanceToLogin, advanceToDesktop, playBootSequence };
+  return {
+    phase,
+    firstDesktopVisit,
+    advanceToLogin,
+    advanceToDesktop,
+    playBootSequence,
+  };
 }

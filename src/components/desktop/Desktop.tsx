@@ -149,7 +149,8 @@ export default function Desktop() {
 
   // Phase A: boot → login → desktop ceremony. The overlays render as
   // Fragment siblings of .retro-desktop (NOT wrappers) so R7 is preserved.
-  const { phase, advanceToLogin, advanceToDesktop } = useBootSequence();
+  const { phase, firstDesktopVisit, advanceToLogin, advanceToDesktop } =
+    useBootSequence();
 
   // Preload audio once per island mount; browsers allow metadata fetch
   // without a user gesture. Actual play() is gated behind the avatar click.
@@ -161,6 +162,21 @@ export default function Desktop() {
   // focus to the trigger on close (WCAG focus-return pattern).
   const startBtnRef = useRef<HTMLButtonElement>(null);
   const bsodTriggerRef = useRef<HTMLElement | null>(null);
+
+  // Track the previous phase so we can detect the login→desktop transition
+  // specifically (not arbitrary re-renders while phase==='desktop').
+  const prevPhaseRef = useRef<typeof phase>(phase);
+  useEffect(() => {
+    const prev = prevPhaseRef.current;
+    prevPhaseRef.current = phase;
+    // Focus-return on login→desktop: when LoginScreen unmounts, focus falls
+    // to <body>. Send it to the start button (a sensible taskbar landmark).
+    // Gated on firstDesktopVisit so return visitors don't get focus ripped
+    // to the start button on every page load.
+    if (prev === "login" && phase === "desktop" && firstDesktopVisit) {
+      window.setTimeout(() => startBtnRef.current?.focus(), 0);
+    }
+  }, [phase, firstDesktopVisit]);
 
   // Build render closures for each window. Kept inside component so they
   // can close over local state (e.g. aboutInitialTab for the Contact tab).
@@ -386,7 +402,7 @@ export default function Desktop() {
           }}
         />
       )}
-      {phase === "desktop" && <WelcomeBalloon />}
+      {phase === "desktop" && firstDesktopVisit && <WelcomeBalloon />}
     </>
   );
 }

@@ -10,9 +10,10 @@ const results = {
   initialBoot: null,
   autoAdvanceToLogin: null,
   clickLoginOpensDesktop: null,
-  loginWavPlayedOnce: null,
+  loginWavRequested: null,
   balloonAppears: null,
   returnVisitorShortCircuit: null,
+  returnVisitorNoBalloon: null,
   r7RndDirectChild: null,
   pageErrors: [],
 };
@@ -80,7 +81,7 @@ const browser = await chromium.launch();
   // fires one request on mount; play() reuses the cached element and may
   // not fire a second). We just need proof the audio path is wired.
   pass(
-    "loginWavPlayedOnce",
+    "loginWavRequested",
     loginWavCount >= 1,
     `totalRequests=${loginWavCount} deltaFromClick=${loginWavCount - avatarBefore}`,
   );
@@ -135,6 +136,14 @@ const browser = await chromium.launch();
     } catch {}
   });
   const page = await ctx.newPage();
+  // Cipher fix: assert that balloon.wav is never requested on return
+  // visits (autoplay-gated; if we accidentally re-render the balloon the
+  // play() call would be blocked silently and break mitchivin parity).
+  let balloonWavCount = 0;
+  page.on("request", (req) => {
+    if (/\/sounds\/balloon\.wav(\?|$)/.test(req.url())) balloonWavCount++;
+  });
+  page.on("pageerror", (e) => results.pageErrors.push(e.message));
   await page.goto(URL, { waitUntil: "domcontentloaded" });
   await page.evaluate(() => {
     const el = document.getElementById("desktop");
@@ -176,6 +185,17 @@ const browser = await chromium.launch();
     "returnVisitorShortCircuit",
     boot === 0 && login === 0 && icons > 0,
     `boot=${boot} login=${login} icons=${icons} visited=${lsVisited}`,
+  );
+
+  // Wait past the 2s balloon delay and assert it never appears and its
+  // sound is never requested. balloon.wav gets cached by preload(), so
+  // the stricter signal is counting .welcome-balloon DOM elements.
+  await page.waitForTimeout(2600);
+  const balloonAfterWait = await page.locator(".welcome-balloon").count();
+  pass(
+    "returnVisitorNoBalloon",
+    balloonAfterWait === 0,
+    `balloonCount=${balloonAfterWait} balloonWavReqs=${balloonWavCount}`,
   );
   await ctx.close();
 }
