@@ -12,16 +12,28 @@ const APPEAR_DELAY_MS = 2000;
 // R4 Fix 2: 10s visible (was 6s). Long enough for a normal reader to finish.
 const VISIBLE_MS = 10000;
 
-export default function WelcomeBalloon() {
-  const [visible, setVisible] = useState(false);
+export default function WelcomeBalloon({
+  immediate = false,
+}: {
+  // R6 Fix C: when the tray "i" icon re-triggers the balloon via the
+  // balloonKey remount trick, we want it to appear *now*, not after the
+  // 2s initial-ceremony delay. CEO reported "nothing happens on click" —
+  // the remount was working but the 2s appear delay made it look dead.
+  immediate?: boolean;
+}) {
+  const [visible, setVisible] = useState(immediate);
 
   useEffect(() => {
+    if (immediate) {
+      audioManager.play("balloon");
+      return;
+    }
     const appearId = window.setTimeout(() => {
       setVisible(true);
       audioManager.play("balloon");
     }, APPEAR_DELAY_MS);
     return () => window.clearTimeout(appearId);
-  }, []);
+  }, [immediate]);
 
   useEffect(() => {
     if (!visible) return;

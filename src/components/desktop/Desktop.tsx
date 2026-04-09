@@ -302,12 +302,15 @@ export default function Desktop() {
           // useBootSequence has settled on 'desktop'. visibility (not
           // display) so Rnd bounds measurements remain valid.
           visibility: hydrated && phase === "desktop" ? "visible" : "hidden",
+          // R6 Fix A: wire the CEO-generated XP wallpaper. BASE_URL pattern
+          // (Cipher carry-forward W from PR #5) so a future base change
+          // doesn't silently break the wallpaper.
+          backgroundImage: `url("${import.meta.env.BASE_URL}assets/pictures/carved-name-hillside.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Wallpaper layer (Bliss CSS gradient stand-in).
-          TODO: swap to bliss.jpg once /assets/wallpapers/bliss.jpg is sourced.
-          Single-line swap: change .retro-desktop background in desktop.css. */}
-
         {/* Desktop icons */}
         <div className="desk-icons">
           {ICONS.map((icon) => (
@@ -394,7 +397,16 @@ export default function Desktop() {
               setStartOpen((s) => !s);
             }}
           >
-            <span className="start-orb-glyph" aria-hidden="true" />
+            {/* R6 Fix D: replace the CSS fake-orb with the real XP logo PNG.
+                The PNG is pre-processed to have transparent background
+                (R6 Fix E) so it composites cleanly on the green start-btn. */}
+            <img
+              src={`${import.meta.env.BASE_URL}assets/pictures/boot/xp-logo-2002.png`}
+              alt=""
+              className="start-orb-glyph"
+              draggable={false}
+              aria-hidden="true"
+            />
             <span className="start-text">start</span>
           </button>
           <div className="tb-tasks">
@@ -470,7 +482,7 @@ export default function Desktop() {
         />
       )}
       {phase === "desktop" && (firstDesktopVisit || balloonForced) && (
-        <WelcomeBalloon key={balloonKey} />
+        <WelcomeBalloon key={balloonKey} immediate={balloonKey > 0} />
       )}
     </>
   );

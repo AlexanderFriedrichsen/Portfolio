@@ -37,27 +37,7 @@
   isolation: isolate;
   z-index: 1;
 
-  /* Bliss wallpaper — CSS gradient stand-in.
-   * TODO: swap to a single line when public/assets/wallpapers/bliss.jpg lands:
-   *   background: url(/Portfolio/assets/wallpapers/bliss.jpg) center/cover no-repeat;
-   * The JPG isn't sourced yet (Anchor flagged copyright; CEO deciding async). */
-  background:
-    linear-gradient(
-      180deg,
-      #4a90e2 0%,
-      #87ceeb 35%,
-      #c8e4f5 55%,
-      #e8f3fb 60%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 140% 70% at 50% 110%,
-      #6fbf3c 0%,
-      #5aa830 40%,
-      #3f8a22 70%,
-      #2e6b18 100%
-    );
-  background-color: #6fbf3c;
+  background-color: #245edb;
 }
 .xp-scope.retro-desktop::before {
   content: "";
@@ -247,20 +227,13 @@
     inset 0 2px 4px rgba(0, 0, 0, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.2);
 }
+/* R6 Fix D: .start-orb-glyph is now an <img> of the XP logo PNG. */
 .xp-scope .start-orb-glyph {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    #fff 0%,
-    #c9f5b4 20%,
-    #5fbf2e 60%,
-    #2c6e0f 100%
-  );
-  box-shadow:
-    0 0 0 1px #1d4d08,
-    inset 0 0 4px rgba(255, 255, 255, 0.6);
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 
 .xp-scope .tb-tasks {
