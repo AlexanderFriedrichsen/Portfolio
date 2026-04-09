@@ -616,7 +616,7 @@ function WindowFrame({
         <div
           className="window-body"
           ref={bodyRef}
-          style={{ padding: 0, flex: 1, overflow: "auto" }}
+          style={{ flex: 1, overflow: "auto" }}
         >
           {def.render()}
         </div>

@@ -96,7 +96,7 @@ export default function LoginScreen({
           aria-label="Restart"
         >
           <span className="login-restart-glyph" aria-hidden="true">
-            ⟳
+            ↻
           </span>
           <span className="login-restart-label">Restart</span>
         </button>
