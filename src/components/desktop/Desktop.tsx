@@ -4,6 +4,11 @@ import { Rnd } from "react-rnd";
 // not here, to keep the heavy CSS in a single route chunk instead of duplicating
 // it into the React island JS chunk. See Desktop.astro for the rationale.
 
+import BootScreen from "./boot/BootScreen";
+import LoginScreen from "./boot/LoginScreen";
+import WelcomeBalloon from "./boot/WelcomeBalloon";
+import { useBootSequence } from "./boot/useBootSequence";
+import { audioManager } from "./boot/audioManager";
 import AgentTeam from "./windows/AgentTeam";
 import ResearchVault from "./windows/ResearchVault";
 import AboutMe from "./windows/AboutMe";
@@ -142,10 +147,36 @@ export default function Desktop() {
   const [cookiesVisible, setCookiesVisible] = useState(false);
   const [aboutInitialTab, setAboutInitialTab] = useState<AboutTabId>("general");
 
+  // Phase A: boot → login → desktop ceremony. The overlays render as
+  // Fragment siblings of .retro-desktop (NOT wrappers) so R7 is preserved.
+  const { phase, firstDesktopVisit, advanceToLogin, advanceToDesktop } =
+    useBootSequence();
+
+  // Preload audio once per island mount; browsers allow metadata fetch
+  // without a user gesture. Actual play() is gated behind the avatar click.
+  useEffect(() => {
+    audioManager.preload();
+  }, []);
+
   // Trigger refs — captured when a menu/overlay opens so we can restore
   // focus to the trigger on close (WCAG focus-return pattern).
   const startBtnRef = useRef<HTMLButtonElement>(null);
   const bsodTriggerRef = useRef<HTMLElement | null>(null);
+
+  // Track the previous phase so we can detect the login→desktop transition
+  // specifically (not arbitrary re-renders while phase==='desktop').
+  const prevPhaseRef = useRef<typeof phase>(phase);
+  useEffect(() => {
+    const prev = prevPhaseRef.current;
+    prevPhaseRef.current = phase;
+    // Focus-return on login→desktop: when LoginScreen unmounts, focus falls
+    // to <body>. Send it to the start button (a sensible taskbar landmark).
+    // Gated on firstDesktopVisit so return visitors don't get focus ripped
+    // to the start button on every page load.
+    if (prev === "login" && phase === "desktop" && firstDesktopVisit) {
+      window.setTimeout(() => startBtnRef.current?.focus(), 0);
+    }
+  }, [phase, firstDesktopVisit]);
 
   // Build render closures for each window. Kept inside component so they
   // can close over local state (e.g. aboutInitialTab for the Contact tab).
@@ -180,12 +211,15 @@ export default function Desktop() {
     return () => window.clearInterval(id);
   }, []);
 
-  // Cookies popup: 1.5s delay after mount. Gated on desktop MQ.
+  // Cookies popup: 1.5s delay AFTER the desktop phase unveils.
+  // Phase A: gated on phase==='desktop' so the popup can't fire behind the
+  // login overlay. (Previously gated only on the MQ.)
   useEffect(() => {
     if (!isDesktopViewport()) return;
+    if (phase !== "desktop") return;
     const id = window.setTimeout(() => setCookiesVisible(true), 1500);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [phase]);
 
   const openWindow = useCallback((id: WindowId) => {
     setOpenWindows((prev) => (prev.includes(id) ? prev : [...prev, id]));
@@ -219,143 +253,157 @@ export default function Desktop() {
   );
 
   return (
-    <div className="xp-scope retro-desktop" aria-label="Retro desktop hero">
-      {/* Wallpaper layer (Bliss CSS gradient stand-in).
+    <>
+      <div className="xp-scope retro-desktop" aria-label="Retro desktop hero">
+        {/* Wallpaper layer (Bliss CSS gradient stand-in).
           TODO: swap to bliss.jpg once /assets/wallpapers/bliss.jpg is sourced.
           Single-line swap: change .retro-desktop background in desktop.css. */}
 
-      {/* Desktop icons */}
-      <div className="desk-icons">
-        {ICONS.map((icon) => (
-          <DesktopIconButton
-            key={icon.id}
-            label={icon.label}
-            iconKey={icon.iconKey}
-            extBadge={!!icon.extBadge}
-            isOpen={
-              icon.kind === "window" &&
-              openWindows.includes(icon.id as WindowId)
-            }
-            onActivate={() => activateIcon(icon)}
-          />
-        ))}
-      </div>
-
-      {/* Windows. Each <Rnd> is a DIRECT child of the root .retro-desktop. */}
-      {openWindows.map((id) => {
-        const def = WINDOWS[id];
-        const z = 10 + zOrder.indexOf(id);
-        const isFocused = focused === id;
-        return (
-          <WindowFrame
-            key={id}
-            def={def}
-            zIndex={z}
-            isFocused={isFocused}
-            onFocus={() => focus(id)}
-            onClose={() => close(id)}
-            autofocus={justOpened === id}
-            clearAutofocus={() =>
-              setJustOpened((cur) => (cur === id ? null : cur))
-            }
-          />
-        );
-      })}
-
-      {/* Cookies popup (now a child of Desktop, not index.astro) */}
-      {cookiesVisible && (
-        <CookiesDialog onClose={() => setCookiesVisible(false)} />
-      )}
-
-      {/* Start menu */}
-      {startOpen && (
-        <StartMenu
-          startBtnRef={startBtnRef}
-          onClose={() => setStartOpen(false)}
-          onPick={(action) => {
-            setStartOpen(false);
-            // Windows
-            if (action === "about") {
-              setAboutInitialTab("general");
-              openWindow("about-me");
-            } else if (action === "contact") {
-              setAboutInitialTab("contact");
-              openWindow("about-me");
-            } else if (action === "agent-team") openWindow("agent-team");
-            else if (action === "research-vault") openWindow("research-vault");
-            else if (action === "mtg-analyzer") openWindow("mtg-analyzer");
-            else if (action === "tools") openWindow("tools");
-            // External / stubs
-            else if (action === "resume")
-              window.open("/Portfolio/resume/", "_blank", "noopener");
-            else if (action === "blog")
-              window.open("https://honestafblog.com", "_blank", "noopener");
-            else if (action === "wonders" || action === "gecco") {
-              // Stubs per CEO — href=# equivalent. No-op for now.
-            }
-            // System
-            else if (action === "logoff" || action === "shutdown") {
-              bsodTriggerRef.current = startBtnRef.current;
-              setBsod(true);
-            }
-          }}
-        />
-      )}
-
-      {/* BSOD overlay */}
-      {bsod && (
-        <Bsod
-          onDismiss={() => {
-            setBsod(false);
-            // Restore focus to whatever opened the BSOD (Shut Down/Log Off).
-            const t = bsodTriggerRef.current;
-            bsodTriggerRef.current = null;
-            window.setTimeout(() => t?.focus?.(), 0);
-          }}
-        />
-      )}
-
-      {/* Taskbar */}
-      <div className="taskbar" role="toolbar" aria-label="Taskbar">
-        <button
-          ref={startBtnRef}
-          type="button"
-          className={"start-btn" + (startOpen ? " active" : "")}
-          aria-label="Start"
-          aria-haspopup="menu"
-          aria-expanded={startOpen}
-          onClick={(e) => {
-            e.stopPropagation();
-            setStartOpen((s) => !s);
-          }}
-        >
-          <span className="start-orb-glyph" aria-hidden="true" />
-          <span className="start-text">start</span>
-        </button>
-        <div className="tb-tasks">
-          {openWindows.map((id) => {
-            const def = WINDOWS[id];
-            return (
-              <button
-                key={id}
-                type="button"
-                className={"tb-task" + (focused === id ? " active" : "")}
-                onClick={() => focus(id)}
-                aria-label={`Focus ${def.title}`}
-              >
-                {def.title.split(" — ")[0]}
-              </button>
-            );
-          })}
+        {/* Desktop icons */}
+        <div className="desk-icons">
+          {ICONS.map((icon) => (
+            <DesktopIconButton
+              key={icon.id}
+              label={icon.label}
+              iconKey={icon.iconKey}
+              extBadge={!!icon.extBadge}
+              isOpen={
+                icon.kind === "window" &&
+                openWindows.includes(icon.id as WindowId)
+              }
+              onActivate={() => activateIcon(icon)}
+            />
+          ))}
         </div>
-        <div className="tb-tray">
-          <div className="tb-clock" aria-label="Clock">
-            <div>{now ? formatClockTime(now) : ""}</div>
-            <div>{now ? formatClockDate(now) : ""}</div>
+
+        {/* Windows. Each <Rnd> is a DIRECT child of the root .retro-desktop. */}
+        {openWindows.map((id) => {
+          const def = WINDOWS[id];
+          const z = 10 + zOrder.indexOf(id);
+          const isFocused = focused === id;
+          return (
+            <WindowFrame
+              key={id}
+              def={def}
+              zIndex={z}
+              isFocused={isFocused}
+              onFocus={() => focus(id)}
+              onClose={() => close(id)}
+              autofocus={justOpened === id}
+              clearAutofocus={() =>
+                setJustOpened((cur) => (cur === id ? null : cur))
+              }
+            />
+          );
+        })}
+
+        {/* Cookies popup (now a child of Desktop, not index.astro) */}
+        {cookiesVisible && (
+          <CookiesDialog onClose={() => setCookiesVisible(false)} />
+        )}
+
+        {/* Start menu */}
+        {startOpen && (
+          <StartMenu
+            startBtnRef={startBtnRef}
+            onClose={() => setStartOpen(false)}
+            onPick={(action) => {
+              setStartOpen(false);
+              // Windows
+              if (action === "about") {
+                setAboutInitialTab("general");
+                openWindow("about-me");
+              } else if (action === "contact") {
+                setAboutInitialTab("contact");
+                openWindow("about-me");
+              } else if (action === "agent-team") openWindow("agent-team");
+              else if (action === "research-vault")
+                openWindow("research-vault");
+              else if (action === "mtg-analyzer") openWindow("mtg-analyzer");
+              else if (action === "tools") openWindow("tools");
+              // External / stubs
+              else if (action === "resume")
+                window.open("/Portfolio/resume/", "_blank", "noopener");
+              else if (action === "blog")
+                window.open("https://honestafblog.com", "_blank", "noopener");
+              else if (action === "wonders" || action === "gecco") {
+                // Stubs per CEO — href=# equivalent. No-op for now.
+              }
+              // System
+              else if (action === "logoff" || action === "shutdown") {
+                bsodTriggerRef.current = startBtnRef.current;
+                setBsod(true);
+              }
+            }}
+          />
+        )}
+
+        {/* BSOD overlay */}
+        {bsod && (
+          <Bsod
+            onDismiss={() => {
+              setBsod(false);
+              // Restore focus to whatever opened the BSOD (Shut Down/Log Off).
+              const t = bsodTriggerRef.current;
+              bsodTriggerRef.current = null;
+              window.setTimeout(() => t?.focus?.(), 0);
+            }}
+          />
+        )}
+
+        {/* Taskbar */}
+        <div className="taskbar" role="toolbar" aria-label="Taskbar">
+          <button
+            ref={startBtnRef}
+            type="button"
+            className={"start-btn" + (startOpen ? " active" : "")}
+            aria-label="Start"
+            aria-haspopup="menu"
+            aria-expanded={startOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setStartOpen((s) => !s);
+            }}
+          >
+            <span className="start-orb-glyph" aria-hidden="true" />
+            <span className="start-text">start</span>
+          </button>
+          <div className="tb-tasks">
+            {openWindows.map((id) => {
+              const def = WINDOWS[id];
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={"tb-task" + (focused === id ? " active" : "")}
+                  onClick={() => focus(id)}
+                  aria-label={`Focus ${def.title}`}
+                >
+                  {def.title.split(" — ")[0]}
+                </button>
+              );
+            })}
+          </div>
+          <div className="tb-tray">
+            <div className="tb-clock" aria-label="Clock">
+              <div>{now ? formatClockTime(now) : ""}</div>
+              <div>{now ? formatClockDate(now) : ""}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {/* Phase A overlays — Fragment siblings of .retro-desktop (R7 safe). */}
+      {phase === "boot" && <BootScreen onSkip={advanceToLogin} />}
+      {phase === "login" && (
+        <LoginScreen
+          onLogin={() => {
+            audioManager.play("login");
+            advanceToDesktop();
+          }}
+        />
+      )}
+      {phase === "desktop" && firstDesktopVisit && <WelcomeBalloon />}
+    </>
   );
 }
 
