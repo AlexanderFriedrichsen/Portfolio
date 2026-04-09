@@ -124,6 +124,16 @@ for (const v of viewports) {
     hasTouch: v.hasTouch,
     isMobile: v.isMobile,
   });
+  // Phase A: pre-set the visited flag so the boot/login ceremony short-
+  // circuits. Without this, the desk-icon selectors below race the 2s
+  // boot auto-advance and flake. This is intentional, narrow, and only
+  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
+  // first-visit ceremony separately.
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("portfolio:visited", "1");
+    } catch {}
+  });
   const page = await ctx.newPage();
   const consoleErrs = [];
   page.on("console", (msg) => {
@@ -171,6 +181,16 @@ for (const v of [
     hasTouch: v.hasTouch,
     isMobile: v.isMobile,
   });
+  // Phase A: pre-set the visited flag so the boot/login ceremony short-
+  // circuits. Without this, the desk-icon selectors below race the 2s
+  // boot auto-advance and flake. This is intentional, narrow, and only
+  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
+  // first-visit ceremony separately.
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("portfolio:visited", "1");
+    } catch {}
+  });
   const page = await ctx.newPage();
   // Install layout-shift observer before any page script runs so we catch
   // the client:visible hydration shift.
@@ -212,6 +232,16 @@ for (const v of [
     viewport: { width: 1280, height: 800 },
     hasTouch: false,
     isMobile: false,
+  });
+  // Phase A: pre-set the visited flag so the boot/login ceremony short-
+  // circuits. Without this, the desk-icon selectors below race the 2s
+  // boot auto-advance and flake. This is intentional, narrow, and only
+  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
+  // first-visit ceremony separately.
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("portfolio:visited", "1");
+    } catch {}
   });
   const page = await ctx.newPage();
   const errs = [];
@@ -426,6 +456,16 @@ for (const v of [
     viewport: { width: 375, height: 667 },
     hasTouch: true,
     isMobile: true,
+  });
+  // Phase A: pre-set the visited flag so the boot/login ceremony short-
+  // circuits. Without this, the desk-icon selectors below race the 2s
+  // boot auto-advance and flake. This is intentional, narrow, and only
+  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
+  // first-visit ceremony separately.
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("portfolio:visited", "1");
+    } catch {}
   });
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: "networkidle" });

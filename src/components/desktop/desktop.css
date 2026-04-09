@@ -610,3 +610,230 @@
     transition: none !important;
   }
 }
+
+/* ─── Phase A: Boot / Login / Welcome balloon ─────────────────────────────
+   All three overlays are fixed, full-viewport siblings of .retro-desktop.
+   They sit above the desktop on z-index and do NOT wrap any Rnd (R7 safe).
+*/
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  color: #e8e8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: boot-fade-in 300ms ease-out;
+  font-family: "Tahoma", "Segoe UI", sans-serif;
+}
+.boot-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.boot-wordmark {
+  width: 480px;
+  max-width: 70vw;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 6px rgba(120, 160, 255, 0.25));
+}
+.boot-loadbar {
+  width: 320px;
+  height: 20px;
+  background: #0e1a3a;
+  border: 1px solid #2a3a6a;
+  overflow: hidden;
+  position: relative;
+}
+.boot-loadbar-track {
+  position: absolute;
+  inset: 0;
+  background-image: url("/Portfolio/assets/pictures/boot/loading-bar.png");
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  animation: boot-loadbar-slide 1.2s linear infinite;
+  image-rendering: pixelated;
+}
+.boot-copyright {
+  font-size: 11px;
+  color: #8896bb;
+  letter-spacing: 0.02em;
+}
+@keyframes boot-loadbar-slide {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -120px 0;
+  }
+}
+@keyframes boot-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    #3a6ab7 0%,
+    #1e3a7a 60%,
+    #0f1f4a 100%
+  );
+  color: #f2f4fa;
+  display: flex;
+  flex-direction: column;
+  font-family: "Tahoma", "Segoe UI", sans-serif;
+  animation: boot-fade-in 400ms ease-out;
+}
+.login-header {
+  padding: 32px 48px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+}
+.login-brand {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.login-tagline {
+  font-size: 13px;
+  color: #cfd8f0;
+}
+.login-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-avatar-btn {
+  background: transparent;
+  border: 2px solid transparent;
+  padding: 14px 22px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  border-radius: 4px;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+}
+.login-avatar-btn:hover,
+.login-avatar-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+  outline: none;
+}
+.login-avatar {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  border: 2px solid #e8ecf6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+.login-meta {
+  text-align: left;
+  max-width: 360px;
+}
+.login-name {
+  font-size: 22px;
+  font-weight: 600;
+}
+.login-role {
+  font-size: 13px;
+  color: #dce3f5;
+  margin-top: 2px;
+}
+.login-mission {
+  font-size: 12px;
+  color: #b9c4e4;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+.login-footer {
+  padding: 14px 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: right;
+}
+.login-hint {
+  font-size: 12px;
+  color: #c8d1ea;
+}
+
+.welcome-balloon {
+  position: fixed;
+  right: 16px;
+  bottom: 56px;
+  z-index: 9000;
+  max-width: 300px;
+  background: #fffbe1;
+  border: 1px solid #6e6a3b;
+  padding: 10px 12px 12px;
+  font-family: "Tahoma", "Segoe UI", sans-serif;
+  font-size: 11px;
+  color: #222;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  animation: boot-fade-in 240ms ease-out;
+  cursor: pointer;
+}
+.welcome-balloon-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.welcome-balloon-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: #2a5ea8;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 10px;
+}
+.welcome-balloon-body {
+  line-height: 1.4;
+}
+.welcome-balloon-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #fffbe1;
+  filter: drop-shadow(0 1px 0 #6e6a3b);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen,
+  .login-screen,
+  .welcome-balloon {
+    animation: none !important;
+  }
+  .boot-loadbar-track {
+    animation: none !important;
+  }
+}
