@@ -158,6 +158,8 @@
     inset 1px 1px #0831d9,
     inset -2px -2px #001ea0,
     inset 2px 2px #166aee,
+    inset -3px -3px #003bda,
+    inset 3px 3px #0855dd,
     2px 2px 8px rgba(0, 0, 0, 0.35);
 }
 .xp-scope .window-body p {
