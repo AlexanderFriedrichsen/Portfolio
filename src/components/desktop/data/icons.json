@@ -36,6 +36,12 @@
     "iconKey": "mtg"
   },
   {
+    "id": "fate",
+    "label": "Fate",
+    "kind": "window",
+    "iconKey": "fate"
+  },
+  {
     "id": "wonders",
     "label": "Wonders of First",
     "kind": "link",

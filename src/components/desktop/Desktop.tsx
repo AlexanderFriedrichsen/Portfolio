@@ -15,6 +15,7 @@ import AboutMe from "./windows/AboutMe";
 import ToolsITried from "./windows/ToolsITried";
 import HonestAlexFLLC from "./windows/HonestAlexFLLC";
 import MtgAnalyzer from "./windows/MtgAnalyzer";
+import Fate from "./windows/Fate";
 import iconsData from "./data/icons.json";
 import { DesktopGlyph } from "./xp-icons";
 
@@ -31,7 +32,8 @@ type WindowId =
   | "about-me"
   | "tools"
   | "llc"
-  | "mtg-analyzer";
+  | "mtg-analyzer"
+  | "fate";
 
 type WindowDef = {
   id: WindowId;
@@ -89,6 +91,13 @@ const WINDOW_META: Record<
     defaultPos: { x: 320, y: 80 },
     defaultSize: { width: 720, height: 560 },
     minSize: { width: 520, height: 360 },
+  },
+  fate: {
+    id: "fate",
+    title: "Fate — A Love Letter",
+    defaultPos: { x: 240, y: 60 },
+    defaultSize: { width: 720, height: 600 },
+    minSize: { width: 520, height: 400 },
   },
 };
 
@@ -248,6 +257,10 @@ export default function Desktop() {
     "mtg-analyzer": {
       ...WINDOW_META["mtg-analyzer"],
       render: () => <MtgAnalyzer />,
+    },
+    fate: {
+      ...WINDOW_META.fate,
+      render: () => <Fate />,
     },
   };
 
