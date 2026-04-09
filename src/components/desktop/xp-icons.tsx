@@ -266,6 +266,20 @@ export function DesktopGlyph({ kind, small = false }: Props) {
           <circle cx="18" cy="20" r="2" fill="#fff" />
         </svg>
       );
+    case "fate":
+      // Fate uses a raster icon from the game (the only bitmap glyph in this
+      // set). Rendered as an <img> instead of inline SVG. BASE_URL-templated.
+      return (
+        <img
+          src={`${import.meta.env.BASE_URL}assets/pictures/Fate-Icon-184px.webp`}
+          alt=""
+          width={size}
+          height={size}
+          draggable={false}
+          aria-hidden="true"
+          style={{ display: "block", imageRendering: "auto" }}
+        />
+      );
     case "resume":
       return (
         <svg {...common}>
