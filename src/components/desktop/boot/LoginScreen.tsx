@@ -1,33 +1,65 @@
-// Phase A polish — XP login / welcome screen, mitchivin-style layout.
-// Click the avatar to fire login.wav and advance to desktop.
-// Focus lands on the avatar on mount.
+// Phase A Round 4 — XP welcome-screen layout, mitchivin structural pattern.
+//
+// Layout:
+//   [deep-blue outer frame]
+//     ┌─ horizontal pale-blue gradient bar ─────────────────────┐
+//     │  ┌ left column ────┐  │  ┌ right column ─────────────┐  │   <- inner band
+//     │  │  HonestAlexFXP  │  │  │  avatar  Alex Friedrichsen │  │      (lighter blue)
+//     │  │  "To begin,     │  │  │          AI Engineer       │  │
+//     │  │   click Alex…"  │  │  └────────────────────────────┘  │
+//     │  └─────────────────┘  │ ← vertical pale-blue divider
+//     └─ horizontal pale-blue gradient bar ─────────────────────┘
+//   [bottom row, outside inner band]
+//     Restart (bottom-left)            Flavor text (bottom-right)
+//                                      F11 hint (bottom-right corner)
+//
+// Focus lands on the avatar button on mount. Clicking the avatar fires
+// login.wav and advances to desktop (wired from Desktop.tsx). The
+// Restart entry calls playBootSequence() (wired from Desktop.tsx) —
+// clean fix for Cipher's R1 warning about reload() stomping state.
 
 import React, { useEffect, useRef } from "react";
 import Wordmark from "./Wordmark";
 
-export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
+type Props = {
+  onLogin: () => void;
+  onRestart: () => void;
+};
+
+export default function LoginScreen({ onLogin, onRestart }: Props) {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     btnRef.current?.focus();
   }, []);
 
-  const onRestart = () => {
-    // Soft restart: reload the page. Return visitors short-circuit the boot.
-    if (typeof window !== "undefined") window.location.reload();
-  };
-
   return (
     <div className="login-screen" role="dialog" aria-label="Welcome">
-      <div className="login-wordmark-slot">
-        <Wordmark size="md" />
-      </div>
-      <div className="login-body">
-        <div className="login-user-card">
+      {/* Top gradient bar — signature XP welcome-screen chrome */}
+      <div className="login-bar login-bar-top" aria-hidden="true" />
+
+      {/* Inner band: two columns separated by a vertical divider */}
+      <div className="login-band">
+        <div className="login-col login-col-left">
+          <div className="login-wordmark-slot">
+            <Wordmark size="md" />
+          </div>
+          <p className="login-instruction">
+            To begin, click
+            <br />
+            <span className="login-instruction-name">Alex Friedrichsen</span>
+            <br />
+            to log in.
+          </p>
+        </div>
+
+        <div className="login-col-divider" aria-hidden="true" />
+
+        <div className="login-col login-col-right">
           <button
             ref={btnRef}
             type="button"
-            className="login-avatar-btn"
+            className="login-user-card"
             onClick={onLogin}
             aria-label="Log in as Alex Friedrichsen"
           >
@@ -37,26 +69,37 @@ export default function LoginScreen({ onLogin }: { onLogin: () => void }) {
               className="login-avatar"
               draggable={false}
             />
-          </button>
-          <div className="login-name">Alex Friedrichsen</div>
-          <div className="login-role">AI Engineer</div>
-          <button
-            type="button"
-            className="login-restart"
-            onClick={onRestart}
-            aria-label="Restart"
-          >
-            <span className="login-restart-glyph" aria-hidden="true">
-              ⟳
-            </span>
-            <span className="login-restart-label">Restart</span>
+            <div className="login-user-text">
+              <div className="login-name">Alex Friedrichsen</div>
+              <div className="login-role">AI Engineer</div>
+            </div>
           </button>
         </div>
       </div>
-      <div className="login-footer">
-        <span className="login-hint">
-          To begin, click your user name. Press F11 for the full experience.
-        </span>
+
+      {/* Bottom gradient bar */}
+      <div className="login-bar login-bar-bottom" aria-hidden="true" />
+
+      {/* Bottom chrome: Restart left, flavor text + F11 hint right */}
+      <div className="login-bottom">
+        <button
+          type="button"
+          className="login-restart"
+          onClick={onRestart}
+          aria-label="Restart"
+        >
+          <span className="login-restart-glyph" aria-hidden="true">
+            ⟳
+          </span>
+          <span className="login-restart-label">Restart</span>
+        </button>
+        <div className="login-flavor">
+          <div>After you log on, the desktop is yours to explore.</div>
+          <div>Every pixel placed on purpose.</div>
+        </div>
+      </div>
+      <div className="login-f11-hint" aria-hidden="true">
+        Press F11 for the full experience
       </div>
     </div>
   );

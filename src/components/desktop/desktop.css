@@ -318,64 +318,7 @@
   line-height: 1.1;
 }
 
-/* ─── Cookies dialog (Rnd-wrapped draggable window, R7 direct child) ─── */
-/* Rnd owns position/size; we only style the inner .window chrome. */
-.xp-scope .cookies-dialog {
-  /* no positioning — handled by <Rnd> wrapper */
-}
-.xp-scope .cookies-dialog .window-body {
-  padding: 12px;
-}
-.xp-scope .cookie-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.xp-scope .cookie-icon {
-  flex: 0 0 32px;
-  width: 32px;
-  height: 32px;
-  background: radial-gradient(
-    circle at 35% 30%,
-    #d4a064 0%,
-    #a26a2c 60%,
-    #5a3a14 100%
-  );
-  border-radius: 50%;
-  box-shadow:
-    inset -2px -3px 4px rgba(0, 0, 0, 0.4),
-    0 1px 2px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-.xp-scope .cookie-icon::before,
-.xp-scope .cookie-icon::after {
-  content: "";
-  position: absolute;
-  background: #3a1f0a;
-  border-radius: 50%;
-}
-.xp-scope .cookie-icon::before {
-  width: 4px;
-  height: 4px;
-  top: 8px;
-  left: 7px;
-}
-.xp-scope .cookie-icon::after {
-  width: 5px;
-  height: 5px;
-  top: 14px;
-  left: 18px;
-  box-shadow:
-    -3px 6px 0 -1px #3a1f0a,
-    6px -2px 0 -1px #3a1f0a;
-}
-.xp-scope .dialog-buttons {
-  margin-top: 10px;
-  text-align: right;
-  display: flex;
-  gap: 6px;
-  justify-content: flex-end;
-}
+/* R4 Fix 1: cookies dialog CSS removed — feature deleted entirely. */
 
 /* ─── Start menu (two-column, matches mocks/d1-v2/xp-start-menu.html) ─── */
 .xp-scope .start-menu {
@@ -726,112 +669,202 @@
   }
 }
 
-/* ─── LoginScreen: mitchivin-style centered user card ─── */
+/* ─── LoginScreen R4 Fix 5: mitchivin two-column welcome-screen layout ─── */
 .login-screen {
   position: fixed;
   inset: 0;
   z-index: 10001;
-  background: linear-gradient(
-    180deg,
-    #1e4a8a 0%,
-    #2a6fbf 35%,
-    #1a3f7a 70%,
-    #0f1f4a 100%
-  );
-  color: #f2f4fa;
+  background: rgb(0, 45, 153); /* deep XP blue — outer frame */
+  color: #fff;
   display: flex;
   flex-direction: column;
-  font-family: "Tahoma", "Segoe UI", sans-serif;
+  justify-content: center;
+  font-family: Tahoma, Arial, sans-serif;
   animation: boot-fade-in 400ms ease-out;
 }
-.login-wordmark-slot {
-  padding: 36px 48px 0;
-  display: flex;
-  justify-content: center;
+
+/* Horizontal pale-blue gradient bars bracket the inner band — signature
+   XP welcome-screen chrome. */
+.login-bar {
+  height: 2px;
+  flex: 0 0 auto;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(186, 215, 248) 40%,
+    rgb(186, 215, 248) 60%,
+    transparent 100%
+  );
 }
-.login-body {
-  flex: 1;
+
+/* Inner band — slightly lighter blue, holds the two columns. */
+.login-band {
+  flex: 0 0 auto;
+  background: rgb(88, 124, 219);
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
+  padding: 48px 64px;
+  gap: 48px;
+  min-height: 260px;
 }
-.login-user-card {
+
+.login-col {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  justify-content: center;
+  max-width: 460px;
 }
-.login-avatar-btn {
+.login-col-left {
+  align-items: flex-end;
+  text-align: right;
+}
+.login-col-right {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.login-wordmark-slot {
+  margin-bottom: 20px;
+}
+
+.login-instruction {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+.login-instruction-name {
+  font-weight: 400;
+  color: rgb(186, 215, 248);
+}
+
+/* Vertical divider — same pale-blue gradient as the horizontal bars but
+   rotated, and it doesn't extend to the full height of the band. */
+.login-col-divider {
+  width: 1px;
+  align-self: center;
+  height: 70%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgb(186, 215, 248) 35%,
+    rgb(186, 215, 248) 65%,
+    transparent 100%
+  );
+}
+
+/* User card (right column) — the clickable login target. */
+.login-user-card {
   background: transparent;
-  border: 2px solid transparent;
-  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 10px 16px 10px 10px;
   cursor: pointer;
   color: inherit;
   font: inherit;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
   transition:
     background 140ms ease,
     border-color 140ms ease;
 }
-.login-avatar-btn:hover,
-.login-avatar-btn:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.55);
+.login-user-card:hover,
+.login-user-card:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
   outline: none;
 }
 .login-avatar {
   width: 88px;
   height: 88px;
   image-rendering: pixelated;
-  border: 2px solid #e8ecf6;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   display: block;
+  flex: 0 0 auto;
+}
+.login-user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
 }
 .login-name {
+  font-family: Tahoma, Arial, sans-serif;
   font-size: 24px;
-  font-weight: 600;
-  margin-top: 4px;
+  font-weight: 700;
+  color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .login-role {
-  font-size: 14px;
-  color: #dce3f5;
-  margin-top: -2px;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgb(186, 215, 248);
+  margin-top: 2px;
+}
+
+/* Bottom chrome — outside the inner band. */
+.login-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 40px;
+  pointer-events: none;
+}
+.login-bottom > * {
+  pointer-events: auto;
 }
 .login-restart {
-  margin-top: 14px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #f2f4fa;
+  color: #fff;
   font: inherit;
+  font-family: Tahoma, Arial, sans-serif;
   font-size: 12px;
   padding: 6px 14px;
   border-radius: 3px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   transition:
     background 140ms ease,
     border-color 140ms ease;
 }
 .login-restart:hover,
 .login-restart:focus-visible {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.65);
   outline: none;
 }
 .login-restart-glyph {
   font-size: 14px;
   line-height: 1;
 }
-.login-footer {
-  padding: 14px 48px 24px;
+.login-flavor {
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
   text-align: right;
 }
-.login-hint {
-  font-size: 12px;
-  color: #c8d1ea;
+.login-f11-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
 }
 
 .welcome-balloon {
@@ -842,13 +875,35 @@
   max-width: 300px;
   background: #fffbe1;
   border: 1px solid #6e6a3b;
-  padding: 10px 12px 12px;
+  padding: 10px 28px 12px 12px;
   font-family: "Tahoma", "Segoe UI", sans-serif;
   font-size: 11px;
   color: #222;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
   animation: boot-fade-in 240ms ease-out;
+}
+/* R4 Fix 2: explicit close (X) — only way to dismiss early. */
+.welcome-balloon-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #444;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 14px;
   cursor: pointer;
+  border-radius: 2px;
+}
+.welcome-balloon-close:hover,
+.welcome-balloon-close:focus-visible {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: #888;
+  outline: none;
 }
 .welcome-balloon-title {
   display: flex;
