@@ -355,6 +355,61 @@ const browser = await chromium.launch();
   });
   pass("r7RndDirectChild", r7.ok, JSON.stringify(r7));
 
+  // R6 Fix A: CEO XP wallpaper must be wired to .retro-desktop.
+  const wallpaperBg = await page.evaluate(() => {
+    const el = document.querySelector(".desktop-only .retro-desktop");
+    if (!el) return "";
+    return getComputedStyle(el).backgroundImage || "";
+  });
+  const wallpaperOk = wallpaperBg.includes("carved-name-hillside.png");
+  if (wallpaperOk) {
+    console.log(`  [PASS] backgroundWallpaperPresent`);
+  } else {
+    console.log(`  [FAIL] backgroundWallpaperPresent — got=${wallpaperBg}`);
+    process.exitCode = 1;
+  }
+
+  // R6 Fix C: tray welcome "i" icon re-opens the balloon after it dismisses.
+  // Wait for the initial balloon to auto-hide (10s), click the tray icon,
+  // then assert the balloon is visible again within 3s. We shortcut the
+  // 10s wait by dismissing via the close button instead.
+  {
+    // Ensure balloon is visible, then close it.
+    await page
+      .locator(".welcome-balloon")
+      .first()
+      .waitFor({ state: "visible", timeout: 5000 })
+      .catch(() => {});
+    const closeBtn = page.locator(".welcome-balloon .welcome-balloon-close");
+    if ((await closeBtn.count()) > 0) {
+      await closeBtn.first().click();
+    }
+    await page.waitForTimeout(200);
+    const afterClose = await page.locator(".welcome-balloon").count();
+    const trayWelcomeBtn = page.locator(
+      ".desktop-only .tb-tray .tb-tray-icon[aria-label='Show welcome message']",
+    );
+    await trayWelcomeBtn.click();
+    // Appears immediately now (R6 Fix C immediate=true on remount).
+    await page
+      .locator(".welcome-balloon")
+      .first()
+      .waitFor({ state: "visible", timeout: 3000 })
+      .catch(() => {});
+    const afterTrayClick = await page.locator(".welcome-balloon").count();
+    const ok = afterClose === 0 && afterTrayClick >= 1;
+    if (ok) {
+      console.log(
+        `  [PASS] welcomeIconRestoresBalloon — afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
+      );
+    } else {
+      console.log(
+        `  [FAIL] welcomeIconRestoresBalloon — afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
+      );
+      process.exitCode = 1;
+    }
+  }
+
   // R5 Fix 2: cookies popup still gone; legacy content no longer in DOM.
   const cookiesCount = await page.locator(".cookies-dialog").count();
   if (cookiesCount !== 0) {

@@ -71,7 +71,7 @@ export default function LoginScreen({
             aria-label="Log in as Alex Friedrichsen"
           >
             <img
-              src="/Portfolio/assets/pictures/boot/user-avatar.png"
+              src={`${import.meta.env.BASE_URL}assets/pictures/boot/user-avatar.png`}
               alt=""
               className="login-avatar"
               draggable={false}

@@ -15,7 +15,7 @@ export default function Wordmark({
       aria-label="HonestAlexFXP"
     >
       <img
-        src="/Portfolio/assets/pictures/boot/xp-logo-2002.png"
+        src={`${import.meta.env.BASE_URL}assets/pictures/boot/xp-logo-2002.png`}
         alt=""
         className="xp-wordmark-flag"
         draggable={false}
