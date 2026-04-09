@@ -3,20 +3,44 @@
 // Requires: `npm run preview` (or equivalent http server) serving dist at
 // http://localhost:4321/Portfolio/ — same convention as d6-gating.mjs.
 import { chromium } from "playwright";
+import { statSync } from "node:fs";
 
 const URL = "http://localhost:4321/Portfolio/#desktop";
 
 const results = {
+  loginWavFileSize: null,
   initialBoot: null,
+  bootWordmarkPresent: null,
   autoAdvanceToLogin: null,
+  loginWordmarkPresent: null,
+  loginNameText: null,
+  loginRoleText: null,
   clickLoginOpensDesktop: null,
   loginWavRequested: null,
   balloonAppears: null,
   returnVisitorShortCircuit: null,
   returnVisitorNoBalloon: null,
   r7RndDirectChild: null,
+  cookiesDirectChild: null,
+  cookiesIsRnd: null,
   pageErrors: [],
 };
+
+// ── File-system check: real XP login.wav is ~190 KB, synthesized placeholder
+// was ~5 KB. Gate at 40 KB to catch regression to placeholder.
+{
+  try {
+    const s = statSync("public/sounds/login.wav");
+    const ok = s.size > 40 * 1024;
+    results.loginWavFileSize = { pass: ok, extra: `size=${s.size}` };
+    console.log(
+      `  [${ok ? "PASS" : "FAIL"}] loginWavFileSize — size=${s.size}`,
+    );
+  } catch (e) {
+    results.loginWavFileSize = { pass: false, extra: String(e) };
+    console.log(`  [FAIL] loginWavFileSize — ${e}`);
+  }
+}
 
 function pass(name, cond, extra = "") {
   results[name] = { pass: !!cond, extra };
@@ -62,6 +86,21 @@ const browser = await chromium.launch();
   const bootVisible = await page.locator(".desktop-only .boot-screen").count();
   pass("initialBoot", bootVisible === 1, `bootCount=${bootVisible}`);
 
+  // Wordmark (HonestAlexFXP) should render on BootScreen.
+  const bootWordmark = await page
+    .locator(".desktop-only .boot-screen .xp-wordmark")
+    .count();
+  const bootWordmarkText = bootWordmark
+    ? await page
+        .locator(".desktop-only .boot-screen .xp-wordmark-text")
+        .innerText()
+    : "";
+  pass(
+    "bootWordmarkPresent",
+    bootWordmark === 1 && /HonestAlexF\s*XP/i.test(bootWordmarkText),
+    `count=${bootWordmark} text="${bootWordmarkText}"`,
+  );
+
   // Wait for auto-advance to login (2000ms + margin).
   await page.waitForTimeout(2400);
   const loginCount = await page.locator(".desktop-only .login-screen").count();
@@ -71,6 +110,26 @@ const browser = await chromium.launch();
     loginCount === 1 && bootGone === 0,
     `login=${loginCount} boot=${bootGone}`,
   );
+
+  // Wordmark + name + role should render on LoginScreen.
+  const loginWordmark = await page
+    .locator(".desktop-only .login-screen .xp-wordmark")
+    .count();
+  pass("loginWordmarkPresent", loginWordmark === 1, `count=${loginWordmark}`);
+  const nameText = await page
+    .locator(".desktop-only .login-screen .login-name")
+    .innerText()
+    .catch(() => "");
+  pass(
+    "loginNameText",
+    /Alex\s+Friedrichsen/i.test(nameText),
+    `text="${nameText}"`,
+  );
+  const roleText = await page
+    .locator(".desktop-only .login-screen .login-role")
+    .innerText()
+    .catch(() => "");
+  pass("loginRoleText", /AI\s+Engineer/i.test(roleText), `text="${roleText}"`);
 
   // Click the login avatar.
   const avatarBefore = loginWavCount;
@@ -119,6 +178,35 @@ const browser = await chromium.launch();
     return { ok: windows.length >= 1, windowCount: windows.length };
   });
   pass("r7RndDirectChild", r7.ok, JSON.stringify(r7));
+
+  // Cookies popup: should appear ~1.5s after desktop phase.
+  await page
+    .waitForSelector(".desktop-only .cookies-dialog", { timeout: 3000 })
+    .catch(() => {});
+  const cookiesInfo = await page.evaluate(() => {
+    const root = document.querySelector(".desktop-only .retro-desktop");
+    const dialog = document.querySelector(".desktop-only .cookies-dialog");
+    if (!root || !dialog) return { ok: false, reason: "no dialog" };
+    // Rnd wraps children in a div; walk up until we find the node whose
+    // parent is .retro-desktop. That node is the Rnd wrapper and MUST be a
+    // direct child of .retro-desktop (R7).
+    let cur = dialog.parentElement;
+    while (cur && cur !== root && cur.parentElement !== root) {
+      cur = cur.parentElement;
+    }
+    if (!cur || cur.parentElement !== root) {
+      return { ok: false, reason: "not direct child of .retro-desktop" };
+    }
+    const style = cur.getAttribute("style") || "";
+    const isRnd = /position:\s*absolute/i.test(style);
+    return { ok: true, isRnd, wrapperStyle: style.slice(0, 140) };
+  });
+  pass("cookiesDirectChild", cookiesInfo.ok, JSON.stringify(cookiesInfo));
+  pass(
+    "cookiesIsRnd",
+    cookiesInfo.ok && cookiesInfo.isRnd === true,
+    JSON.stringify(cookiesInfo),
+  );
 
   await ctx.close();
 }
