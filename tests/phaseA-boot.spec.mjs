@@ -27,8 +27,8 @@ const results = {
   loginFlavorText: null,
   loginF11HintClickable: null,
   clickLoginOpensDesktop: null,
-  startupWavRequestedOnFirstLogin: null,
-  loginWavNotRequestedOnFirstLogin: null,
+  startupWavPlayedOnFirstLogin: null,
+  loginWavNotPlayedOnFirstLogin: null,
   balloonAppears: null,
   balloonHasCloseButton: null,
   balloonCloseDismisses: null,
@@ -249,24 +249,35 @@ const browser = await chromium.launch();
     JSON.stringify(f11Hint),
   );
 
-  // R5 Fix 7: first avatar click plays startup.wav (not login.wav).
-  const startupBefore = startupWavCount;
-  const loginBefore = loginWavCount;
+  // R5 r2 Cipher W3: assert actual audioManager.play() invocations via the
+  // window.__audioPlayCount instrumentation. The network-request approach
+  // missed cached replays (preload() warmed the cache, click-time play()
+  // emitted no new request). This is the real signal.
+  const playBefore = await page.evaluate(() => {
+    const w = window;
+    return {
+      startup: w.__audioPlayCount?.startup ?? 0,
+      login: w.__audioPlayCount?.login ?? 0,
+    };
+  });
   await page.locator(".desktop-only .login-screen .login-user-card").click();
   await page.waitForTimeout(300);
+  const playAfter = await page.evaluate(() => {
+    const w = window;
+    return {
+      startup: w.__audioPlayCount?.startup ?? 0,
+      login: w.__audioPlayCount?.login ?? 0,
+    };
+  });
   pass(
-    "startupWavRequestedOnFirstLogin",
-    startupWavCount >= 1,
-    `total=${startupWavCount} delta=${startupWavCount - startupBefore}`,
+    "startupWavPlayedOnFirstLogin",
+    playAfter.startup - playBefore.startup === 1,
+    `delta=${playAfter.startup - playBefore.startup}`,
   );
-  // login.wav may be fetched once by preload(), but NOT as a fresh play-triggered
-  // request. preload uses HTMLMediaElement which may or may not emit a network
-  // request depending on cache — we assert that the click itself did not trigger
-  // a NEW login.wav request.
   pass(
-    "loginWavNotRequestedOnFirstLogin",
-    loginWavCount - loginBefore === 0,
-    `deltaFromClick=${loginWavCount - loginBefore} totalSoFar=${loginWavCount}`,
+    "loginWavNotPlayedOnFirstLogin",
+    playAfter.login - playBefore.login === 0,
+    `delta=${playAfter.login - playBefore.login}`,
   );
 
   const loginGone = await page.locator(".desktop-only .login-screen").count();

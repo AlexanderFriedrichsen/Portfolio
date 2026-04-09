@@ -17,7 +17,7 @@
 //   'login'    — LoginScreen overlay visible, avatar click advances to 'desktop'.
 //   'desktop'  — no overlay; Desktop content is revealed.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { audioManager } from "./audioManager";
 
 export type BootPhase = "boot" | "login" | "desktop";
@@ -47,6 +47,18 @@ export function useBootSequence() {
   const [firstDesktopVisit, setFirstDesktopVisit] = useState(false);
   const [hasLoggedInOnce, setHasLoggedInOnce] = useState(false);
   const [shuttingDown, setShuttingDown] = useState(false);
+  // R5 r2 Cipher warning 2: track the shutdown timer so we can cancel it
+  // on unmount (HMR, route change, test teardown). Without this cleanup a
+  // fired callback hits a dead component and React warns.
+  const shutdownTimerRef = useRef<number | null>(null);
+  useEffect(() => {
+    return () => {
+      if (shutdownTimerRef.current !== null) {
+        window.clearTimeout(shutdownTimerRef.current);
+        shutdownTimerRef.current = null;
+      }
+    };
+  }, []);
 
   // Client-mount: always start the ceremony unless the test escape hatch
   // is set. R5 Fix 1 removed the portfolio:visited localStorage short-circuit.
@@ -72,6 +84,12 @@ export function useBootSequence() {
     setPhase("desktop");
   }, []);
 
+  // Intentional asymmetry with shutdown(): the Restart button on the login
+  // screen is NOT a cold boot — the user is already inside the session and
+  // has technically "logged in once" (that's how they got here via the
+  // avatar). So we deliberately do NOT reset hasLoggedInOnce; the next
+  // avatar click plays login.wav (logon chime), not startup.wav. Only
+  // shutdown() resets the session entirely. Do not "fix" this.
   const playBootSequence = useCallback(() => {
     setFirstDesktopVisit(false);
     setPhase("boot");
@@ -92,7 +110,11 @@ export function useBootSequence() {
   const shutdown = useCallback(() => {
     setShuttingDown(true);
     audioManager.play("shutdown");
-    window.setTimeout(() => {
+    if (shutdownTimerRef.current !== null) {
+      window.clearTimeout(shutdownTimerRef.current);
+    }
+    shutdownTimerRef.current = window.setTimeout(() => {
+      shutdownTimerRef.current = null;
       setShuttingDown(false);
       setFirstDesktopVisit(false);
       setHasLoggedInOnce(false);

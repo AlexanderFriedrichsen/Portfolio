@@ -442,7 +442,8 @@ export default function Desktop() {
                 className="tb-tray-glyph tb-tray-fullscreen"
                 aria-hidden="true"
               >
-                {isFullscreen ? "⛶" : "⛶"}
+                {/* R5 r2 Cipher W1: distinct glyphs for enter vs exit. */}
+                {isFullscreen ? "⧉" : "⛶"}
               </span>
             </button>
             <div className="tb-clock" aria-label="Clock">

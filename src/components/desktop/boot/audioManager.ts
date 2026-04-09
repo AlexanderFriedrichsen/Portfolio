@@ -53,6 +53,16 @@ export const audioManager = {
   play(name: SoundName): void {
     const el = ensure(name);
     if (!el) return;
+    // R5 r2 Cipher W3: expose a per-sound play counter on window so tests
+    // can assert actual .play() invocations (not just network requests,
+    // which miss cached replays). Handful of bytes, always on.
+    if (typeof window !== "undefined") {
+      const w = window as unknown as {
+        __audioPlayCount?: Record<string, number>;
+      };
+      w.__audioPlayCount ??= {};
+      w.__audioPlayCount[name] = (w.__audioPlayCount[name] ?? 0) + 1;
+    }
     try {
       el.currentTime = 0;
     } catch {
