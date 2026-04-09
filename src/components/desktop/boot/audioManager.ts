@@ -13,7 +13,7 @@
 //
 // Phase C (Restart/Turn Off) will reuse this module; no API changes expected.
 
-export type SoundName = "login" | "logoff" | "balloon" | "startup";
+export type SoundName = "login" | "logoff" | "balloon" | "startup" | "shutdown";
 
 // Base URL is injected by Vite from astro.config.mjs (base: "/Portfolio/").
 // Using import.meta.env.BASE_URL keeps the audio paths in sync with any
@@ -28,6 +28,9 @@ const SOURCES: Record<SoundName, string> = {
   // the first user gesture during boot, because browser autoplay policy
   // blocks .play() before any gesture. See Desktop.tsx first-gesture hook.
   startup: `${BASE}sounds/startup.wav`,
+  // R5 Fix 4: canonical XP shutdown sound, copied from the sound library
+  // (Windows XP Shutdown.wav). Played when the user picks Shut Down.
+  shutdown: `${BASE}sounds/shutdown.wav`,
 };
 
 const cache: Partial<Record<SoundName, HTMLAudioElement>> = {};

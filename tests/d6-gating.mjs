@@ -2,8 +2,11 @@
 // Run: node tests/d6-gating.mjs  (requires http-server on :4321 serving dist at /Portfolio/)
 import { chromium, devices } from "playwright";
 
-// D7: now points at the integrated #desktop section on the real index page.
-const URL = "http://localhost:4321/Portfolio/#desktop";
+// D7: points at the integrated #desktop section on the real index page.
+// R5 Fix 1: the portfolio:visited shortcut was removed, so the ?skipBoot=1
+// test-only escape hatch is used here to keep d6-gating's post-login
+// assertions deterministic. phaseA-boot.spec.mjs covers the full ceremony.
+const URL = "http://localhost:4321/Portfolio/?skipBoot=1#desktop";
 
 const viewports = [
   {
@@ -124,16 +127,7 @@ for (const v of viewports) {
     hasTouch: v.hasTouch,
     isMobile: v.isMobile,
   });
-  // Phase A: pre-set the visited flag so the boot/login ceremony short-
-  // circuits. Without this, the desk-icon selectors below race the 2s
-  // boot auto-advance and flake. This is intentional, narrow, and only
-  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
-  // first-visit ceremony separately.
-  await ctx.addInitScript(() => {
-    try {
-      localStorage.setItem("portfolio:visited", "1");
-    } catch {}
-  });
+  // R5 Fix 1: boot skipped via ?skipBoot=1 in the URL — see URL constant.
   const page = await ctx.newPage();
   const consoleErrs = [];
   page.on("console", (msg) => {
@@ -181,16 +175,7 @@ for (const v of [
     hasTouch: v.hasTouch,
     isMobile: v.isMobile,
   });
-  // Phase A: pre-set the visited flag so the boot/login ceremony short-
-  // circuits. Without this, the desk-icon selectors below race the 2s
-  // boot auto-advance and flake. This is intentional, narrow, and only
-  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
-  // first-visit ceremony separately.
-  await ctx.addInitScript(() => {
-    try {
-      localStorage.setItem("portfolio:visited", "1");
-    } catch {}
-  });
+  // R5 Fix 1: boot skipped via ?skipBoot=1 in the URL — see URL constant.
   const page = await ctx.newPage();
   // Install layout-shift observer before any page script runs so we catch
   // the client:visible hydration shift.
@@ -233,16 +218,7 @@ for (const v of [
     hasTouch: false,
     isMobile: false,
   });
-  // Phase A: pre-set the visited flag so the boot/login ceremony short-
-  // circuits. Without this, the desk-icon selectors below race the 2s
-  // boot auto-advance and flake. This is intentional, narrow, and only
-  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
-  // first-visit ceremony separately.
-  await ctx.addInitScript(() => {
-    try {
-      localStorage.setItem("portfolio:visited", "1");
-    } catch {}
-  });
+  // R5 Fix 1: boot skipped via ?skipBoot=1 in the URL — see URL constant.
   const page = await ctx.newPage();
   const errs = [];
   page.on("pageerror", (e) => errs.push(e.message));
@@ -416,24 +392,28 @@ for (const v of [
     if (!sm) return false;
     return !!sm.closest(".retro-desktop");
   });
-  // BSOD via Shut Down menuitem. Use raw .click() on the DOM node so we
-  // bypass any overlapping element / click-outside handler timing weirdness.
+  // R5 Fix 4: Shut Down no longer fires BSOD. Clicking it now dims the
+  // screen via .shutdown-overlay, plays shutdown.wav, and replays the boot
+  // ceremony. Assert the overlay appears and lives inside .retro-desktop.
   await page.evaluate(() => {
     const b = document.querySelector(".sm-shutdown");
     if (b) b.click();
   });
   await page.waitForTimeout(250);
-  t.bsodVisible = (await page.locator(".desktop-only .bsod").count()) === 1;
-  // v2 r2: BSOD should live inside .retro-desktop.
-  t.bsodInsideDesktop = await page.evaluate(() => {
-    const b = document.querySelector(".bsod");
-    if (!b) return false;
-    return !!b.closest(".retro-desktop");
+  t.shutdownOverlayVisible =
+    (await page.locator(".desktop-only .shutdown-overlay").count()) === 1;
+  t.shutdownOverlayInsideDesktop = await page.evaluate(() => {
+    const o = document.querySelector(".shutdown-overlay");
+    if (!o) return false;
+    return !!o.closest(".retro-desktop");
   });
-  // Click anywhere dismisses
-  await page.mouse.click(400, 400);
-  await page.waitForTimeout(200);
-  t.bsodDismissed = (await page.locator(".desktop-only .bsod").count()) === 0;
+  // After ~1.5s the boot ceremony replays.
+  await page.waitForTimeout(1600);
+  t.shutdownReplaysBoot =
+    (await page.locator(".desktop-only .boot-screen").count()) === 1;
+  // BSOD component is gone.
+  t.bsodElementAbsent =
+    (await page.locator(".desktop-only .bsod").count()) === 0;
 
   // No vertical scroll on the html element at >=1024 fine.
   t.noScroll = await page.evaluate(() => {
@@ -452,16 +432,7 @@ for (const v of [
     hasTouch: true,
     isMobile: true,
   });
-  // Phase A: pre-set the visited flag so the boot/login ceremony short-
-  // circuits. Without this, the desk-icon selectors below race the 2s
-  // boot auto-advance and flake. This is intentional, narrow, and only
-  // applies to the d6 gating matrix — phaseA-boot.spec.mjs covers the
-  // first-visit ceremony separately.
-  await ctx.addInitScript(() => {
-    try {
-      localStorage.setItem("portfolio:visited", "1");
-    } catch {}
-  });
+  // R5 Fix 1: boot skipped via ?skipBoot=1 in the URL — see URL constant.
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: "networkidle" });
   const m = await page.evaluate(() => {

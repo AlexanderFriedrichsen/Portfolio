@@ -143,8 +143,10 @@ export default function Desktop() {
   );
   const [justOpened, setJustOpened] = useState<WindowId | null>(null);
   const [startOpen, setStartOpen] = useState(false);
-  const [bsod, setBsod] = useState(false);
   const [aboutInitialTab, setAboutInitialTab] = useState<AboutTabId>("general");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [balloonKey, setBalloonKey] = useState(0);
+  const [balloonForced, setBalloonForced] = useState(false);
 
   // R4 Fix 3: SSR hydration flash guard. `phase` initializes to 'desktop'
   // on both server and client to avoid hydration mismatch, and only flips
@@ -164,9 +166,12 @@ export default function Desktop() {
   const {
     phase,
     firstDesktopVisit,
+    shuttingDown,
     advanceToLogin,
     advanceToDesktop,
     playBootSequence,
+    logOff,
+    shutdown,
   } = useBootSequence();
 
   // Preload audio once per island mount; browsers allow metadata fetch
@@ -175,37 +180,38 @@ export default function Desktop() {
     audioManager.preload();
   }, []);
 
-  // R4 Fix 4: XP startup chord on first user gesture. Autoplay policy
-  // blocks .play() before any gesture, so we attach a one-shot listener
-  // on the document and play 'startup' the first time the user clicks
-  // anywhere (including the boot-screen "click to skip" or the login
-  // avatar). The listener removes itself after firing. Gated on
-  // first-visit: return visitors already persisted `portfolio:visited`
-  // and we want the desktop to load silently for them.
+  // R5 Fix 5: fullscreen state tracking. Browser default F11 often goes
+  // through fullscreen at the chrome level (not document.fullscreenElement),
+  // but when our clickable hint or tray icon triggers requestFullscreen()
+  // the fullscreenchange event fires and we can hide the hint text.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof document === "undefined") return;
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (typeof document === "undefined") return;
     try {
-      if (window.localStorage.getItem("portfolio:visited")) return;
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.();
+      } else {
+        document.documentElement.requestFullscreen?.();
+      }
     } catch {
-      /* ignore */
+      /* ignore — user-initiated failures are silent */
     }
-    const onFirstGesture = () => {
-      audioManager.play("startup");
-      document.removeEventListener("pointerdown", onFirstGesture, true);
-      document.removeEventListener("keydown", onFirstGesture, true);
-    };
-    document.addEventListener("pointerdown", onFirstGesture, true);
-    document.addEventListener("keydown", onFirstGesture, true);
-    return () => {
-      document.removeEventListener("pointerdown", onFirstGesture, true);
-      document.removeEventListener("keydown", onFirstGesture, true);
-    };
+  }, []);
+
+  const showWelcomeBalloon = useCallback(() => {
+    setBalloonForced(true);
+    setBalloonKey((k) => k + 1);
   }, []);
 
   // Trigger refs — captured when a menu/overlay opens so we can restore
   // focus to the trigger on close (WCAG focus-return pattern).
   const startBtnRef = useRef<HTMLButtonElement>(null);
-  const bsodTriggerRef = useRef<HTMLElement | null>(null);
 
   // Track the previous phase so we can detect the login→desktop transition
   // specifically (not arbitrary re-renders while phase==='desktop').
@@ -368,23 +374,8 @@ export default function Desktop() {
                 // Stubs per CEO — href=# equivalent. No-op for now.
               }
               // System
-              else if (action === "logoff" || action === "shutdown") {
-                bsodTriggerRef.current = startBtnRef.current;
-                setBsod(true);
-              }
-            }}
-          />
-        )}
-
-        {/* BSOD overlay */}
-        {bsod && (
-          <Bsod
-            onDismiss={() => {
-              setBsod(false);
-              // Restore focus to whatever opened the BSOD (Shut Down/Log Off).
-              const t = bsodTriggerRef.current;
-              bsodTriggerRef.current = null;
-              window.setTimeout(() => t?.focus?.(), 0);
+              else if (action === "logoff") logOff();
+              else if (action === "shutdown") shutdown();
             }}
           />
         )}
@@ -423,25 +414,63 @@ export default function Desktop() {
             })}
           </div>
           <div className="tb-tray">
+            {/* R5 Fix 6: XP-style system tray icons to the LEFT of the clock. */}
+            <button
+              type="button"
+              className="tb-tray-icon"
+              aria-label="Show welcome message"
+              title="Welcome"
+              onClick={showWelcomeBalloon}
+            >
+              <span
+                className="tb-tray-glyph tb-tray-welcome"
+                aria-hidden="true"
+              >
+                i
+              </span>
+            </button>
+            <button
+              type="button"
+              className="tb-tray-icon"
+              aria-label={
+                isFullscreen ? "Exit full screen" : "Enter full screen"
+              }
+              title={isFullscreen ? "Exit full screen" : "Enter full screen"}
+              onClick={toggleFullscreen}
+            >
+              <span
+                className="tb-tray-glyph tb-tray-fullscreen"
+                aria-hidden="true"
+              >
+                {isFullscreen ? "⛶" : "⛶"}
+              </span>
+            </button>
             <div className="tb-clock" aria-label="Clock">
               <div>{now ? formatClockTime(now) : ""}</div>
               <div>{now ? formatClockDate(now) : ""}</div>
             </div>
           </div>
         </div>
+
+        {/* R5 Fix 4: shutdown grey overlay. Sits above desktop, below the
+            boot screen so the boot fade can land on top. */}
+        {shuttingDown && (
+          <div className="shutdown-overlay" aria-hidden="true" />
+        )}
       </div>
       {/* Phase A overlays — Fragment siblings of .retro-desktop (R7 safe). */}
       {phase === "boot" && <BootScreen onSkip={advanceToLogin} />}
       {phase === "login" && (
         <LoginScreen
-          onLogin={() => {
-            audioManager.play("login");
-            advanceToDesktop();
-          }}
+          onLogin={advanceToDesktop}
           onRestart={playBootSequence}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={toggleFullscreen}
         />
       )}
-      {phase === "desktop" && firstDesktopVisit && <WelcomeBalloon />}
+      {phase === "desktop" && (firstDesktopVisit || balloonForced) && (
+        <WelcomeBalloon key={balloonKey} />
+      )}
     </>
   );
 }
@@ -769,61 +798,5 @@ function StartMenu({
   );
 }
 
-// ─── BSOD ──────────────────────────────────────────────────────────────────
-function Bsod({ onDismiss }: { onDismiss: () => void }) {
-  const divRef = useRef<HTMLDivElement>(null);
-
-  // Click anywhere dismisses. Keydown is gated to Enter/Escape only
-  // (Cipher: "any-key" triggers false positives for Tab/Shift/etc).
-  useEffect(() => {
-    divRef.current?.focus();
-    const click = () => onDismiss();
-    const key = (e: KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === "Escape") {
-        e.preventDefault();
-        onDismiss();
-      }
-    };
-    document.addEventListener("click", click);
-    document.addEventListener("keydown", key);
-    return () => {
-      document.removeEventListener("click", click);
-      document.removeEventListener("keydown", key);
-    };
-  }, [onDismiss]);
-
-  return (
-    <div
-      ref={divRef}
-      className="bsod"
-      role="alertdialog"
-      aria-label="System error"
-      aria-modal="true"
-      tabIndex={-1}
-    >
-      <div className="bsod-inner">
-        <p>
-          A problem has been detected and Windows has been shut down to prevent
-          damage to your computer.
-        </p>
-        <p>*** STOP: 0x000000F3 (PORTFOLIO_VIBES_OVERFLOW)</p>
-        <p>
-          If this is the first time you've seen this stop error screen, restart
-          your computer. If this screen appears again, follow these steps:
-        </p>
-        <p>
-          Check to be sure you have adequate disk space. If a driver is
-          identified in the stop message, disable the driver or check with the
-          manufacturer for driver updates. Try changing video adapters.
-        </p>
-        <p>Technical information:</p>
-        <p>
-          *** STOP: 0x000000F3 (0x00000420, 0x0000C0DE, 0xDEADBEEF, 0x00000000)
-        </p>
-        <p style={{ marginTop: 24 }}>
-          Press Enter or Escape, or click anywhere, to continue _
-        </p>
-      </div>
-    </div>
-  );
-}
+// R5: BSOD component removed. Log Off and Shut Down now run proper XP-style
+// flows (logoff → login screen; shutdown → grey overlay → boot replay).
