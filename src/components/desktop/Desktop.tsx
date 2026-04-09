@@ -311,10 +311,6 @@ export default function Desktop() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Wallpaper layer (Bliss CSS gradient stand-in).
-          TODO: swap to bliss.jpg once /assets/wallpapers/bliss.jpg is sourced.
-          Single-line swap: change .retro-desktop background in desktop.css. */}
-
         {/* Desktop icons */}
         <div className="desk-icons">
           {ICONS.map((icon) => (

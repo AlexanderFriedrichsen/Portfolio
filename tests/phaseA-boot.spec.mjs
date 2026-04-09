@@ -340,20 +340,42 @@ const browser = await chromium.launch();
     `count=${fullscreenIcon}`,
   );
 
-  // R7 sanity.
-  const r7 = await page.evaluate(() => {
+  // R7 sanity — two-phase.
+  // Phase 1: initial desktop has zero windows (R6 Fix 1 regression guard).
+  const r7Initial = await page.evaluate(() => {
     const root = document.querySelector(".desktop-only .retro-desktop");
     if (!root) return { ok: false, reason: "no .retro-desktop" };
     const windows = Array.from(root.querySelectorAll(":scope > div")).filter(
       (d) => d.querySelector(":scope > .window"),
     );
-    // R6 Fix 1: desktop now starts with zero windows open. The R7
-    // Rnd-direct-child invariant still holds vacuously (and structurally
-    // when any window is later opened). Assert windowCount === 0 at the
-    // initial desktop state as a regression guard.
     return { ok: windows.length === 0, windowCount: windows.length };
   });
-  pass("r7RndDirectChild", r7.ok, JSON.stringify(r7));
+  pass("r7RndDirectChild", r7Initial.ok, JSON.stringify(r7Initial));
+
+  // Phase 2 (Cipher W2 r6c3): re-arm the structural R7 guard. Open a
+  // window via the first desktop icon, then assert there is exactly one
+  // Rnd wrapper that is a DIRECT child of .retro-desktop and contains a
+  // .window child. This proves the R7 invariant (no intermediate
+  // wrappers between .retro-desktop and Rnd) still holds.
+  await page.locator(".desktop-only .desk-icons .desk-icon").first().dblclick();
+  await page.waitForTimeout(400);
+  const r7After = await page.evaluate(() => {
+    const root = document.querySelector(".desktop-only .retro-desktop");
+    if (!root) return { ok: false, reason: "no .retro-desktop" };
+    const rndChildren = Array.from(
+      root.querySelectorAll(":scope > div"),
+    ).filter((d) => d.querySelector(":scope > .window"));
+    return { ok: rndChildren.length === 1, windowCount: rndChildren.length };
+  });
+  pass("r7RndDirectChildAfterOpen", r7After.ok, JSON.stringify(r7After));
+  // Close the window we opened so subsequent assertions see the clean state.
+  const closeBtn = page.locator(
+    ".desktop-only .retro-desktop > div > .window > .title-bar > .title-bar-controls button[aria-label^='Close']",
+  );
+  if ((await closeBtn.count()) > 0) {
+    await closeBtn.first().click({ force: true });
+    await page.waitForTimeout(200);
+  }
 
   // R6 Fix A: CEO XP wallpaper must be wired to .retro-desktop.
   const wallpaperBg = await page.evaluate(() => {
@@ -369,42 +391,56 @@ const browser = await chromium.launch();
     process.exitCode = 1;
   }
 
-  // R6 Fix C: tray welcome "i" icon re-opens the balloon after it dismisses.
-  // Wait for the initial balloon to auto-hide (10s), click the tray icon,
-  // then assert the balloon is visible again within 3s. We shortcut the
-  // 10s wait by dismissing via the close button instead.
+  // R6 Fix C (Cipher W1 r6c3): tray welcome "i" icon re-opens the balloon
+  // AND does so with sub-500ms latency. The 2s APPEAR_DELAY_MS path would
+  // satisfy a looser tolerance, so we tight-poll elapsed time instead —
+  // this proves the `immediate={balloonKey > 0}` fix actually landed.
   {
-    // Ensure balloon is visible, then close it.
     await page
       .locator(".welcome-balloon")
       .first()
       .waitFor({ state: "visible", timeout: 5000 })
       .catch(() => {});
-    const closeBtn = page.locator(".welcome-balloon .welcome-balloon-close");
-    if ((await closeBtn.count()) > 0) {
-      await closeBtn.first().click();
+    const wbClose = page.locator(".welcome-balloon .welcome-balloon-close");
+    if ((await wbClose.count()) > 0) {
+      await wbClose.first().click();
     }
     await page.waitForTimeout(200);
     const afterClose = await page.locator(".welcome-balloon").count();
+
     const trayWelcomeBtn = page.locator(
       ".desktop-only .tb-tray .tb-tray-icon[aria-label='Show welcome message']",
     );
+    const t0 = Date.now();
     await trayWelcomeBtn.click();
-    // Appears immediately now (R6 Fix C immediate=true on remount).
-    await page
-      .locator(".welcome-balloon")
-      .first()
-      .waitFor({ state: "visible", timeout: 3000 })
-      .catch(() => {});
+    // Tight-poll for visibility; max 1s window so the 2s non-immediate
+    // path would definitely fail. Asserted < 500ms below.
+    let elapsedMs = -1;
+    for (let i = 0; i < 40; i++) {
+      const visible = await page
+        .locator(".welcome-balloon")
+        .first()
+        .isVisible()
+        .catch(() => false);
+      if (visible) {
+        elapsedMs = Date.now() - t0;
+        break;
+      }
+      await page.waitForTimeout(25);
+    }
     const afterTrayClick = await page.locator(".welcome-balloon").count();
-    const ok = afterClose === 0 && afterTrayClick >= 1;
+    const ok =
+      afterClose === 0 &&
+      afterTrayClick >= 1 &&
+      elapsedMs >= 0 &&
+      elapsedMs < 500;
     if (ok) {
       console.log(
-        `  [PASS] welcomeIconRestoresBalloon — afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
+        `  [PASS] welcomeIconRestoresBalloon — elapsedMs=${elapsedMs} afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
       );
     } else {
       console.log(
-        `  [FAIL] welcomeIconRestoresBalloon — afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
+        `  [FAIL] welcomeIconRestoresBalloon — elapsedMs=${elapsedMs} afterClose=${afterClose} afterTrayClick=${afterTrayClick}`,
       );
       process.exitCode = 1;
     }
