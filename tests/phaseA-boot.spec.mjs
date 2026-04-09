@@ -9,20 +9,26 @@ const URL = "http://localhost:4321/Portfolio/#desktop";
 
 const results = {
   loginWavFileSize: null,
+  startupWavFileSize: null,
   initialBoot: null,
+  desktopHiddenBeforeBoot: null,
   bootWordmarkPresent: null,
   autoAdvanceToLogin: null,
   loginWordmarkPresent: null,
+  loginTwoColumnStructure: null,
+  loginGradientBars: null,
   loginNameText: null,
   loginRoleText: null,
+  loginFlavorText: null,
   clickLoginOpensDesktop: null,
   loginWavRequested: null,
   balloonAppears: null,
+  balloonHasCloseButton: null,
+  balloonCloseDismisses: null,
+  balloonPersistsPast9s: null,
   returnVisitorShortCircuit: null,
   returnVisitorNoBalloon: null,
   r7RndDirectChild: null,
-  cookiesDirectChild: null,
-  cookiesIsRnd: null,
   pageErrors: [],
 };
 
@@ -39,6 +45,23 @@ const results = {
   } catch (e) {
     results.loginWavFileSize = { pass: false, extra: String(e) };
     console.log(`  [FAIL] loginWavFileSize — ${e}`);
+  }
+}
+
+// R4 Fix 4: startup.wav must exist (canonical XP startup chord is ~424 KB;
+// gate at 100 KB so any regression to placeholder or to the small 2 KB
+// "Windows XP Start.wav" is caught).
+{
+  try {
+    const s = statSync("public/sounds/startup.wav");
+    const ok = s.size > 100 * 1024;
+    results.startupWavFileSize = { pass: ok, extra: `size=${s.size}` };
+    console.log(
+      `  [${ok ? "PASS" : "FAIL"}] startupWavFileSize — size=${s.size}`,
+    );
+  } catch (e) {
+    results.startupWavFileSize = { pass: false, extra: String(e) };
+    console.log(`  [FAIL] startupWavFileSize — ${e}`);
   }
 }
 
@@ -86,6 +109,24 @@ const browser = await chromium.launch();
   const bootVisible = await page.locator(".desktop-only .boot-screen").count();
   pass("initialBoot", bootVisible === 1, `bootCount=${bootVisible}`);
 
+  // R4 Fix 3: while the boot screen is up on first visit, the
+  // .retro-desktop root must be visibility:hidden. This is the SSR-flash
+  // guard — before this fix, the fully-rendered desktop painted for a
+  // frame before the boot overlay mounted.
+  const desktopVis = await page.evaluate(() => {
+    const el = document.querySelector(".desktop-only .retro-desktop");
+    if (!el) return { found: false };
+    return {
+      found: true,
+      visibility: getComputedStyle(el).visibility,
+    };
+  });
+  pass(
+    "desktopHiddenBeforeBoot",
+    desktopVis.found && desktopVis.visibility === "hidden",
+    JSON.stringify(desktopVis),
+  );
+
   // Wordmark (HonestAlexFXP) should render on BootScreen.
   const bootWordmark = await page
     .locator(".desktop-only .boot-screen .xp-wordmark")
@@ -116,6 +157,57 @@ const browser = await chromium.launch();
     .locator(".desktop-only .login-screen .xp-wordmark")
     .count();
   pass("loginWordmarkPresent", loginWordmark === 1, `count=${loginWordmark}`);
+
+  // R4 Fix 5: two-column structure — left column with instruction text,
+  // vertical divider, right column with user card.
+  const structure = await page.evaluate(() => {
+    const left = document.querySelector(
+      ".desktop-only .login-screen .login-col-left",
+    );
+    const right = document.querySelector(
+      ".desktop-only .login-screen .login-col-right",
+    );
+    const div = document.querySelector(
+      ".desktop-only .login-screen .login-col-divider",
+    );
+    const instr = document.querySelector(
+      ".desktop-only .login-screen .login-instruction",
+    );
+    const card = document.querySelector(
+      ".desktop-only .login-screen .login-user-card",
+    );
+    return {
+      left: !!left,
+      right: !!right,
+      divider: !!div,
+      instruction: !!instr,
+      userCard: !!card,
+      instructionText: instr?.textContent?.trim() || "",
+    };
+  });
+  pass(
+    "loginTwoColumnStructure",
+    structure.left &&
+      structure.right &&
+      structure.divider &&
+      structure.instruction &&
+      structure.userCard &&
+      /click/i.test(structure.instructionText),
+    JSON.stringify(structure),
+  );
+
+  // R4 Fix 5: horizontal gradient bars at top and bottom of the inner band.
+  const bars = await page.evaluate(() => {
+    const top = document.querySelector(
+      ".desktop-only .login-screen .login-bar-top",
+    );
+    const bot = document.querySelector(
+      ".desktop-only .login-screen .login-bar-bottom",
+    );
+    return { top: !!top, bot: !!bot };
+  });
+  pass("loginGradientBars", bars.top && bars.bot, JSON.stringify(bars));
+
   const nameText = await page
     .locator(".desktop-only .login-screen .login-name")
     .innerText()
@@ -131,9 +223,20 @@ const browser = await chromium.launch();
     .catch(() => "");
   pass("loginRoleText", /AI\s+Engineer/i.test(roleText), `text="${roleText}"`);
 
-  // Click the login avatar.
+  // R4 Fix 5: bottom-right flavor text present.
+  const flavor = await page
+    .locator(".desktop-only .login-screen .login-flavor")
+    .innerText()
+    .catch(() => "");
+  pass(
+    "loginFlavorText",
+    flavor.length > 0 && /desktop|pixel|explore/i.test(flavor),
+    `text="${flavor.slice(0, 80)}"`,
+  );
+
+  // Click the login user card (R4 Fix 5: the whole card is the button).
   const avatarBefore = loginWavCount;
-  await page.locator(".login-avatar-btn").click();
+  await page.locator(".desktop-only .login-screen .login-user-card").click();
   await page.waitForTimeout(200);
 
   // login.wav should have been requested at least once by now (preload
@@ -166,6 +269,37 @@ const browser = await chromium.launch();
     `count=${balloon} text="${balloonText.slice(0, 40)}"`,
   );
 
+  // R4 Fix 2: balloon must have an explicit close (X) button.
+  const balloonCloseCount = await page
+    .locator(".welcome-balloon .welcome-balloon-close")
+    .count();
+  pass(
+    "balloonHasCloseButton",
+    balloonCloseCount === 1,
+    `count=${balloonCloseCount}`,
+  );
+
+  // R4 Fix 2: balloon must remain visible for at least 9 seconds after
+  // appearing. We already waited 2.4s for it to appear; sleep another
+  // 7s (for ~9.4s total visible) and assert it's still there.
+  await page.waitForTimeout(7000);
+  const balloonAfter9s = await page.locator(".welcome-balloon").count();
+  pass(
+    "balloonPersistsPast9s",
+    balloonAfter9s === 1,
+    `countAfter9s=${balloonAfter9s}`,
+  );
+
+  // R4 Fix 2: clicking the close button dismisses the balloon.
+  await page.locator(".welcome-balloon .welcome-balloon-close").click();
+  await page.waitForTimeout(150);
+  const balloonAfterClose = await page.locator(".welcome-balloon").count();
+  pass(
+    "balloonCloseDismisses",
+    balloonAfterClose === 0,
+    `countAfterClose=${balloonAfterClose}`,
+  );
+
   // R7 sanity: each open <Rnd> root should be a direct child of .retro-desktop.
   // Rnd wraps its children in a div with inline style — those divs must be
   // direct children of .retro-desktop with no wrapping element in between.
@@ -179,34 +313,14 @@ const browser = await chromium.launch();
   });
   pass("r7RndDirectChild", r7.ok, JSON.stringify(r7));
 
-  // Cookies popup: should appear ~1.5s after desktop phase.
-  await page
-    .waitForSelector(".desktop-only .cookies-dialog", { timeout: 3000 })
-    .catch(() => {});
-  const cookiesInfo = await page.evaluate(() => {
-    const root = document.querySelector(".desktop-only .retro-desktop");
-    const dialog = document.querySelector(".desktop-only .cookies-dialog");
-    if (!root || !dialog) return { ok: false, reason: "no dialog" };
-    // Rnd wraps children in a div; walk up until we find the node whose
-    // parent is .retro-desktop. That node is the Rnd wrapper and MUST be a
-    // direct child of .retro-desktop (R7).
-    let cur = dialog.parentElement;
-    while (cur && cur !== root && cur.parentElement !== root) {
-      cur = cur.parentElement;
-    }
-    if (!cur || cur.parentElement !== root) {
-      return { ok: false, reason: "not direct child of .retro-desktop" };
-    }
-    const style = cur.getAttribute("style") || "";
-    const isRnd = /position:\s*absolute/i.test(style);
-    return { ok: true, isRnd, wrapperStyle: style.slice(0, 140) };
-  });
-  pass("cookiesDirectChild", cookiesInfo.ok, JSON.stringify(cookiesInfo));
-  pass(
-    "cookiesIsRnd",
-    cookiesInfo.ok && cookiesInfo.isRnd === true,
-    JSON.stringify(cookiesInfo),
-  );
+  // R4 Fix 1: cookies popup was removed entirely. Assert it's gone.
+  const cookiesCount = await page.locator(".cookies-dialog").count();
+  if (cookiesCount !== 0) {
+    console.log(`  [FAIL] cookiesDialogRemoved — count=${cookiesCount}`);
+    process.exitCode = 1;
+  } else {
+    console.log(`  [PASS] cookiesDialogRemoved`);
+  }
 
   await ctx.close();
 }

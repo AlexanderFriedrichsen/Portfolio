@@ -144,18 +144,62 @@ export default function Desktop() {
   const [justOpened, setJustOpened] = useState<WindowId | null>(null);
   const [startOpen, setStartOpen] = useState(false);
   const [bsod, setBsod] = useState(false);
-  const [cookiesVisible, setCookiesVisible] = useState(false);
   const [aboutInitialTab, setAboutInitialTab] = useState<AboutTabId>("general");
+
+  // R4 Fix 3: SSR hydration flash guard. `phase` initializes to 'desktop'
+  // on both server and client to avoid hydration mismatch, and only flips
+  // to 'boot' inside a useEffect. That leaves a paint window where the
+  // fully-rendered desktop is briefly visible before the boot overlay
+  // mounts. We render .retro-desktop with `visibility: hidden` until
+  // (a) we've hydrated and (b) phase has settled on 'desktop'. We use
+  // visibility rather than display:none so Rnd's bounds="parent"
+  // measurements keep working (display:none would zero the bounds box).
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   // Phase A: boot → login → desktop ceremony. The overlays render as
   // Fragment siblings of .retro-desktop (NOT wrappers) so R7 is preserved.
-  const { phase, firstDesktopVisit, advanceToLogin, advanceToDesktop } =
-    useBootSequence();
+  const {
+    phase,
+    firstDesktopVisit,
+    advanceToLogin,
+    advanceToDesktop,
+    playBootSequence,
+  } = useBootSequence();
 
   // Preload audio once per island mount; browsers allow metadata fetch
-  // without a user gesture. Actual play() is gated behind the avatar click.
+  // without a user gesture. Actual play() is gated behind a user gesture.
   useEffect(() => {
     audioManager.preload();
+  }, []);
+
+  // R4 Fix 4: XP startup chord on first user gesture. Autoplay policy
+  // blocks .play() before any gesture, so we attach a one-shot listener
+  // on the document and play 'startup' the first time the user clicks
+  // anywhere (including the boot-screen "click to skip" or the login
+  // avatar). The listener removes itself after firing. Gated on
+  // first-visit: return visitors already persisted `portfolio:visited`
+  // and we want the desktop to load silently for them.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (window.localStorage.getItem("portfolio:visited")) return;
+    } catch {
+      /* ignore */
+    }
+    const onFirstGesture = () => {
+      audioManager.play("startup");
+      document.removeEventListener("pointerdown", onFirstGesture, true);
+      document.removeEventListener("keydown", onFirstGesture, true);
+    };
+    document.addEventListener("pointerdown", onFirstGesture, true);
+    document.addEventListener("keydown", onFirstGesture, true);
+    return () => {
+      document.removeEventListener("pointerdown", onFirstGesture, true);
+      document.removeEventListener("keydown", onFirstGesture, true);
+    };
   }, []);
 
   // Trigger refs — captured when a menu/overlay opens so we can restore
@@ -211,16 +255,6 @@ export default function Desktop() {
     return () => window.clearInterval(id);
   }, []);
 
-  // Cookies popup: 1.5s delay AFTER the desktop phase unveils.
-  // Phase A: gated on phase==='desktop' so the popup can't fire behind the
-  // login overlay. (Previously gated only on the MQ.)
-  useEffect(() => {
-    if (!isDesktopViewport()) return;
-    if (phase !== "desktop") return;
-    const id = window.setTimeout(() => setCookiesVisible(true), 1500);
-    return () => window.clearTimeout(id);
-  }, [phase]);
-
   const openWindow = useCallback((id: WindowId) => {
     setOpenWindows((prev) => (prev.includes(id) ? prev : [...prev, id]));
     setZOrder((prev) => [...prev.filter((x) => x !== id), id]);
@@ -254,7 +288,16 @@ export default function Desktop() {
 
   return (
     <>
-      <div className="xp-scope retro-desktop" aria-label="Retro desktop hero">
+      <div
+        className="xp-scope retro-desktop"
+        aria-label="Retro desktop hero"
+        style={{
+          // R4 Fix 3: hide the desktop until hydration has completed AND
+          // useBootSequence has settled on 'desktop'. visibility (not
+          // display) so Rnd bounds measurements remain valid.
+          visibility: hydrated && phase === "desktop" ? "visible" : "hidden",
+        }}
+      >
         {/* Wallpaper layer (Bliss CSS gradient stand-in).
           TODO: swap to bliss.jpg once /assets/wallpapers/bliss.jpg is sourced.
           Single-line swap: change .retro-desktop background in desktop.css. */}
@@ -296,11 +339,6 @@ export default function Desktop() {
             />
           );
         })}
-
-        {/* Cookies popup (now a child of Desktop, not index.astro) */}
-        {cookiesVisible && (
-          <CookiesDialog onClose={() => setCookiesVisible(false)} />
-        )}
 
         {/* Start menu */}
         {startOpen && (
@@ -400,6 +438,7 @@ export default function Desktop() {
             audioManager.play("login");
             advanceToDesktop();
           }}
+          onRestart={playBootSequence}
         />
       )}
       {phase === "desktop" && firstDesktopVisit && <WelcomeBalloon />}
@@ -538,75 +577,6 @@ function WindowFrame({
           style={{ padding: 0, flex: 1, overflow: "auto" }}
         >
           {def.render()}
-        </div>
-      </div>
-    </Rnd>
-  );
-}
-
-// ─── Cookies dialog ─────────────────────────────────────────────────────────
-// Phase A polish: draggable <Rnd> window, direct child of .retro-desktop (R7).
-// Title bar "Cookies.exe"; close button dismisses; drag via title bar.
-function CookiesDialog({ onClose }: { onClose: () => void }) {
-  return (
-    <Rnd
-      default={{ x: 500, y: 260, width: 420, height: 200 }}
-      minWidth={320}
-      minHeight={160}
-      bounds="parent"
-      dragHandleClassName="title-bar"
-      cancel=".title-bar-controls button, .dialog-buttons button"
-      style={{ zIndex: 900 }}
-    >
-      <div
-        className="cookies-dialog window"
-        role="dialog"
-        aria-label="Cookies and vibes"
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div className="title-bar">
-          <div className="title-bar-text">Cookies.exe</div>
-          <div className="title-bar-controls">
-            <button
-              type="button"
-              aria-label="Close"
-              title="Close cookies dialog"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-            />
-          </div>
-        </div>
-        <div
-          className="window-body"
-          style={{ padding: 12, flex: 1, overflow: "auto" }}
-        >
-          <div className="cookie-row">
-            <div className="cookie-icon" aria-hidden="true" />
-            <div>
-              <p style={{ margin: "0 0 4px" }}>
-                <strong>This site serves cookies and vibes.</strong>
-              </p>
-              <p style={{ margin: 0 }}>
-                By continuing to browse, you accept both. The vibes are
-                non-optional.
-              </p>
-            </div>
-          </div>
-          <div className="dialog-buttons">
-            <button type="button" onClick={onClose}>
-              OK
-            </button>
-            <button type="button" onClick={onClose}>
-              More info
-            </button>
-          </div>
         </div>
       </div>
     </Rnd>

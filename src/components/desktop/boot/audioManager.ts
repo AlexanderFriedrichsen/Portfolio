@@ -13,7 +13,7 @@
 //
 // Phase C (Restart/Turn Off) will reuse this module; no API changes expected.
 
-export type SoundName = "login" | "logoff" | "balloon";
+export type SoundName = "login" | "logoff" | "balloon" | "startup";
 
 // Base URL is injected by Vite from astro.config.mjs (base: "/Portfolio/").
 // Using import.meta.env.BASE_URL keeps the audio paths in sync with any
@@ -24,6 +24,10 @@ const SOURCES: Record<SoundName, string> = {
   login: `${BASE}sounds/login.wav`,
   logoff: `${BASE}sounds/logoff.wav`,
   balloon: `${BASE}sounds/balloon.wav`,
+  // R4 Fix 4: canonical XP startup chord (~424 KB, ~5–6 s). Triggered on
+  // the first user gesture during boot, because browser autoplay policy
+  // blocks .play() before any gesture. See Desktop.tsx first-gesture hook.
+  startup: `${BASE}sounds/startup.wav`,
 };
 
 const cache: Partial<Record<SoundName, HTMLAudioElement>> = {};

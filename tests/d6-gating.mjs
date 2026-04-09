@@ -398,13 +398,8 @@ for (const v of [
   });
   t.controlGlyphsAllPresent = !!t.controlGlyphs.allGood;
 
-  // Cookies popup is INSIDE the desktop bounds (child of .retro-desktop, not body).
-  await page.waitForTimeout(1700); // 1.5s mount delay
-  t.cookiesInsideDesktop = await page.evaluate(() => {
-    const c = document.querySelector(".cookies-dialog");
-    if (!c) return false;
-    return !!c.closest(".retro-desktop");
-  });
+  // R4 Fix 1: cookies popup removed entirely. Assert it no longer exists.
+  t.cookiesRemoved = (await page.locator(".cookies-dialog").count()) === 0;
 
   // Start button toggles the menu.
   const startBtn = page.locator(".desktop-only .start-btn").first();
