@@ -544,48 +544,72 @@ function WindowFrame({
   );
 }
 
-// ─── Cookies dialog (XP-styled, lives inside .retro-desktop) ───────────────
+// ─── Cookies dialog ─────────────────────────────────────────────────────────
+// Phase A polish: draggable <Rnd> window, direct child of .retro-desktop (R7).
+// Title bar "Cookies.exe"; close button dismisses; drag via title bar.
 function CookiesDialog({ onClose }: { onClose: () => void }) {
   return (
-    <div
-      className="cookies-dialog window"
-      role="dialog"
-      aria-label="Cookies and vibes"
+    <Rnd
+      default={{ x: 500, y: 260, width: 420, height: 200 }}
+      minWidth={320}
+      minHeight={160}
+      bounds="parent"
+      dragHandleClassName="title-bar"
+      cancel=".title-bar-controls button, .dialog-buttons button"
+      style={{ zIndex: 900 }}
     >
-      <div className="title-bar">
-        <div className="title-bar-text">cookies and vibes</div>
-        <div className="title-bar-controls">
-          <button
-            type="button"
-            aria-label="Close"
-            title="Close cookies dialog"
-            onClick={onClose}
-          />
-        </div>
-      </div>
-      <div className="window-body">
-        <div className="cookie-row">
-          <div className="cookie-icon" aria-hidden="true" />
-          <div>
-            <p style={{ margin: "0 0 4px" }}>
-              <strong>This site serves cookies and vibes.</strong>
-            </p>
-            <p style={{ margin: 0 }}>
-              By continuing to browse, you accept both. The vibes are
-              non-optional.
-            </p>
+      <div
+        className="cookies-dialog window"
+        role="dialog"
+        aria-label="Cookies and vibes"
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div className="title-bar">
+          <div className="title-bar-text">Cookies.exe</div>
+          <div className="title-bar-controls">
+            <button
+              type="button"
+              aria-label="Close"
+              title="Close cookies dialog"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+            />
           </div>
         </div>
-        <div className="dialog-buttons">
-          <button type="button" onClick={onClose}>
-            OK
-          </button>
-          <button type="button" onClick={onClose}>
-            More info
-          </button>
+        <div
+          className="window-body"
+          style={{ padding: 12, flex: 1, overflow: "auto" }}
+        >
+          <div className="cookie-row">
+            <div className="cookie-icon" aria-hidden="true" />
+            <div>
+              <p style={{ margin: "0 0 4px" }}>
+                <strong>This site serves cookies and vibes.</strong>
+              </p>
+              <p style={{ margin: 0 }}>
+                By continuing to browse, you accept both. The vibes are
+                non-optional.
+              </p>
+            </div>
+          </div>
+          <div className="dialog-buttons">
+            <button type="button" onClick={onClose}>
+              OK
+            </button>
+            <button type="button" onClick={onClose}>
+              More info
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Rnd>
   );
 }
 

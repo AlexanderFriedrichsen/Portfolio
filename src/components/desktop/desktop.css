@@ -318,13 +318,10 @@
   line-height: 1.1;
 }
 
-/* ─── Cookies dialog (lives inside .retro-desktop) ─── */
+/* ─── Cookies dialog (Rnd-wrapped draggable window, R7 direct child) ─── */
+/* Rnd owns position/size; we only style the inner .window chrome. */
 .xp-scope .cookies-dialog {
-  position: absolute;
-  top: 70%;
-  left: 60%;
-  width: 280px;
-  z-index: 900;
+  /* no positioning — handled by <Rnd> wrapper */
 }
 .xp-scope .cookies-dialog .window-body {
   padding: 12px;
@@ -641,6 +638,55 @@
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 6px rgba(120, 160, 255, 0.25));
 }
+
+/* ─── HonestAlexFXP wordmark (BootScreen + LoginScreen) ─── */
+.xp-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: "Segoe UI", "Tahoma", sans-serif;
+  color: #f2f4fa;
+  user-select: none;
+}
+.xp-wordmark-flag {
+  height: 64px;
+  width: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+.xp-wordmark-text {
+  font-size: 42px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.xp-wordmark-honest {
+  font-weight: 300;
+}
+.xp-wordmark-xp {
+  font-weight: 700;
+  color: #ffd84a;
+  margin-left: 4px;
+}
+.xp-wordmark-sm .xp-wordmark-flag {
+  height: 36px;
+}
+.xp-wordmark-sm .xp-wordmark-text {
+  font-size: 24px;
+}
+.xp-wordmark-md .xp-wordmark-flag {
+  height: 56px;
+}
+.xp-wordmark-md .xp-wordmark-text {
+  font-size: 34px;
+}
+.xp-wordmark-lg .xp-wordmark-flag {
+  height: 88px;
+}
+.xp-wordmark-lg .xp-wordmark-text {
+  font-size: 56px;
+}
 .boot-loadbar {
   width: 320px;
   height: 20px;
@@ -680,14 +726,16 @@
   }
 }
 
+/* ─── LoginScreen: mitchivin-style centered user card ─── */
 .login-screen {
   position: fixed;
   inset: 0;
   z-index: 10001;
-  background: radial-gradient(
-    ellipse at 30% 40%,
-    #3a6ab7 0%,
-    #1e3a7a 60%,
+  background: linear-gradient(
+    180deg,
+    #1e4a8a 0%,
+    #2a6fbf 35%,
+    #1a3f7a 70%,
     #0f1f4a 100%
   );
   color: #f2f4fa;
@@ -696,21 +744,10 @@
   font-family: "Tahoma", "Segoe UI", sans-serif;
   animation: boot-fade-in 400ms ease-out;
 }
-.login-header {
-  padding: 32px 48px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+.login-wordmark-slot {
+  padding: 36px 48px 0;
   display: flex;
-  align-items: baseline;
-  gap: 24px;
-}
-.login-brand {
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.login-tagline {
-  font-size: 13px;
-  color: #cfd8f0;
+  justify-content: center;
 }
 .login-body {
   flex: 1;
@@ -718,13 +755,16 @@
   align-items: center;
   justify-content: center;
 }
+.login-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
 .login-avatar-btn {
   background: transparent;
   border: 2px solid transparent;
-  padding: 14px 22px;
-  display: flex;
-  gap: 20px;
-  align-items: center;
+  padding: 8px;
   cursor: pointer;
   color: inherit;
   font: inherit;
@@ -740,34 +780,53 @@
   outline: none;
 }
 .login-avatar {
-  width: 96px;
-  height: 96px;
+  width: 88px;
+  height: 88px;
   image-rendering: pixelated;
   border: 2px solid #e8ecf6;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-.login-meta {
-  text-align: left;
-  max-width: 360px;
+  display: block;
 }
 .login-name {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
+  margin-top: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .login-role {
-  font-size: 13px;
+  font-size: 14px;
   color: #dce3f5;
-  margin-top: 2px;
+  margin-top: -2px;
 }
-.login-mission {
+.login-restart {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #f2f4fa;
+  font: inherit;
   font-size: 12px;
-  color: #b9c4e4;
-  margin-top: 8px;
-  line-height: 1.4;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+}
+.login-restart:hover,
+.login-restart:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
+  outline: none;
+}
+.login-restart-glyph {
+  font-size: 14px;
+  line-height: 1;
 }
 .login-footer {
   padding: 14px 48px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
   text-align: right;
 }
 .login-hint {

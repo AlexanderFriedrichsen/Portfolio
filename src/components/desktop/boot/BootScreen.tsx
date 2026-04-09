@@ -3,22 +3,18 @@
 // Click anywhere skips the 2 s auto-advance hold.
 
 import React from "react";
+import Wordmark from "./Wordmark";
 
 export default function BootScreen({ onSkip }: { onSkip: () => void }) {
   return (
     <div
       className="boot-screen"
       role="status"
-      aria-label="Starting AlexOS XP"
+      aria-label="Starting HonestAlexFXP"
       onClick={onSkip}
     >
       <div className="boot-inner">
-        <img
-          src="/Portfolio/assets/pictures/boot/boot-wordmark.png"
-          alt="AlexOS XP"
-          className="boot-wordmark"
-          draggable={false}
-        />
+        <Wordmark size="lg" />
         <div className="boot-loadbar" aria-hidden="true">
           <div className="boot-loadbar-track" />
         </div>
