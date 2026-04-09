@@ -11,8 +11,8 @@ const BASE = import.meta.env.BASE_URL;
 
 const VIDEO_SRC = `${BASE}assets/videos/fate-intro.mp4`;
 const POSTER_SRC = `${BASE}assets/pictures/fate/intrologo.png`;
-const NARRATOR_SRC = `${BASE}sounds/1-01. Narrator Intro.mp3`;
-const THEME_SRC = `${BASE}sounds/1-02. Main Theme  (Captain O'kane - The Clergy's Lamentation).mp3`;
+const NARRATOR_SRC = `${BASE}sounds/fate-narrator-intro.mp3`;
+const THEME_SRC = `${BASE}sounds/fate-title-theme.mp3`;
 const WIKI_URL = "https://fate.fandom.com/wiki/Fate";
 
 export default function Fate() {
@@ -125,6 +125,7 @@ export default function Fate() {
               controls
               preload="none"
               src={NARRATOR_SRC}
+              aria-label="Narrator Intro — play for the full effect"
               style={{ width: "100%" }}
             />
           </label>
@@ -143,6 +144,7 @@ export default function Fate() {
               controls
               preload="none"
               src={THEME_SRC}
+              aria-label="Title Theme — Captain O'Kane, The Clergy's Lamentation"
               style={{ width: "100%" }}
             />
           </label>
