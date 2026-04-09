@@ -24,9 +24,16 @@ import Wordmark from "./Wordmark";
 type Props = {
   onLogin: () => void;
   onRestart: () => void;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 };
 
-export default function LoginScreen({ onLogin, onRestart }: Props) {
+export default function LoginScreen({
+  onLogin,
+  onRestart,
+  isFullscreen = false,
+  onToggleFullscreen,
+}: Props) {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -98,9 +105,22 @@ export default function LoginScreen({ onLogin, onRestart }: Props) {
           <div>Every pixel placed on purpose.</div>
         </div>
       </div>
-      <div className="login-f11-hint" aria-hidden="true">
-        Press F11 for the full experience
-      </div>
+      {/* R5 Fix 5: clickable F11 hint. Browsers intercept the real F11
+          at the chrome layer so we can't bind it as a keystroke, but the
+          click-to-fullscreen gesture works reliably. Hidden once the
+          page is already in document fullscreen. */}
+      {!isFullscreen && (
+        <button
+          type="button"
+          className="login-f11-hint"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFullscreen?.();
+          }}
+        >
+          Click here (or press F11) for the full experience
+        </button>
+      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@
 //
 // Phase C (Restart/Turn Off) will reuse this module; no API changes expected.
 
-export type SoundName = "login" | "logoff" | "balloon" | "startup";
+export type SoundName = "login" | "logoff" | "balloon" | "startup" | "shutdown";
 
 // Base URL is injected by Vite from astro.config.mjs (base: "/Portfolio/").
 // Using import.meta.env.BASE_URL keeps the audio paths in sync with any
@@ -28,6 +28,9 @@ const SOURCES: Record<SoundName, string> = {
   // the first user gesture during boot, because browser autoplay policy
   // blocks .play() before any gesture. See Desktop.tsx first-gesture hook.
   startup: `${BASE}sounds/startup.wav`,
+  // R5 Fix 4: canonical XP shutdown sound, copied from the sound library
+  // (Windows XP Shutdown.wav). Played when the user picks Shut Down.
+  shutdown: `${BASE}sounds/shutdown.wav`,
 };
 
 const cache: Partial<Record<SoundName, HTMLAudioElement>> = {};
@@ -50,6 +53,16 @@ export const audioManager = {
   play(name: SoundName): void {
     const el = ensure(name);
     if (!el) return;
+    // R5 r2 Cipher W3: expose a per-sound play counter on window so tests
+    // can assert actual .play() invocations (not just network requests,
+    // which miss cached replays). Handful of bytes, always on.
+    if (typeof window !== "undefined") {
+      const w = window as unknown as {
+        __audioPlayCount?: Record<string, number>;
+      };
+      w.__audioPlayCount ??= {};
+      w.__audioPlayCount[name] = (w.__audioPlayCount[name] ?? 0) + 1;
+    }
     try {
       el.currentTime = 0;
     } catch {

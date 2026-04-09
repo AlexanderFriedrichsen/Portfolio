@@ -320,6 +320,74 @@
 
 /* R4 Fix 1: cookies dialog CSS removed — feature deleted entirely. */
 
+/* R5 Fix 6: system tray icons. Sit to the LEFT of the clock, XP convention.
+   Placeholder glyphs — Pixel polish follow-up will swap these for sprite icons. */
+.xp-scope .tb-tray-icon {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  color: #fff;
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  transition: background-color 100ms ease;
+}
+.xp-scope .tb-tray-icon:hover,
+.xp-scope .tb-tray-icon:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+.xp-scope .tb-tray-glyph {
+  display: inline-block;
+  line-height: 1;
+}
+.xp-scope .tb-tray-welcome {
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 11px;
+  color: #fff;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #1084d0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.xp-scope .tb-tray-fullscreen {
+  font-size: 13px;
+}
+
+/* R5 Fix 4: shutdown grey overlay. Fades in quickly over the desktop to
+   simulate an XP shutdown dim before the boot ceremony replays. */
+.xp-scope .shutdown-overlay {
+  position: absolute;
+  inset: 0;
+  background: #1a1a1a;
+  opacity: 0;
+  z-index: 9500;
+  animation: xp-shutdown-fade 600ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes xp-shutdown-fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.92;
+  }
+}
+
+/* R5: BSOD CSS removed alongside the component. */
+
 /* ─── Start menu (two-column, matches mocks/d1-v2/xp-start-menu.html) ─── */
 .xp-scope .start-menu {
   position: absolute;
@@ -471,29 +539,7 @@
   font-size: 14px;
 }
 
-/* ─── BSOD overlay ─── */
-.xp-scope .bsod {
-  position: absolute;
-  inset: 0;
-  z-index: 9999;
-  background: #0000aa;
-  color: #fff;
-  font-family: "Lucida Console", "Courier New", monospace;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  padding: 80px 60px;
-  cursor: pointer;
-}
-.xp-scope .bsod-inner {
-  max-width: 720px;
-  line-height: 1.4;
-}
-.xp-scope .bsod-inner p {
-  margin: 0 0 1em;
-  color: #fff;
-  font-family: inherit;
-}
+/* R5: BSOD CSS removed — component deleted alongside the joke placeholder. */
 
 /* ─── About Me philosophy panel ─── */
 .xp-scope .about-simple {
@@ -857,14 +903,30 @@
   color: rgba(255, 255, 255, 0.72);
   text-align: right;
 }
+/* R5 Fix 5: clickable fullscreen hint (was a pointer-events:none span). */
 .login-f11-hint {
   position: absolute;
   right: 12px;
   bottom: 8px;
   font-family: Tahoma, Arial, sans-serif;
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
-  pointer-events: none;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+.login-f11-hint:hover,
+.login-f11-hint:focus-visible {
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
 }
 
 .welcome-balloon {
