@@ -347,7 +347,11 @@ const browser = await chromium.launch();
     const windows = Array.from(root.querySelectorAll(":scope > div")).filter(
       (d) => d.querySelector(":scope > .window"),
     );
-    return { ok: windows.length >= 1, windowCount: windows.length };
+    // R6 Fix 1: desktop now starts with zero windows open. The R7
+    // Rnd-direct-child invariant still holds vacuously (and structurally
+    // when any window is later opened). Assert windowCount === 0 at the
+    // initial desktop state as a regression guard.
+    return { ok: windows.length === 0, windowCount: windows.length };
   });
   pass("r7RndDirectChild", r7.ok, JSON.stringify(r7));
 

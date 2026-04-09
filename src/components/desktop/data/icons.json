@@ -3,7 +3,6 @@
     "id": "about-me",
     "label": "About Me",
     "kind": "window",
-    "openByDefault": true,
     "iconKey": "user"
   },
   {

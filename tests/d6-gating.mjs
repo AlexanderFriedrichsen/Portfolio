@@ -231,7 +231,9 @@ for (const v of [
 
   const t = results.touch;
 
-  // Initial state: Desktop.tsx pre-opens "agent-team" window on hydration.
+  // R6 Fix 1: Desktop.tsx no longer pre-opens any window on hydration.
+  // Tests must open windows explicitly via icon dblclick before asserting
+  // window-scoped invariants.
   t.baselineWindows = await page.locator(".desktop-only .window").count();
   // Double-click second desk icon to open another window
   const firstIcon = page.locator(".desk-icons .desk-icon").nth(1);
