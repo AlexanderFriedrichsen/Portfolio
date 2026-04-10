@@ -95,9 +95,15 @@ export default function LoginScreen({
           onClick={onRestart}
           aria-label="Restart"
         >
-          <span className="login-restart-glyph" aria-hidden="true">
-            ↻
-          </span>
+          <img
+            src={`${import.meta.env.BASE_URL}assets/pictures/icons/xp-restart-16.svg`}
+            alt=""
+            width={16}
+            height={16}
+            className="login-restart-icon"
+            draggable={false}
+            aria-hidden="true"
+          />
           <span className="login-restart-label">Restart</span>
         </button>
         <div className="login-flavor">

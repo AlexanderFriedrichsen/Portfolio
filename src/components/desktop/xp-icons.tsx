@@ -271,7 +271,7 @@ export function DesktopGlyph({ kind, small = false }: Props) {
       // set). Rendered as an <img> instead of inline SVG. BASE_URL-templated.
       return (
         <img
-          src={`${import.meta.env.BASE_URL}assets/pictures/Fate-Icon-184px.webp`}
+          src={`${import.meta.env.BASE_URL}assets/pictures/Fate-Icon-72px.webp`}
           alt=""
           width={size}
           height={size}
