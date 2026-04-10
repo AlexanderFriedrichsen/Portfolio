@@ -4,6 +4,7 @@
   "version": "0.2.0",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/scope-xpcss.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
