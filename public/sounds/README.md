@@ -11,16 +11,17 @@ mitchivin.com.
 
 ## Full XP sound library
 
-`windowsxpstartup_201910/` contains the full archive.org collection (~30 WAV
-files including Shutdown, Startup, Notify, Error, Ding, Recycle, etc.). Kept
-in the repo as a reference library for future phases:
+The full archive.org collection (`windowsxpstartup_201910/`, ~39 WAVs, ~2.9 MB)
+used to live here but was relocated out of `public/` because Astro was
+shipping the entire library on every page load. It now lives at
+`assets-archive/sounds/windowsxpstartup_201910/` (outside `public/`, not
+deployed). See `assets-archive/sounds/README.md` for details.
 
-- Phase C (shutdown ceremony) will want `Windows XP Shutdown.wav`.
-- Phase E (notifications) may want `Windows XP Notify.wav`, `Windows XP Ding.wav`, etc.
-
-Do not reference files from this subfolder at runtime — copy/rename into
-canonical root-level names when a phase consumes them, so the runtime path
-stays stable regardless of collection reshuffles.
+When a future phase needs a new sound (e.g. Phase C shutdown ceremony wants
+`Windows XP Shutdown.wav`), copy the chosen WAV into this folder with a
+short lowercase filename (`shutdown.wav`) and reference it from
+`audioManager.ts`. **Do NOT move the full subfolder back into `public/`** —
+it was deliberately evicted and must stay in `assets-archive/`.
 
 ## Alternate-format duplicates
 

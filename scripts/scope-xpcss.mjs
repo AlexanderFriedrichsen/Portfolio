@@ -17,11 +17,24 @@ const OUT = resolve(__dirname, "../src/components/desktop/xp.scoped.css");
 let css = readFileSync(SRC, "utf8");
 
 // ─── Strip ::-webkit-scrollbar* rules ────────────────────────────────────
-// XP.css bundles a huge scrollbar skin with ~50 inlined data-URI bitmaps.
-// That's ~20 KB gz of weight we don't need: the desktop component doesn't
-// depend on XP scrollbar styling for layout (Cipher verified round-1), and
-// default OS scrollbars look fine inside the windows. We rip them out before
-// scoping so they never reach xp.scoped.css.
+// XP.css bundles a huge scrollbar skin with ~50 inlined data-URI bitmaps
+// (SVG + bitmap) for the XP Luna scrollbar look. That's ~20 KB gz of weight
+// we don't need: Cipher PR #9 review confirmed the desktop component doesn't
+// depend on XP scrollbar styling for layout.
+//
+// REPLACEMENT: a hand-curated 98-style grey scrollbar block lives in
+//   src/components/desktop/desktop.css
+// (search for `::-webkit-scrollbar` there). That's the canonical home of
+// scrollbar visuals inside .xp-scope. If you ever need to tweak scrollbar
+// appearance, edit desktop.css — NOT this script and NOT xp.scoped.css
+// (which is a generated artifact).
+//
+// REGRESSION GUARD: tests/scrollbar-guard.mjs asserts both:
+//   1. desktop.css still contains the manual scrollbar block (so nobody
+//      deletes it thinking it's dead code), and
+//   2. xp.scoped.css does NOT contain ::-webkit-scrollbar (so this strip
+//      still works after xp.css upgrades).
+// If either assertion trips, read the comment at the top of that test.
 //
 // IMPORTANT FOR FUTURE xp.css UPGRADERS: the scoper below uses comma-split
 // selector-list prefixing. If a future xp.css release introduces a

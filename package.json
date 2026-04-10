@@ -4,11 +4,13 @@
   "version": "0.2.0",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/scope-xpcss.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check-bundle": "node scripts/check-bundle.mjs",
-    "verify": "npm run build && npm run check-bundle"
+    "scrollbar-guard": "node tests/scrollbar-guard.mjs",
+    "verify": "npm run build && npm run check-bundle && npm run scrollbar-guard"
   },
   "dependencies": {
     "@astrojs/react": "^3.6.3",
