@@ -151,6 +151,16 @@ export default function Desktop() {
   // Fate launches as a fullscreen overlay OUTSIDE the Rnd window system
   // (it's a "you just launched the game" experience, not a window).
   const [fateLaunching, setFateLaunching] = useState(false);
+  const fateReturnFocusRef = useRef<HTMLElement | null>(null);
+  const closeFate = useCallback(() => {
+    setFateLaunching(false);
+    // Restore focus to the icon that launched Fate for keyboard users.
+    const el = fateReturnFocusRef.current;
+    fateReturnFocusRef.current = null;
+    if (el && typeof el.focus === "function") {
+      queueMicrotask(() => el.focus());
+    }
+  }, []);
 
   // R4 Fix 3: SSR hydration flash guard. `phase` initializes to 'desktop'
   // on both server and client to avoid hydration mismatch, and only flips
@@ -287,6 +297,9 @@ export default function Desktop() {
   const activateIcon = useCallback(
     (icon: IconDef) => {
       if (icon.id === "fate") {
+        const active = document.activeElement;
+        fateReturnFocusRef.current =
+          active instanceof HTMLElement ? active : null;
         setFateLaunching(true);
         return;
       }
@@ -497,7 +510,7 @@ export default function Desktop() {
       )}
       {/* Fate fullscreen launch overlay — sibling of .retro-desktop (R7 safe).
           Rendered outside the window system; covers the whole viewport. */}
-      {fateLaunching && <Fate onClose={() => setFateLaunching(false)} />}
+      {fateLaunching && <Fate onClose={closeFate} />}
     </>
   );
 }

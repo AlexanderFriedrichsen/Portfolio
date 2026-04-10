@@ -19,12 +19,17 @@ const VIDEO_SRC = `${BASE}assets/videos/fate-intro.mp4`;
 const THEME_SRC = `${BASE}sounds/fate-title-theme.mp3`;
 
 const LOOP_START = 5.63;
-const LOOP_END = 16.5;
+// LOOP_END has 0.25s of slack vs the true cut at 16.5 — ontimeupdate fires
+// at ~4Hz, so without slack the seek-back can fire after the user has already
+// glimpsed several frames of the narrator section.
+const LOOP_END = 16.25;
+const LOOP_RESEEK = 16.5;
 const VIDEO_END = 129.5;
 
 type Phase = "loading" | "titleLoop" | "playthrough";
 
 export default function Fate({ onClose }: { onClose: () => void }) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const themeRef = useRef<HTMLAudioElement>(null);
   const [phase, setPhase] = useState<Phase>("loading");
@@ -60,6 +65,7 @@ export default function Fate({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
+    rootRef.current?.focus();
     v.currentTime = 0;
     v.muted = false;
     v.play().catch(() => {
@@ -101,19 +107,29 @@ export default function Fate({ onClose }: { onClose: () => void }) {
     }
   }, [onClose]);
 
+  // Pause media on unmount so audio doesn't leak if the overlay is torn down
+  // mid-playback (Escape, parent unmount, etc.).
+  useEffect(
+    () => () => {
+      themeRef.current?.pause();
+      videoRef.current?.pause();
+    },
+    [],
+  );
+
   const handleClick = useCallback(() => {
     if (phaseRef.current !== "titleLoop") return;
     const v = videoRef.current;
     const theme = themeRef.current;
     if (!v) return;
-    // Stop title theme, unmute video, let narrator carry from LOOP_END forward.
+    // Stop title theme, unmute video, let narrator carry from LOOP_RESEEK forward.
     if (theme) {
       theme.pause();
     }
     v.muted = false;
-    // Jump to LOOP_END so the narrator section starts cleanly.
-    if (v.currentTime < LOOP_END) {
-      v.currentTime = LOOP_END;
+    // Jump past the true cut so the narrator section starts cleanly.
+    if (v.currentTime < LOOP_RESEEK) {
+      v.currentTime = LOOP_RESEEK;
     }
     setPhase("playthrough");
     // Chromium occasionally pauses the element on currentTime jumps; kick it.
@@ -122,10 +138,14 @@ export default function Fate({ onClose }: { onClose: () => void }) {
 
   return (
     <div
+      ref={rootRef}
       onClick={handleClick}
       role="dialog"
+      aria-modal="true"
       aria-label="Fate — launching"
+      tabIndex={-1}
       style={{
+        outline: "none",
         position: "fixed",
         inset: 0,
         zIndex: 9999,
@@ -142,6 +162,7 @@ export default function Fate({ onClose }: { onClose: () => void }) {
         playsInline
         preload="auto"
         onTimeUpdate={onTimeUpdate}
+        onEnded={onClose}
         style={{
           width: "100%",
           height: "100%",
