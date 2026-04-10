@@ -326,7 +326,7 @@ export default function Desktop() {
           // R6 Fix A: wire the CEO-generated XP wallpaper. BASE_URL pattern
           // (Cipher carry-forward W from PR #5) so a future base change
           // doesn't silently break the wallpaper.
-          backgroundImage: `url("${import.meta.env.BASE_URL}assets/pictures/carved-name-hillside.png")`,
+          backgroundImage: `url("${import.meta.env.BASE_URL}assets/pictures/carved-name-hillside.webp")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -458,12 +458,16 @@ export default function Desktop() {
               title="Welcome"
               onClick={showWelcomeBalloon}
             >
-              <span
+              {/* Pixel polish: XP info-bubble SVG replaces CSS-styled 'i'. */}
+              <img
+                src={`${import.meta.env.BASE_URL}assets/pictures/icons/xp-tray-info-16.svg`}
+                alt=""
+                width={14}
+                height={14}
                 className="tb-tray-glyph tb-tray-welcome"
+                draggable={false}
                 aria-hidden="true"
-              >
-                i
-              </span>
+              />
             </button>
             <button
               type="button"
@@ -474,13 +478,21 @@ export default function Desktop() {
               title={isFullscreen ? "Exit full screen" : "Enter full screen"}
               onClick={toggleFullscreen}
             >
-              <span
+              {/* R5 r2 Cipher W1: distinct glyphs for enter vs exit. Pixel
+                  polish: 16x16 SVGs for consistent rendering. */}
+              <img
+                src={`${import.meta.env.BASE_URL}assets/pictures/icons/${
+                  isFullscreen
+                    ? "xp-tray-fullscreen-exit-16.svg"
+                    : "xp-tray-fullscreen-16.svg"
+                }`}
+                alt=""
+                width={14}
+                height={14}
                 className="tb-tray-glyph tb-tray-fullscreen"
+                draggable={false}
                 aria-hidden="true"
-              >
-                {/* R5 r2 Cipher W1: distinct glyphs for enter vs exit. */}
-                {isFullscreen ? "⧉" : "⛶"}
-              </span>
+              />
             </button>
             <div className="tb-clock" aria-label="Clock">
               <div>{now ? formatClockTime(now) : ""}</div>

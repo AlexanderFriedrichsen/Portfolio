@@ -383,7 +383,7 @@ const browser = await chromium.launch();
     if (!el) return "";
     return getComputedStyle(el).backgroundImage || "";
   });
-  const wallpaperOk = wallpaperBg.includes("carved-name-hillside.png");
+  const wallpaperOk = wallpaperBg.includes("carved-name-hillside.webp");
   if (wallpaperOk) {
     console.log(`  [PASS] backgroundWallpaperPresent`);
   } else {
