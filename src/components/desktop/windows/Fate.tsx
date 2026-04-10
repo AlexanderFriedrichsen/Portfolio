@@ -1,164 +1,196 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
-// Fate — homage window for the 2005 WildTangent dungeon crawler.
-// Hero is the pre-cropped intro MP4 (800x600, ~16s, muted autoplay loop with
-// a click-to-unmute button). Below the video: Alex's personal intro copy, an
-// audio row with two tracks (narrator + main theme), and a link to the wiki.
+// Fate — fullscreen "you just launched the game" experience for the 2005
+// WildTangent dungeon crawler. Not a windowed component: this renders as a
+// fixed-position overlay OUTSIDE the Rnd window system. The Fate desktop icon
+// double-click opens this instead of adding 'fate' to openWindows.
 //
-// Assets are referenced via import.meta.env.BASE_URL so a base change can't
-// silently 404 them (Cipher carry-forward W from PR #5).
+// Video sections (fate-intro.mp4, 800x600, 129.5s total):
+//   0.00 – 5.63s : WildTangent loading screen (plays once, unmuted)
+//   5.63 – 16.50s: Title menu — LOOPED, video muted, fate-title-theme.mp3 plays
+//   16.50 – 129.5s: Narrator parchment + gameplay (after user click)
+//
+// State machine on a single <video> + single <audio>:
+//   loading → titleLoop → playthrough → close
+// Transitions driven by ontimeupdate + click handler.
+
 const BASE = import.meta.env.BASE_URL;
-
 const VIDEO_SRC = `${BASE}assets/videos/fate-intro.mp4`;
-const POSTER_SRC = `${BASE}assets/pictures/fate/intrologo.png`;
-const NARRATOR_SRC = `${BASE}sounds/fate-narrator-intro.mp3`;
 const THEME_SRC = `${BASE}sounds/fate-title-theme.mp3`;
-const WIKI_URL = "https://fate.fandom.com/wiki/Fate";
 
-export default function Fate() {
+const LOOP_START = 5.63;
+// LOOP_END has 0.25s of slack vs the true cut at 16.5 — ontimeupdate fires
+// at ~4Hz, so without slack the seek-back can fire after the user has already
+// glimpsed several frames of the narrator section.
+const LOOP_END = 16.25;
+const LOOP_RESEEK = 16.5;
+const VIDEO_END = 129.5;
+
+type Phase = "loading" | "titleLoop" | "playthrough";
+
+export default function Fate({ onClose }: { onClose: () => void }) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
+  const themeRef = useRef<HTMLAudioElement>(null);
+  const [phase, setPhase] = useState<Phase>("loading");
+  const phaseRef = useRef<Phase>("loading");
+  const [showHint, setShowHint] = useState(false);
 
-  const toggleMute = () => {
+  // Keep a ref in sync with phase so the ontimeupdate handler can see the
+  // current phase without stale-closure bugs.
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
+  // Escape closes the overlay at any time.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  // Unobtrusive "ESC to exit" hint fades in after 3s.
+  useEffect(() => {
+    const id = window.setTimeout(() => setShowHint(true), 3000);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  // Kick off playback on mount. The parent only renders this component after
+  // a user double-click, so autoplay-with-sound is allowed.
+  useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    v.muted = !v.muted;
-    setMuted(v.muted);
-    // Chromium sometimes pauses when unmuting after autoplay; kick it back on.
-    if (!v.muted && v.paused) v.play().catch(() => {});
-  };
+    rootRef.current?.focus();
+    v.currentTime = 0;
+    v.muted = false;
+    v.play().catch(() => {
+      // If autoplay-with-sound is somehow blocked, retry muted so the visuals
+      // still run. The loading audio is incidental; not worth blocking on.
+      v.muted = true;
+      v.play().catch(() => {});
+    });
+  }, []);
+
+  const onTimeUpdate = useCallback(() => {
+    const v = videoRef.current;
+    const theme = themeRef.current;
+    if (!v) return;
+    const t = v.currentTime;
+    const cur = phaseRef.current;
+
+    if (cur === "loading" && t >= LOOP_START) {
+      // Transition into titleLoop: mute video, start title theme.
+      v.muted = true;
+      if (theme) {
+        theme.currentTime = 0;
+        theme.loop = true;
+        theme.play().catch(() => {});
+      }
+      setPhase("titleLoop");
+      return;
+    }
+
+    if (cur === "titleLoop" && t >= LOOP_END) {
+      // Loop guard: jump back to LOOP_START.
+      v.currentTime = LOOP_START;
+      return;
+    }
+
+    if (cur === "playthrough" && t >= VIDEO_END) {
+      // Experience is over — close the overlay.
+      onClose();
+    }
+  }, [onClose]);
+
+  // Pause media on unmount so audio doesn't leak if the overlay is torn down
+  // mid-playback (Escape, parent unmount, etc.).
+  useEffect(
+    () => () => {
+      themeRef.current?.pause();
+      videoRef.current?.pause();
+    },
+    [],
+  );
+
+  const handleClick = useCallback(() => {
+    if (phaseRef.current !== "titleLoop") return;
+    const v = videoRef.current;
+    const theme = themeRef.current;
+    if (!v) return;
+    // Stop title theme, unmute video, let narrator carry from LOOP_RESEEK forward.
+    if (theme) {
+      theme.pause();
+    }
+    v.muted = false;
+    // Jump past the true cut so the narrator section starts cleanly.
+    if (v.currentTime < LOOP_RESEEK) {
+      v.currentTime = LOOP_RESEEK;
+    }
+    setPhase("playthrough");
+    // Chromium occasionally pauses the element on currentTime jumps; kick it.
+    if (v.paused) v.play().catch(() => {});
+  }, []);
 
   return (
     <div
+      ref={rootRef}
+      onClick={handleClick}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Fate — launching"
+      tabIndex={-1}
       style={{
-        padding: "12px 14px",
+        outline: "none",
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        background: "#000",
         display: "flex",
-        flexDirection: "column",
-        gap: 12,
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: phase === "titleLoop" ? "pointer" : "default",
       }}
     >
-      {/* Hero video */}
-      <div
-        style={{ position: "relative", background: "#000", borderRadius: 2 }}
-      >
-        <video
-          ref={videoRef}
-          src={VIDEO_SRC}
-          poster={POSTER_SRC}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          style={{ width: "100%", height: "auto", display: "block" }}
-          aria-label="Fate intro: WildTangent logo into the title screen"
-        />
-        <button
-          type="button"
-          onClick={toggleMute}
-          aria-label={muted ? "Unmute intro video" : "Mute intro video"}
+      <video
+        ref={videoRef}
+        src={VIDEO_SRC}
+        playsInline
+        preload="auto"
+        onTimeUpdate={onTimeUpdate}
+        onEnded={onClose}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          display: "block",
+          background: "#000",
+        }}
+        aria-label="Fate intro sequence"
+      />
+      <audio ref={themeRef} src={THEME_SRC} preload="auto" />
+      {showHint && (
+        <div
+          aria-hidden="true"
           style={{
             position: "absolute",
-            bottom: 8,
-            right: 8,
-            padding: "4px 10px",
-            background: "rgba(0,0,0,0.65)",
-            color: "#fff",
-            border: "1px solid #fff",
-            borderRadius: 2,
+            bottom: 16,
+            right: 20,
+            color: "rgba(255,255,255,0.55)",
             fontFamily: "Tahoma, sans-serif",
             fontSize: 11,
-            cursor: "pointer",
+            letterSpacing: 0.5,
+            pointerEvents: "none",
+            textShadow: "0 1px 2px rgba(0,0,0,0.8)",
           }}
         >
-          {muted ? "🔇 Click to unmute" : "🔊 Mute"}
-        </button>
-      </div>
-
-      {/* Intro copy */}
-      <div style={{ fontSize: 12, lineHeight: 1.55 }}>
-        <h2 style={{ margin: "0 0 6px", fontSize: 14 }}>
-          Fate (WildTangent, 2005)
-        </h2>
-        <p style={{ margin: "0 0 8px" }}>
-          Before I knew what a roguelike was, before Diablo and Torchlight were
-          shorthand for anything, there was <b>Fate</b>. A dungeon crawler that
-          shipped bundled on half the family PCs of the early 2000s, free from
-          WildTangent, infinite in the way games felt infinite when you were
-          ten. You picked a pet — a dog or a cat — and together you went
-          downstairs forever.
-        </p>
-        <p style={{ margin: "0 0 8px" }}>
-          The loot grind was pure dopamine. The pet would run your junk back to
-          town to sell while you kept killing things. You could fish in the town
-          pond and — if you caught the right fish and fed it to your pet — it
-          would <i>permanently transform</i> into a dragon or a wolf or a hell
-          beast. I spent hours at that pond. I still think about the title
-          theme, Captain O'Kane's <i>The Clergy's Lamentation</i>, which is
-          somehow a legitimately haunting piece of Celtic music buried inside a
-          shareware ARPG.
-        </p>
-        <p style={{ margin: 0 }}>
-          Fate is the reason I like games that respect a kid's patience. It
-          never explained itself, it just let you go deeper. This window is a
-          love letter. Play the narrator intro for the full effect.{" "}
-          <a href={WIKI_URL} target="_blank" rel="noopener noreferrer">
-            Fate Fandom wiki ↗
-          </a>
-        </p>
-      </div>
-
-      {/* Audio row */}
-      <fieldset style={{ margin: 0, padding: "8px 10px" }}>
-        <legend style={{ fontSize: 11, padding: "0 4px" }}>Soundtrack</legend>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <label
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              fontSize: 11,
-            }}
-          >
-            <span>Narrator Intro — play for the full effect</span>
-            <audio
-              controls
-              preload="none"
-              src={NARRATOR_SRC}
-              aria-label="Narrator Intro — play for the full effect"
-              style={{ width: "100%" }}
-            />
-          </label>
-          <label
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              fontSize: 11,
-            }}
-          >
-            <span>
-              Title Theme — Captain O'Kane, <i>The Clergy's Lamentation</i>
-            </span>
-            <audio
-              controls
-              preload="none"
-              src={THEME_SRC}
-              aria-label="Title Theme — Captain O'Kane, The Clergy's Lamentation"
-              style={{ width: "100%" }}
-            />
-          </label>
+          ESC to exit
         </div>
-      </fieldset>
-
-      <div className="status-bar">
-        <p className="status-bar-field">Bundled with WildTangent · 2005</p>
-        <p className="status-bar-field">
-          <a href={WIKI_URL} target="_blank" rel="noopener noreferrer">
-            fate.fandom.com
-          </a>
-        </p>
-      </div>
+      )}
     </div>
   );
 }

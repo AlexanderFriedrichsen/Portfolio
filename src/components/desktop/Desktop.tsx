@@ -32,8 +32,7 @@ type WindowId =
   | "about-me"
   | "tools"
   | "llc"
-  | "mtg-analyzer"
-  | "fate";
+  | "mtg-analyzer";
 
 type WindowDef = {
   id: WindowId;
@@ -92,13 +91,6 @@ const WINDOW_META: Record<
     defaultSize: { width: 720, height: 560 },
     minSize: { width: 520, height: 360 },
   },
-  fate: {
-    id: "fate",
-    title: "Fate — A Love Letter",
-    defaultPos: { x: 240, y: 60 },
-    defaultSize: { width: 720, height: 600 },
-    minSize: { width: 520, height: 400 },
-  },
 };
 
 type IconDef = {
@@ -156,6 +148,19 @@ export default function Desktop() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [balloonKey, setBalloonKey] = useState(0);
   const [balloonForced, setBalloonForced] = useState(false);
+  // Fate launches as a fullscreen overlay OUTSIDE the Rnd window system
+  // (it's a "you just launched the game" experience, not a window).
+  const [fateLaunching, setFateLaunching] = useState(false);
+  const fateReturnFocusRef = useRef<HTMLElement | null>(null);
+  const closeFate = useCallback(() => {
+    setFateLaunching(false);
+    // Restore focus to the icon that launched Fate for keyboard users.
+    const el = fateReturnFocusRef.current;
+    fateReturnFocusRef.current = null;
+    if (el && typeof el.focus === "function") {
+      queueMicrotask(() => el.focus());
+    }
+  }, []);
 
   // R4 Fix 3: SSR hydration flash guard. `phase` initializes to 'desktop'
   // on both server and client to avoid hydration mismatch, and only flips
@@ -258,10 +263,6 @@ export default function Desktop() {
       ...WINDOW_META["mtg-analyzer"],
       render: () => <MtgAnalyzer />,
     },
-    fate: {
-      ...WINDOW_META.fate,
-      render: () => <Fate />,
-    },
   };
 
   // D5: live clock. Gated: only run on desktop viewport — no point burning
@@ -292,9 +293,16 @@ export default function Desktop() {
     setFocused(id);
   }, []);
 
-  // Activating an icon: open window, or follow link.
+  // Activating an icon: open window, follow link, or launch Fate overlay.
   const activateIcon = useCallback(
     (icon: IconDef) => {
+      if (icon.id === "fate") {
+        const active = document.activeElement;
+        fateReturnFocusRef.current =
+          active instanceof HTMLElement ? active : null;
+        setFateLaunching(true);
+        return;
+      }
       if (icon.kind === "window" && WINDOW_IDS.has(icon.id)) {
         openWindow(icon.id as WindowId);
       } else if (icon.kind === "link" && icon.href) {
@@ -333,8 +341,11 @@ export default function Desktop() {
               iconKey={icon.iconKey}
               extBadge={!!icon.extBadge}
               isOpen={
-                icon.kind === "window" &&
-                openWindows.includes(icon.id as WindowId)
+                icon.id === "fate"
+                  ? fateLaunching
+                  : icon.kind === "window" &&
+                    WINDOW_IDS.has(icon.id) &&
+                    openWindows.includes(icon.id as WindowId)
               }
               onActivate={() => activateIcon(icon)}
             />
@@ -497,6 +508,9 @@ export default function Desktop() {
       {phase === "desktop" && (firstDesktopVisit || balloonForced) && (
         <WelcomeBalloon key={balloonKey} immediate={balloonKey > 0} />
       )}
+      {/* Fate fullscreen launch overlay — sibling of .retro-desktop (R7 safe).
+          Rendered outside the window system; covers the whole viewport. */}
+      {fateLaunching && <Fate onClose={closeFate} />}
     </>
   );
 }
