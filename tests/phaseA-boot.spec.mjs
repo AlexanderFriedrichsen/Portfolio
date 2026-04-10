@@ -327,17 +327,39 @@ const browser = await chromium.launch();
   );
 
   // R5 Fix 6: tray icons present to the left of the clock.
-  const welcomeIcon = await page
-    .locator(".desktop-only .tb-tray .tb-tray-welcome")
-    .count();
-  pass("trayWelcomeIconPresent", welcomeIcon >= 1, `count=${welcomeIcon}`);
-  const fullscreenIcon = await page
-    .locator(".desktop-only .tb-tray .tb-tray-fullscreen")
-    .count();
+  // Cipher W (PR #13): assert the underlying <img> actually loaded —
+  // .count() alone would pass even if the SVG 404s.
+  const welcomeIconInfo = await page.evaluate(() => {
+    const el = document.querySelector(
+      ".desktop-only .tb-tray .tb-tray-welcome",
+    );
+    return el
+      ? { tag: el.tagName, nw: el.naturalWidth, complete: el.complete }
+      : null;
+  });
+  pass(
+    "trayWelcomeIconPresent",
+    !!welcomeIconInfo &&
+      welcomeIconInfo.tag === "IMG" &&
+      welcomeIconInfo.complete === true &&
+      welcomeIconInfo.nw > 0,
+    JSON.stringify(welcomeIconInfo),
+  );
+  const fullscreenIconInfo = await page.evaluate(() => {
+    const el = document.querySelector(
+      ".desktop-only .tb-tray .tb-tray-fullscreen",
+    );
+    return el
+      ? { tag: el.tagName, nw: el.naturalWidth, complete: el.complete }
+      : null;
+  });
   pass(
     "trayFullscreenIconPresent",
-    fullscreenIcon >= 1,
-    `count=${fullscreenIcon}`,
+    !!fullscreenIconInfo &&
+      fullscreenIconInfo.tag === "IMG" &&
+      fullscreenIconInfo.complete === true &&
+      fullscreenIconInfo.nw > 0,
+    JSON.stringify(fullscreenIconInfo),
   );
 
   // R7 sanity — two-phase.
@@ -388,6 +410,32 @@ const browser = await chromium.launch();
     console.log(`  [PASS] backgroundWallpaperPresent`);
   } else {
     console.log(`  [FAIL] backgroundWallpaperPresent — got=${wallpaperBg}`);
+    process.exitCode = 1;
+  }
+
+  // Cipher W (PR #13): the URL-string check above would pass even if the
+  // webp 404s. Extract the URL and assert a new Image() actually loads.
+  const wallpaperLoadOk = await page.evaluate(async () => {
+    const el = document.querySelector(".desktop-only .retro-desktop");
+    if (!el) return { ok: false, reason: "no .retro-desktop" };
+    const bg = getComputedStyle(el).backgroundImage || "";
+    const m = bg.match(/url\(["']?([^"')]+)["']?\)/);
+    if (!m) return { ok: false, reason: "no url() in bg", bg };
+    const src = m[1];
+    return await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () =>
+        resolve({ ok: img.naturalWidth > 0, nw: img.naturalWidth, src });
+      img.onerror = () => resolve({ ok: false, reason: "onerror", src });
+      img.src = src;
+    });
+  });
+  if (wallpaperLoadOk.ok) {
+    console.log(`  [PASS] backgroundWallpaperLoads`);
+  } else {
+    console.log(
+      `  [FAIL] backgroundWallpaperLoads — ${JSON.stringify(wallpaperLoadOk)}`,
+    );
     process.exitCode = 1;
   }
 
