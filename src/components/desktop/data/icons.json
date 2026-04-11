@@ -42,6 +42,12 @@
     "iconKey": "fate"
   },
   {
+    "id": "wow",
+    "label": "World of Warcraft",
+    "kind": "window",
+    "iconKey": "wow"
+  },
+  {
     "id": "wonders",
     "label": "Wonders of First",
     "kind": "link",

@@ -16,6 +16,7 @@ import ToolsITried from "./windows/ToolsITried";
 import HonestAlexFLLC from "./windows/HonestAlexFLLC";
 import MtgAnalyzer from "./windows/MtgAnalyzer";
 import Fate from "./windows/Fate";
+import Wow from "./windows/Wow";
 import iconsData from "./data/icons.json";
 import { DesktopGlyph } from "./xp-icons";
 
@@ -160,6 +161,18 @@ export default function Desktop() {
       queueMicrotask(() => el.focus());
     }
   }, []);
+  // Wow follows the same fullscreen-overlay pattern as Fate — a recreation
+  // of the WoW login screen (loading → login box over looping cinematic).
+  const [wowLaunching, setWowLaunching] = useState(false);
+  const wowReturnFocusRef = useRef<HTMLElement | null>(null);
+  const closeWow = useCallback(() => {
+    setWowLaunching(false);
+    const el = wowReturnFocusRef.current;
+    wowReturnFocusRef.current = null;
+    if (el && typeof el.focus === "function") {
+      queueMicrotask(() => el.focus());
+    }
+  }, []);
 
   // R4 Fix 3: SSR hydration flash guard. `phase` initializes to 'desktop'
   // on both server and client to avoid hydration mismatch, and only flips
@@ -292,7 +305,9 @@ export default function Desktop() {
     setFocused(id);
   }, []);
 
-  // Activating an icon: open window, follow link, or launch Fate overlay.
+  // Activating an icon: open window, follow link, or launch a fullscreen
+  // overlay experience (Fate, Wow). Overlay experiences are NOT in the
+  // Rnd window system — they render as siblings of .retro-desktop.
   const activateIcon = useCallback(
     (icon: IconDef) => {
       if (icon.id === "fate") {
@@ -300,6 +315,13 @@ export default function Desktop() {
         fateReturnFocusRef.current =
           active instanceof HTMLElement ? active : null;
         setFateLaunching(true);
+        return;
+      }
+      if (icon.id === "wow") {
+        const active = document.activeElement;
+        wowReturnFocusRef.current =
+          active instanceof HTMLElement ? active : null;
+        setWowLaunching(true);
         return;
       }
       if (icon.kind === "window" && WINDOW_IDS.has(icon.id)) {
@@ -342,9 +364,11 @@ export default function Desktop() {
               isOpen={
                 icon.id === "fate"
                   ? fateLaunching
-                  : icon.kind === "window" &&
-                    WINDOW_IDS.has(icon.id) &&
-                    openWindows.includes(icon.id as WindowId)
+                  : icon.id === "wow"
+                    ? wowLaunching
+                    : icon.kind === "window" &&
+                      WINDOW_IDS.has(icon.id) &&
+                      openWindows.includes(icon.id as WindowId)
               }
               onActivate={() => activateIcon(icon)}
             />
@@ -522,6 +546,8 @@ export default function Desktop() {
       {/* Fate fullscreen launch overlay — sibling of .retro-desktop (R7 safe).
           Rendered outside the window system; covers the whole viewport. */}
       {fateLaunching && <Fate onClose={closeFate} />}
+      {/* Wow fullscreen login screen overlay — same R7-safe sibling pattern. */}
+      {wowLaunching && <Wow onClose={closeWow} />}
     </>
   );
 }
