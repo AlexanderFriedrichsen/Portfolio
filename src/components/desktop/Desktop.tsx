@@ -107,7 +107,9 @@ type IconDef = {
 
 const ICONS = iconsData as IconDef[];
 
-// D5: Clock formatters. "h:mm AM/PM" / "M/D/YYYY" to match prior hardcoded text.
+// D5: Clock formatter. "h:mm AM/PM" to match the real XP tray clock.
+// Polish 2026-04-10: formatClockDate removed — date was dropped from the
+// tray to match XP's behavior (date only appeared on hover tooltip).
 function formatClockTime(d: Date): string {
   let h = d.getHours();
   const m = d.getMinutes();
@@ -115,9 +117,6 @@ function formatClockTime(d: Date): string {
   h = h % 12;
   if (h === 0) h = 12;
   return `${h}:${m.toString().padStart(2, "0")} ${ampm}`;
-}
-function formatClockDate(d: Date): string {
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
 }
 
 const WINDOW_IDS = new Set<string>(Object.keys(WINDOW_META));
@@ -495,8 +494,8 @@ export default function Desktop() {
               />
             </button>
             <div className="tb-clock" aria-label="Clock">
+              {/* Polish 2026-04-10: real XP only showed time in the tray. */}
               <div>{now ? formatClockTime(now) : ""}</div>
-              <div>{now ? formatClockDate(now) : ""}</div>
             </div>
           </div>
         </div>

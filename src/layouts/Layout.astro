@@ -17,6 +17,18 @@ const { title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Alex Friedrichsen — data scientist, builder, and human who grows with friends, finds joy in hard problems, and builds things that help people." />
+    <link rel="icon" type="image/x-icon" href={`${import.meta.env.BASE_URL}favicon/favicon.ico`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${import.meta.env.BASE_URL}favicon/favicon-32x32.png`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${import.meta.env.BASE_URL}favicon/favicon-16x16.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${import.meta.env.BASE_URL}favicon/apple-touch-icon.png`} />
+    <link rel="manifest" href={`${import.meta.env.BASE_URL}favicon/site.webmanifest`} />
+    <meta property="og:title" content={title} />
+    <meta
+      property="og:description"
+      content="grow with friends, find joy in hard problems, build things that help people"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://honestafblog.com/Portfolio/" />
     <title>{title}</title>
   </head>
   <body>

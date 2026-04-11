@@ -23,7 +23,9 @@ const BASE = import.meta.env.BASE_URL; // always has a trailing slash
 const SOURCES: Record<SoundName, string> = {
   login: `${BASE}sounds/login.wav`,
   logoff: `${BASE}sounds/logoff.wav`,
-  balloon: `${BASE}sounds/balloon.wav`,
+  // Polish 2026-04-10: swap the generic balloon.wav for the canonical
+  // Windows XP notify pop. SoundName stays "balloon" so callers don't move.
+  balloon: `${BASE}sounds/Windows XP - Notify [01].opus`,
   // R4 Fix 4: canonical XP startup chord (~424 KB, ~5–6 s). Triggered on
   // the first user gesture during boot, because browser autoplay policy
   // blocks .play() before any gesture. See Desktop.tsx first-gesture hook.
