@@ -530,6 +530,51 @@ export function DesktopGlyph({ kind, small = false }: Props) {
         </svg>
       );
     }
+    case "wow":
+      // World of Warcraft — stylized portal/rune glyph. Dark arcane circle
+      // with a golden "W" rune at its center, evoking the Dark Portal and
+      // the game's iconic gold-on-black login typography.
+      return (
+        <svg {...common}>
+          <defs>
+            <radialGradient id="wow-portal" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#6a1f8a" />
+              <stop offset="55%" stopColor="#2a0844" />
+              <stop offset="100%" stopColor="#0a0015" />
+            </radialGradient>
+          </defs>
+          <circle
+            cx="18"
+            cy="18"
+            r="15"
+            fill="url(#wow-portal)"
+            stroke="#d4a84a"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="18"
+            cy="18"
+            r="11"
+            fill="none"
+            stroke="#d4a84a"
+            strokeWidth="0.8"
+            opacity="0.6"
+          />
+          <text
+            x="18"
+            y="24"
+            textAnchor="middle"
+            fontFamily="Georgia, serif"
+            fontSize="18"
+            fontWeight="bold"
+            fill="#f0c850"
+            stroke="#7a4a00"
+            strokeWidth="0.5"
+          >
+            W
+          </text>
+        </svg>
+      );
     default:
       return (
         <svg {...common}>
