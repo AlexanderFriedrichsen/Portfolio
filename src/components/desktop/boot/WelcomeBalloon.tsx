@@ -1,4 +1,4 @@
-// Phase A — XP-style tray balloon that appears ~2 s after the desktop unveils.
+// Phase A — XP-style tray balloon that appears after the startup chord finishes.
 // Anchored bottom-right near the clock. Auto-dismisses after 10 s or when the
 // user clicks the explicit close (X) button. Clicks elsewhere do NOT dismiss
 // (R4 fix 2 — CEO wants reading time, not accidental dismiss).
@@ -8,7 +8,10 @@
 import React, { useEffect, useState } from "react";
 import { audioManager } from "./audioManager";
 
-const APPEAR_DELAY_MS = 2000;
+// Sequenced after the XP startup chord (~5–6s via audioManager startup.wav)
+// so the notify pop doesn't overlap the boot sound. 6.5s gives the chord
+// time to finish plus a small breathing pause before the balloon appears.
+const APPEAR_DELAY_MS = 6500;
 // R4 Fix 2: 10s visible (was 6s). Long enough for a normal reader to finish.
 const VISIBLE_MS = 10000;
 

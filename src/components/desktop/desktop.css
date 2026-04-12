@@ -118,8 +118,8 @@
   border-color: #fff;
 }
 .xp-scope .desk-icon .glyph {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
   filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.55));
