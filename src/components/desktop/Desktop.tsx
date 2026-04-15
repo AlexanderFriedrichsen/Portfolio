@@ -12,9 +12,7 @@ import { audioManager } from "./boot/audioManager";
 import AgentTeam from "./windows/AgentTeam";
 import ResearchVault from "./windows/ResearchVault";
 import AboutMe from "./windows/AboutMe";
-import ToolsITried from "./windows/ToolsITried";
 import HonestAlexFLLC from "./windows/HonestAlexFLLC";
-import MtgAnalyzer from "./windows/MtgAnalyzer";
 import Fate from "./windows/Fate";
 import Wow from "./windows/Wow";
 import iconsData from "./data/icons.json";
@@ -27,13 +25,7 @@ import { DesktopGlyph } from "./xp-icons";
 // Refactors that insert a wrapper here MUST re-verify drag bounds.
 // ───────────────────────────────────────────────────────────────────────────
 
-type WindowId =
-  | "agent-team"
-  | "research-vault"
-  | "about-me"
-  | "tools"
-  | "llc"
-  | "mtg-analyzer";
+type WindowId = "agent-team" | "research-vault" | "about-me" | "llc";
 
 type WindowDef = {
   id: WindowId;
@@ -71,26 +63,12 @@ const WINDOW_META: Record<
     defaultSize: { width: 820, height: 520 },
     minSize: { width: 560, height: 360 },
   },
-  tools: {
-    id: "tools",
-    title: "Tools I've Tried",
-    defaultPos: { x: 280, y: 130 },
-    defaultSize: { width: 760, height: 480 },
-    minSize: { width: 540, height: 320 },
-  },
   llc: {
     id: "llc",
     title: "HonestAlexF LLC — Company Info",
     defaultPos: { x: 300, y: 100 },
-    defaultSize: { width: 700, height: 540 },
-    minSize: { width: 520, height: 360 },
-  },
-  "mtg-analyzer": {
-    id: "mtg-analyzer",
-    title: "MTG Skill Analyzer",
-    defaultPos: { x: 320, y: 80 },
-    defaultSize: { width: 720, height: 560 },
-    minSize: { width: 520, height: 360 },
+    defaultSize: { width: 460, height: 260 },
+    minSize: { width: 360, height: 200 },
   },
 };
 
@@ -130,7 +108,7 @@ function isDesktopViewport(): boolean {
   return window.matchMedia(DESKTOP_MQ).matches;
 }
 
-type AboutTabId = "general" | "philosophy" | "background" | "contact";
+type AboutTabId = "general" | "why-site" | "off-keyboard" | "contact";
 
 export default function Desktop() {
   const defaultOpen = ICONS.filter(
@@ -269,12 +247,7 @@ export default function Desktop() {
       ...WINDOW_META["research-vault"],
       render: () => <ResearchVault />,
     },
-    tools: { ...WINDOW_META.tools, render: () => <ToolsITried /> },
     llc: { ...WINDOW_META.llc, render: () => <HonestAlexFLLC /> },
-    "mtg-analyzer": {
-      ...WINDOW_META["mtg-analyzer"],
-      render: () => <MtgAnalyzer />,
-    },
   };
 
   // D5: live clock. Gated: only run on desktop viewport — no point burning
@@ -413,16 +386,15 @@ export default function Desktop() {
               } else if (action === "agent-team") openWindow("agent-team");
               else if (action === "research-vault")
                 openWindow("research-vault");
-              else if (action === "mtg-analyzer") openWindow("mtg-analyzer");
-              else if (action === "tools") openWindow("tools");
-              // External / stubs
+              // External
+              else if (action === "mtg-analyzer")
+                window.open(
+                  "https://honestafblog.com/mtg-skill-analyzer",
+                  "_blank",
+                  "noopener",
+                );
               else if (action === "resume")
                 window.open("/Portfolio/resume/", "_blank", "noopener");
-              else if (action === "blog")
-                window.open("https://honestafblog.com", "_blank", "noopener");
-              else if (action === "wonders" || action === "gecco") {
-                // Stubs per CEO — href=# equivalent. No-op for now.
-              }
               // System
               else if (action === "logoff") logOff();
               else if (action === "shutdown") shutdown();
@@ -697,10 +669,6 @@ type StartAction =
   | "agent-team"
   | "research-vault"
   | "mtg-analyzer"
-  | "wonders"
-  | "gecco"
-  | "blog"
-  | "tools"
   | "logoff"
   | "shutdown";
 
@@ -711,20 +679,22 @@ type StartItem = {
   external?: boolean;
 };
 
-// Matches mocks/d1-v2/xp-start-menu.html exactly.
+// Post-cull roster: only destinations that actually exist. Left column is
+// the "core" identity / work surface; right column is external launches.
 const SM_LEFT: StartItem[] = [
   { action: "about", label: "About Me", iconKey: "user" },
-  { action: "resume", label: "Resume", iconKey: "resume", external: true },
-  { action: "contact", label: "Contact", iconKey: "blog" },
+  { action: "contact", label: "Contact", iconKey: "user" },
   { action: "agent-team", label: "Agent Team", iconKey: "agents" },
   { action: "research-vault", label: "Research Vault", iconKey: "folder" },
 ];
 const SM_RIGHT: StartItem[] = [
-  { action: "mtg-analyzer", label: "MTG Skill Analyzer", iconKey: "mtg" },
-  { action: "wonders", label: "Wonders of the First", iconKey: "wonders" },
-  { action: "gecco", label: "GECCO Paper", iconKey: "gecco" },
-  { action: "blog", label: "Blog", iconKey: "blog", external: true },
-  { action: "tools", label: "Tools I've Tried", iconKey: "tools" },
+  {
+    action: "mtg-analyzer",
+    label: "MTG Skill Analyzer",
+    iconKey: "mtg",
+    external: true,
+  },
+  { action: "resume", label: "Resume", iconKey: "resume", external: true },
 ];
 const SM_ALL: StartItem[] = [...SM_LEFT, ...SM_RIGHT];
 

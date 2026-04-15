@@ -1,86 +1,185 @@
-# D7: Integrate retro-desktop into index.astro + rollback dry-run
+# Task Brief — Portfolio Cuts + About Me Rewrite
 
-Repo: `/mnt/c/vault/dev/Portfolio`
-Branch: `feat/retro-desktop-d2` HEAD `0ce4a43`
-Prior phases D2-D6 green. Bundle 112.9 KB gz / 146.5 KB.
+**Repo**: `/mnt/c/vault/dev/Portfolio` (junction to `/mnt/c/dev/GitHub/Portfolio`)
+**Branch**: cut fresh from `main`, suggested name `polish/icon-cull-and-about-me`
+**Worktree isolation**: DO NOT use — this repo's junction breaks worktree mode (see `meta/threads/infra-forge-worktree` + `portfolio-retro-desktop` 2026-04-11 update)
 
-**Read first**:
+## Context
 
-- `/mnt/c/vault/brain/projects/portfolio-site-desktop-section.md` (D7 phase spec, R7 rule, locked decisions)
-- `src/pages/index.astro` (find Movement I → Movement II seam)
-- `src/components/desktop/Desktop.astro`, `MobileFallback.astro`, `desktop.css`
-- `src/pages/desktop-preview.astro` (integration pattern: gating + sibling layout)
+CEO reviewed the shipped retro desktop and wants two things:
 
-## R7 hard constraint
+1. **Cut the clutter** — hard-limit icons so people actually open the ones that remain.
+2. **Rewrite the About Me** — current copy targets agentic engineers specifically; it should be broader and also explain _why this site looks like this_.
 
-`Desktop.tsx`'s root `<div>` IS the `bounds="parent"` target. NO Astro element may sit between `<section id="desktop">` and the React island. Do not wrap `<Desktop>` in any extra div between the section and the island.
+The existing data layer is `src/components/desktop/data/*.json`, parsed by `Desktop.tsx` + window components. Work within that SoT.
 
-## Part 1 — CSS dedup investigation (DO FIRST)
+## Vision
 
-Cipher flagged ~43 KB gz duplicated CSS chunks (`desktop-preview.*.css` × 2 at ~21 KB each).
+**What**: Ship a leaner portfolio desktop with fewer icons, an About Me that represents Alex holistically (not just AI-engineer resume bait), and a research vault culled to only agentic-learning/dev content.
 
-- Reproduce: `npm run build`, then `ls -la dist/_astro/desktop-preview*.css` and `gzip -c <each> | wc -c`
-- Diff the two files (`diff <(sort file1) <(sort file2)`) — confirm overlap
-- Investigate root cause: (a) Astro emitting CSS for both route + island, (b) Vite chunk-split bug, (c) `Desktop.tsx` importing 7.css at module level vs `Desktop.astro` frontmatter
-- Try: move `import "7.css/dist/7.scoped.css"` from `Desktop.tsx` into `Desktop.astro` frontmatter (if not already), OR a single shared CSS file, OR `vite.build.cssCodeSplit: false`
-- Goal: cut ~20 KB gz. If can't safely dedupe, document why and leave note for follow-up — don't make it worse.
-- Re-run `node tests/d6-gating.mjs` after fix — nothing should break.
+**Who sees this**: Hiring managers at agent-focused companies, peers, friends curious about the site. They should be able to click through in under two minutes and get what Alex is about.
 
-## Part 2 — Rename `desktop-preview.astro` → `_desktop-preview.astro`
+**Done when**:
 
-Astro convention: leading underscore = non-routable.
+- Icon count reduced per "Icon Changes" section below
+- `about.json` replaced with new copy (see "About Me Copy")
+- `research-index.json` culled to agentic-only pieces
+- Tools-I-Tried content folded into Research Vault window (merged section)
+- MTG Skill Analyzer icon converted from window to direct external link to live app
+- HonestAlexF LLC shrunk to a minimal placeholder window (one-liner: "Building something here. More later.") OR removed — your call based on what looks cleanest visually
+- All removed icons' code paths cleanly deleted (no dead branches in `xp-icons.tsx`, `Desktop.tsx` activation, window component files if fully removed)
+- Bundle still under 146.5 KB gz ceiling
+- `npm run verify` (build + check-bundle + scrollbar-guard) green
+- Rebased on current `main`, pushed, PR opened
 
-- `git mv src/pages/desktop-preview.astro src/pages/_desktop-preview.astro`
-- After rebuild, `dist/desktop-preview/` should NOT exist
-- Update `tests/d6-gating.mjs` — point at `http://localhost:4321/Portfolio/#desktop` after Part 3 integration so D6 tests run against the real production page
+**Is NOT**:
 
-## Part 3 — Integrate into `index.astro`
+- Content expansion — if you find gaps in the new Research Vault (e.g., agent harness writeup, Twitter-log research evidence), leave a TODO comment and flag it. Quill will fill those in a separate task.
+- Resume edits — separate workstream.
+- New icons. Net icons should decrease.
 
-Per plan, desktop section sits **between Movement I (philosophy) and Movement II (proof)**.
+## Icon Changes (concrete)
 
-- Find seam between Movement I and Movement II
-- Insert `<section id="desktop">` containing:
-  - `<Desktop client:visible />` wrapped in `<div class="desktop-only">` (gated `(min-width: 1024px) and (pointer: fine)`)
-  - `<MobileFallback />` wrapped in `<div class="mobile-only">` (inverse)
-- Use SAME CSS gating as `_desktop-preview.astro` — extract into shared place if helpful
-- MUST NOT break Movement III or anything below
-- R7 applies — no extra wrapper divs between section and island
-- Add `#desktop` anchor so research detail "← Back to desktop" link lands correctly
+Starting state (`icons.json`): about-me, research-vault, tools, llc, agent-team, mtg-analyzer, fate, wow, wonders, gecco, blog, team-handshake, resume — **13 icons**.
 
-## Part 4 — Carry-forward fixes
+### Remove entirely
 
-1. `package.json` add scripts:
-   ```
-   "check-bundle": "node scripts/check-bundle.mjs",
-   "verify": "npm run build && npm run check-bundle"
-   ```
-2. `.gitignore` add `.playwright-mcp/`
-3. `research-index.json` `updated` vs schema `published` — reconcile to one (recommend keep `published`, drop/rename `updated`). Don't break the build.
+- `tools` — fold content into Research Vault as a dedicated section/tab (see "Tools Merge" below)
+- `wonders` — unfinished project, stub link `#`
+- `gecco` — stub link `#`, not linking out
+- `blog` — redundant, site root is already the blog
+- `team-handshake` — stub link `#`
 
-## Part 5 — Build, verify, ship dry-run
+### Modify
 
-1. `npm run build` — must be green
-2. `npm run check-bundle` — report new total
-3. `node tests/d6-gating.mjs` against new `/Portfolio/` integrated route — all checks pass (drag, close, gating, mobile no-overflow, CLS)
-4. **Rollback dry-run**: write to `/mnt/c/vault/dev/Portfolio/.claude/d7-rollback-plan.md`:
-   - Where prior build artifact lives
-   - Exact `git revert` / branch-reset commands
-   - How long it would take
-   - Who to notify
-5. Playwright screenshot: integrated `index.astro` at 1280×800 showing desktop section in context. Save to `.playwright-mcp/d7-integrated-1280.png`
-6. Commit in logical commits (DO NOT push, DO NOT deploy):
-   - `D7: dedupe CSS chunks` (Part 1)
-   - `D7: rename _desktop-preview, update test target` (Part 2)
-   - `D7: integrate desktop section into index.astro` (Part 3)
-   - `D7: wire check-bundle, gitignore .playwright-mcp, reconcile schema` (Part 4)
+- `mtg-analyzer`: change `kind` from `window` to `link`, `external: true`, `href` pointing to the live MTG Skill Analyzer app. Check the current window component for the live URL; if unclear, flag it and leave `href: "#"` with a TODO. No description, no screenshots — just launches the app in a new tab.
+- `llc`: shrink to minimal placeholder OR remove. If keeping, the window body should be a single short sentence like _"Building something here. Come back later."_ — no multi-section copy. If removing feels cleaner visually, remove it.
 
-## Report (return to orchestrator)
+### Keep (no structural change)
 
-- CSS dedup result (before/after KB, root cause, what changed)
-- New bundle total
-- D6 test results post-integration
-- Files touched per commit
-- Rollback plan summary (3-4 lines from doc)
-- Screenshot path
-- Anything surprising or needing CEO input
-- VERDICT: READY TO PUSH or NEEDS WORK (with blockers)
+- `about-me` — copy update only (see "About Me Copy")
+- `research-vault` — content update only (see "Research Index Cull" + "Tools Merge")
+- `agent-team` — unchanged
+- `fate` — unchanged
+- `wow` — unchanged
+- `resume` — unchanged
+
+Target final icon count: **~7** (about-me, research-vault, agent-team, mtg-analyzer, fate, wow, resume, and maybe llc). Net reduction: 13 → 7 or 8.
+
+## About Me Copy
+
+Replace `about.json` content with the below. You may rename sections / adjust the React component (`src/components/desktop/windows/About.tsx` or similar) to fit — schema is not load-bearing, the copy is. Keep `photo`, `contact`, and `facts` structure mostly intact; replace the prose sections.
+
+### Sections to use
+
+**tagline**:
+`Applied AI engineer. Optimizer, archivist, variance specialist.`
+
+**general** (3 paragraphs, keep as array):
+
+1. "I'm an applied AI engineer. Most of my energy right now goes into meta-level, auto-research-oriented, iterative improvement work — the fine edges and details most people skip past. It's a very competitive environment to be building in, which is exactly why I like it. It's the game, and I like being on the front end of it."
+2. "My inherent skill sets — organization, archival, juggling many obligations at once — map cleanly onto what AI amplifies. Projects that used to sit on the shelf for years because I 'didn't have time' are finally getting finished."
+3. "I play Magic, not chess. Magic has variance. LLM output has variance. I've spent a decade learning to operate effectively under variance in contexts where minimizing it is everything. That transfer is real."
+
+**why_this_site** (new section — replace `philosophy` and `background` with this):
+
+1. "This isn't a normal portfolio. That's the point."
+2. "I like the retro aesthetic — nostalgia-evoking, alternative to the flat-modern-AI-CSS everyone else is shipping, and not trivially coded by an LLM. If you're curious enough to poke around, you'll find easter eggs."
+3. "The site took shape after I ran an in-person Easter egg hunt for friends and remembered how much I love watching people explore something I built. Interactive beats static. If you came here just to verify a resume line, the resume is right there — but this is the part I'd want you to actually poke around in."
+
+**off_keyboard** (new section):
+
+1. "Climber, squash player, runner, pianist. Magic pro. Food lover, big traveler, competitor, strategist."
+2. "High openness, low conformity. I like being the first one to try something, and I'd rather ask forgiveness than permission when chasing a long shot."
+3. "Voracious audiobook consumer: progression fantasy, rationalist fiction, world building, high fantasy, sci-fi, self-improvement."
+4. "I don't take myself too seriously day-to-day. I find joy in bringing people together, seeing friends laugh, maintaining relationships and forming new ones."
+
+**contact**: unchanged from current (email, GitHub, LinkedIn, X). Drop the `Blog:` line since the site root is the blog.
+
+**facts** (trim to 3):
+
+- `{ "k": "Based in", "v": "Boston, MA" }`
+- `{ "k": "Currently", "v": "Applied AI engineer, open to senior IC roles" }`
+- `{ "k": "Stack", "v": "TypeScript, Python, Astro, Supabase, Claude Code agent teams" }`
+
+**Remove entirely**: `philosophy`, `background` (placeholder TODO), and the stale `tagline` about "Solo dev, MTG pro, Wonders of the First creator."
+
+### Component adjustments
+
+If the About window uses tabs (General / Philosophy / Background / Contact), the new tabs should be something like: **About** (general), **Why this site** (why_this_site), **Off the keyboard** (off_keyboard), **Contact** (contact + facts). Your call on exact layout; keep it XP-native.
+
+## Research Index Cull
+
+`research-index.json` currently has 6 pieces:
+
+- handoff-protocol (agent-teams) — **KEEP**
+- failure-modes (agent-teams) — **KEEP**
+- landscape-2026 (agent-teams) — **KEEP**
+- 7css-viability (retro-desktop-web) — **REMOVE** (not agentic)
+- tcg-gap-fills (high-ev-competitions) — **REMOVE** (not agentic)
+- agent-economies (agent-economies) — **KEEP** (agentic)
+
+Also delete the corresponding entries in `src/content/research/` for the removed slugs, or leave the content collection entries but filter them out in the index. Your call — whichever is simpler without breaking the `[slug].astro` route.
+
+## Tools Merge
+
+`tools.json` content should fold into the Research Vault window as a new section/tab like "Tools I've Tried." If the Research Vault window currently has a flat list, add a tab/section divider. If it's already structured, find the natural place.
+
+After the merge, delete `tools.json` or leave it unused — the goal is no standalone Tools icon, no standalone Tools window code path.
+
+## TODOs to leave for Quill (flag, don't build)
+
+Leave a `<!-- TODO -->` comment or a note in `project.md` for:
+
+- New Research Vault piece: **agent harness principles + research backing** (CEO wants to showcase the agent team Alex built, with research references)
+- New Research Vault piece: **Twitter log evidence from nightly cron** (demonstrates live research practice — @Apfriedr likes/bookmarks feed into agent improvements)
+- Possibly: **Guiding sources / micro-vault microcosm** — chronological AI development OR "who taught me what" (Karpathy, Cherney, Gary Tan, etc.)
+
+These are substantive copy tasks for Quill, not your job in this PR.
+
+## Constraints
+
+- Bundle ceiling: 146.5 KB gz
+- Keep `7.css`/`xp.css` idioms intact — this is an XP desktop, stay in style
+- No new dependencies
+- Run `npm run verify` before pushing
+
+## Execution Plan
+
+1. Read `icons.json`, `about.json`, `research-index.json`, `tools.json`, `llc.json`
+2. Branch off main
+3. Apply icon changes in `icons.json` (remove 5, modify 2)
+4. Update `about.json` with new copy + adjust `About.tsx` (or equivalent) for new tab/section structure
+5. Cull `research-index.json` + remove orphaned content collection entries
+6. Fold tools content into Research Vault window
+7. Shrink or delete `llc.json` + corresponding window code
+8. Delete dead code paths: xp-icons.tsx cases for removed icons, Desktop.tsx activation branches, orphaned window components
+9. `npm run verify` — fix any failures
+10. Commit in logical chunks (icon cuts, about rewrite, research cull, tools merge)
+11. Push, open PR
+12. Update `.claude/project.md` with summary + flag the Quill TODOs
+
+## Verification
+
+```bash
+# Run from repo root
+cd /mnt/c/vault/dev/Portfolio
+
+# Build passes
+npm run verify
+
+# About copy no longer references old Wonders-creator framing
+! grep -q "Wonders of the First creator" src/components/desktop/data/about.json
+
+# Research index has no non-agentic slugs
+! grep -vE "(7css-viability|tcg-gap-fills)" src/components/desktop/data/research-index.json > /dev/null && ! grep -qE "(7css-viability|tcg-gap-fills)" src/components/desktop/data/research-index.json
+
+# Dead link icons removed
+! grep -qE "\"(wonders|gecco|blog|team-handshake)\"" src/components/desktop/data/icons.json
+
+# Tools icon removed
+! grep -q "\"id\": \"tools\"" src/components/desktop/data/icons.json
+
+# Icon count check (expect ≤ 8)
+test $(node -e "console.log(JSON.parse(require('fs').readFileSync('src/components/desktop/data/icons.json')).length)") -le 8
+```

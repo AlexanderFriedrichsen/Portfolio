@@ -1,39 +1,38 @@
 {
   "name": "Alex Friedrichsen",
-  "tagline": "Solo dev, MTG pro, Wonders of the First creator. Builds tools that help people.",
+  "tagline": "Applied AI engineer. Optimizer, archivist, variance specialist.",
   "photo": "/Portfolio/assets/pictures/alex_pics/IMG_9067.jpg",
   "general": [
-    "I'm an AI-augmented software builder running HonestAlexF LLC out of Boston. Most of what I do sits at the intersection of three things I can't shake: hard problems I find joyful, friends I want to grow with, and tools that make somebody's day better.",
-    "Before code, it was Magic — years on the grind, one Pro Tour Top 8, one SCG Constructed Champion. The same instincts that worked there (study, iterate, ship, ask better questions) are the ones I bring to building software now."
+    "I'm an applied AI engineer. Most of my energy right now goes into meta-level, auto-research-oriented, iterative improvement work, the fine edges and details most people skip past. It's a very competitive environment to be building in, which is exactly why I like it. It's the game, and I like being on the front end of it.",
+    "My inherent skill sets (organization, archival, juggling many obligations at once) map cleanly onto what AI amplifies. Projects that used to sit on the shelf for years because I 'didn't have time' are finally getting finished.",
+    "I play Magic, not chess. Magic has variance. LLM output has variance. I've spent a decade learning to operate effectively under variance in contexts where minimizing it is everything. That transfer is real."
   ],
-  "philosophy": [
-    "Grow with friends. Find joy in hard problems. Build things that help people.",
-    "Three sentences I keep coming back to. Everything I build is a small bet on whether one person plus a team of agents can hold all three at once.",
-    "Hard problems are more fun in good company. Joy in the struggle is the only sustainable engine. And the work only matters if it helps somebody on the other end."
+  "why_this_site": [
+    "This isn't a normal portfolio. That's the point.",
+    "I like the retro aesthetic: nostalgia-evoking, alternative to the flat-modern-AI-CSS everyone else is shipping, and not trivially coded by an LLM. If you're curious enough to poke around, you'll find easter eggs.",
+    "The site took shape after I ran an in-person Easter egg hunt for friends and remembered how much I love watching people explore something I built. Interactive beats static. If you came here just to verify a resume line, the resume is right there, but this is the part I'd want you to actually poke around in."
   ],
-  "background": [
-    "Background tab placeholder — Quill drafts the real copy in D3. Career arc, education, the path from competitive Magic to data science to solo dev studio."
+  "off_keyboard": [
+    "Climber, squash player, runner, pianist. Magic pro. Food lover, big traveler, competitor, strategist.",
+    "High openness, low conformity. I like being the first one to try something, and I'd rather ask forgiveness than permission when chasing a long shot.",
+    "Voracious audiobook consumer: progression fantasy, rationalist fiction, world building, high fantasy, sci-fi, self-improvement.",
+    "I don't take myself too seriously day-to-day. I find joy in bringing people together, seeing friends laugh, maintaining relationships and forming new ones."
   ],
   "contact": [
     "Email: alex@honestafblog.com",
     "GitHub: https://github.com/AlexanderFriedrichsen",
     "LinkedIn: https://www.linkedin.com/in/alexander-friedrichsen/",
-    "X / Twitter: https://x.com/Apfriedr",
-    "Blog: https://honestafblog.com"
+    "X / Twitter: https://x.com/Apfriedr"
   ],
   "facts": [
     { "k": "Based in", "v": "Boston, MA" },
     {
       "k": "Currently",
-      "v": "Running HonestAlexF LLC / open to senior IC roles"
+      "v": "Applied AI engineer, open to senior IC roles"
     },
     {
       "k": "Stack",
       "v": "TypeScript, Python, Astro, Supabase, Claude Code agent teams"
-    },
-    {
-      "k": "Off the keyboard",
-      "v": "Climbing, piano, MTG, building card games"
     }
   ]
 }

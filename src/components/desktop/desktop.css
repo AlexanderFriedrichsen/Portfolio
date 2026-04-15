@@ -527,54 +527,16 @@
 
 /* R5: BSOD CSS removed — component deleted alongside the joke placeholder. */
 
-/* ─── About Me philosophy panel ─── */
+/* ─── About Me simple panels (Why this site, Off the keyboard, Contact) ─── */
 .xp-scope .about-simple {
   padding: 18px;
   font-size: 12px;
   color: #1f2a3a;
   line-height: 1.55;
 }
-.xp-scope .philosophy-triptych {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2em;
-  font-family: Tahoma, sans-serif;
-  font-size: 18px;
-  color: #0a246a;
-  margin: 0 0 14px;
-  font-weight: 700;
-}
-
-/* ─── MTG Skill Analyzer window ─── */
-.xp-scope .mtg-window {
-  padding: 16px 18px;
-  font-size: 12px;
-  color: #1f2a3a;
-  line-height: 1.55;
-}
-.xp-scope .mtg-window p {
-  margin: 0 0 10px;
-}
-.xp-scope .mtg-window .mtg-lede {
-  font-size: 13px;
-}
-.xp-scope .mtg-shot {
-  margin: 12px 0 16px;
-  border: 1px solid #98b3d4;
-  background: #fff;
-}
-.xp-scope .mtg-shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.xp-scope .mtg-shot figcaption {
-  padding: 4px 8px;
-  font-size: 11px;
-  color: #4870a0;
-  background: #eef4fc;
-  border-top: 1px solid #b8c8dc;
-}
+/* .philosophy-triptych / .mtg-window / .mtg-shot removed 2026-04-14
+   — no components reference them any more (AboutMe dropped the
+   Philosophy tab, MtgAnalyzer window was replaced by a direct link). */
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

@@ -12,12 +12,6 @@
     "iconKey": "folder"
   },
   {
-    "id": "tools",
-    "label": "Tools I've Tried",
-    "kind": "window",
-    "iconKey": "tools"
-  },
-  {
     "id": "llc",
     "label": "HonestAlexF LLC",
     "kind": "window",
@@ -32,7 +26,10 @@
   {
     "id": "mtg-analyzer",
     "label": "MTG Skill Analyzer",
-    "kind": "window",
+    "kind": "link",
+    "href": "https://honestafblog.com/mtg-skill-analyzer",
+    "external": true,
+    "extBadge": true,
     "iconKey": "mtg"
   },
   {
@@ -46,38 +43,6 @@
     "label": "World of Warcraft",
     "kind": "window",
     "iconKey": "wow"
-  },
-  {
-    "id": "wonders",
-    "label": "Wonders of the First",
-    "kind": "link",
-    "href": "#",
-    "iconKey": "wonders",
-    "todo": "Q6: confirm Wonders of the First URL"
-  },
-  {
-    "id": "gecco",
-    "label": "GECCO Paper",
-    "kind": "link",
-    "href": "#",
-    "iconKey": "gecco",
-    "todo": "Q6: confirm GECCO paper URL"
-  },
-  {
-    "id": "blog",
-    "label": "Blog",
-    "kind": "link",
-    "href": "https://honestafblog.com",
-    "external": true,
-    "iconKey": "blog"
-  },
-  {
-    "id": "team-handshake",
-    "label": "Team Handshake",
-    "kind": "link",
-    "href": "#",
-    "iconKey": "handshake",
-    "todo": "Q6: confirm Moxfield/Team Handshake URL"
   },
   {
     "id": "resume",

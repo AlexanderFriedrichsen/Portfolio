@@ -5,9 +5,13 @@
 //   - Size bumped 36 → 48 to match real XP desktop icons (viewBox unchanged
 //     at 0 0 36 36 — the existing geometry scales up cleanly).
 //   - Higher-fidelity, more authentic XP-era glyphs for user / folder /
-//     tools / company / agents / blog / resume. Gradients + highlights
-//     instead of flat fills, so they read as real icons at 48px.
-//   - mtg / wonders / gecco / handshake / fate kept as-is per brief.
+//     company / agents / resume. Gradients + highlights instead of flat
+//     fills, so they read as real icons at 48px.
+//   - mtg / fate / wow kept as-is per brief.
+//
+// 2026-04-14 icon cull: removed `tools`, `wonders`, `gecco`, `handshake`,
+// `blog` cases — all referenced only by desktop icons that are no longer
+// part of the roster (see icons.json + CEO review 2026-04-13).
 import React from "react";
 
 type Props = { kind: string; small?: boolean };
@@ -99,51 +103,6 @@ export function DesktopGlyph({ kind, small = false }: Props) {
           />
           {/* top highlight */}
           <path d="M4 15h28" stroke="#fff4c2" strokeWidth="0.8" opacity="0.9" />
-        </svg>
-      );
-    }
-    case "tools": {
-      // Control Panel style: hammer + wrench crossed on a square tile.
-      return (
-        <svg {...common}>
-          <defs>
-            <linearGradient id="tools-bg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#eef2fa" />
-              <stop offset="1" stopColor="#a9b6cf" />
-            </linearGradient>
-          </defs>
-          <rect
-            x="4"
-            y="4"
-            width="28"
-            height="28"
-            rx="2"
-            fill="url(#tools-bg)"
-            stroke="#3a4a66"
-            strokeWidth="1"
-          />
-          {/* wrench (silver) */}
-          <path
-            d="M8 27l12-12 3 3-12 12zM19 13a4 4 0 1 1 4 4l-2-2z"
-            fill="#d8dce6"
-            stroke="#3a4a66"
-            strokeWidth="1"
-            strokeLinejoin="round"
-          />
-          {/* hammer head */}
-          <path
-            d="M24 7l5 5-2 2-5-5z"
-            fill="#c8ccd8"
-            stroke="#3a4a66"
-            strokeWidth="1"
-          />
-          {/* hammer handle */}
-          <path
-            d="M14 25l8-8 3 3-8 8z"
-            fill="#a06a2a"
-            stroke="#3a1a00"
-            strokeWidth="1"
-          />
         </svg>
       );
     }
@@ -287,164 +246,6 @@ export function DesktopGlyph({ kind, small = false }: Props) {
           >
             M
           </text>
-        </svg>
-      );
-    case "wonders":
-      return (
-        <svg {...common}>
-          <polygon
-            points="18,3 33,12 28,30 8,30 3,12"
-            fill="#7a3aa8"
-            stroke="#2a0d4a"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="18"
-            cy="18"
-            r="5"
-            fill="#ffd95a"
-            stroke="#7a5800"
-            strokeWidth="1.5"
-          />
-        </svg>
-      );
-    case "gecco":
-      return (
-        <svg {...common}>
-          <rect
-            x="6"
-            y="4"
-            width="24"
-            height="28"
-            fill="#fff"
-            stroke="#333"
-            strokeWidth="1.5"
-          />
-          <line
-            x1="10"
-            y1="10"
-            x2="26"
-            y2="10"
-            stroke="#333"
-            strokeWidth="1.2"
-          />
-          <line
-            x1="10"
-            y1="14"
-            x2="26"
-            y2="14"
-            stroke="#333"
-            strokeWidth="1.2"
-          />
-          <line
-            x1="10"
-            y1="18"
-            x2="22"
-            y2="18"
-            stroke="#333"
-            strokeWidth="1.2"
-          />
-          <line
-            x1="10"
-            y1="22"
-            x2="26"
-            y2="22"
-            stroke="#333"
-            strokeWidth="1.2"
-          />
-          <text
-            x="18"
-            y="31"
-            textAnchor="middle"
-            fontFamily="Tahoma"
-            fontSize="6"
-            fontWeight="bold"
-            fill="#333"
-          >
-            GECCO
-          </text>
-        </svg>
-      );
-    case "blog": {
-      // Internet Explorer "e" on a globe — the real XP IE shortcut glyph.
-      return (
-        <svg {...common}>
-          <defs>
-            <radialGradient id="ie-globe" cx="0.35" cy="0.35" r="0.75">
-              <stop offset="0" stopColor="#eaf4ff" />
-              <stop offset="0.5" stopColor="#6aa8ff" />
-              <stop offset="1" stopColor="#0a3a9a" />
-            </radialGradient>
-          </defs>
-          <circle
-            cx="18"
-            cy="18"
-            r="14"
-            fill="url(#ie-globe)"
-            stroke="#0a246a"
-            strokeWidth="1.2"
-          />
-          {/* meridians */}
-          <ellipse
-            cx="18"
-            cy="18"
-            rx="6"
-            ry="14"
-            fill="none"
-            stroke="#0a246a"
-            strokeWidth="0.8"
-            opacity="0.5"
-          />
-          <line
-            x1="4"
-            y1="18"
-            x2="32"
-            y2="18"
-            stroke="#0a246a"
-            strokeWidth="0.8"
-            opacity="0.5"
-          />
-          {/* bold italic e */}
-          <text
-            x="19"
-            y="26"
-            textAnchor="middle"
-            fontFamily="Times New Roman, serif"
-            fontSize="22"
-            fontStyle="italic"
-            fontWeight="bold"
-            fill="#fff"
-            stroke="#0a246a"
-            strokeWidth="0.6"
-          >
-            e
-          </text>
-          {/* orbit ring */}
-          <ellipse
-            cx="18"
-            cy="15"
-            rx="16"
-            ry="5"
-            fill="none"
-            stroke="#f7c44a"
-            strokeWidth="1.4"
-            transform="rotate(-18 18 15)"
-          />
-        </svg>
-      );
-    }
-    case "handshake":
-      // SVG glyph placeholder per task brief — flag as carry-forward.
-      // TODO(carry-forward): replace with a real handshake icon when one is sourced.
-      return (
-        <svg {...common}>
-          <path
-            d="M4 18 L14 14 L20 20 L28 12 L32 18 L28 26 L18 22 L8 28 Z"
-            fill="#ff8a3a"
-            stroke="#7a3a00"
-            strokeWidth="1.5"
-          />
-          <circle cx="18" cy="20" r="2" fill="#fff" />
         </svg>
       );
     case "fate":

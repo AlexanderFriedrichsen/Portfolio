@@ -1,29 +1,4 @@
 {
   "name": "HonestAlexF LLC",
-  "tagline": "An AI-augmented solo dev studio. One human, twelve agents, real ship dates.",
-  "what": "HonestAlexF is the company I run to build software that helps people — using a small army of specialist AI agents instead of a small army of humans. Every project goes through the same pipeline: intake, plan, spec tests, build, verify, review, ship.",
-  "services": [
-    {
-      "title": "Custom tools & dashboards",
-      "desc": "Internal apps, data pipelines, analytics surfaces."
-    },
-    {
-      "title": "AI workflow design",
-      "desc": "Standing up agent teams that fit your existing process."
-    },
-    {
-      "title": "Web & game clients",
-      "desc": "Astro / TypeScript sites and Phaser-based browser games."
-    },
-    {
-      "title": "Research & analysis",
-      "desc": "Deep research engagements + statistical modeling."
-    }
-  ],
-  "contact": [
-    { "k": "Email", "v": "alex@honestalexf.com" },
-    { "k": "Site", "v": "honestafblog.com" },
-    { "k": "GitHub", "v": "github.com/AlexanderFriedrichsen" },
-    { "k": "Based", "v": "Boston, MA · remote-friendly" }
-  ]
+  "body": "Building something here. Come back later."
 }
