@@ -46,8 +46,8 @@ const WINDOW_META: Record<
     id: "about-me",
     title: "About Me — Properties",
     defaultPos: { x: 220, y: 70 },
-    defaultSize: { width: 680, height: 500 },
-    minSize: { width: 480, height: 360 },
+    defaultSize: { width: 680, height: 640 },
+    minSize: { width: 480, height: 420 },
   },
   "agent-team": {
     id: "agent-team",
