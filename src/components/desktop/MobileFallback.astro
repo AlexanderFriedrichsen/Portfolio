@@ -115,27 +115,8 @@ const research = (await getCollection("research")).sort(
   <article class="mf-card" id="mf-llc">
     <header class="mf-card-h">
       <h3>{llc.name}</h3>
-      <p class="mf-sub">{llc.tagline}</p>
     </header>
-    <p class="mf-llc-what">{llc.what}</p>
-    <h4 class="mf-llc-h">Services</h4>
-    <ul class="mf-services">
-      {llc.services.map((s) => (
-        <li>
-          <strong>{s.title}</strong>
-          <span> — {s.desc}</span>
-        </li>
-      ))}
-    </ul>
-    <h4 class="mf-llc-h">Contact</h4>
-    <dl class="mf-facts">
-      {llc.contact.map((c) => (
-        <div class="mf-fact-row">
-          <dt>{c.k}</dt>
-          <dd>{c.v}</dd>
-        </div>
-      ))}
-    </dl>
+    <p class="mf-llc-what">{llc.body}</p>
   </article>
 </div>
 
