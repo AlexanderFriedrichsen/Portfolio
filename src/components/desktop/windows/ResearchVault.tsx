@@ -105,8 +105,14 @@ export default function ResearchVault() {
                   </div>
                   <p>{selected.summary}</p>
                   <p>
-                    Full content lives in{" "}
-                    <code>src/content/research/{selected.slug}.md</code>.
+                    <a
+                      className="preview-open"
+                      href={`${import.meta.env.BASE_URL}research/${selected.slug}`}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Open full article →
+                    </a>
                   </p>
                 </>
               ) : (

@@ -66,8 +66,8 @@ export default function WelcomeBalloon({
         Welcome, Alex
       </div>
       <div className="welcome-balloon-body">
-        Your desktop is ready. Double-click any icon to explore — or hit Start
-        for the full menu.
+        Double-click any icon to explore. Curious about the XP theme? Open
+        About, Why this site.
       </div>
       <div className="welcome-balloon-arrow" aria-hidden="true" />
     </div>
