@@ -1,9 +1,234 @@
 [
   {
+    "slug": "how-llms-work",
+    "category": "fundamentals",
+    "title": "How LLMs Actually Work",
+    "summary": "Tokenization, embeddings, attention, decoding. The mental model before the hype.",
+    "status": "stub"
+  },
+  {
+    "slug": "tokenization",
+    "category": "fundamentals",
+    "title": "Tokenization: Where the Bugs Live",
+    "summary": "BPE, SentencePiece, tiktoken. Context windows are measured in tokens, not words, and half the subtle bugs live here.",
+    "status": "stub"
+  },
+  {
+    "slug": "attention-mechanism",
+    "category": "fundamentals",
+    "title": "Attention: The Core Primitive",
+    "summary": "Scaled dot-product, multi-head, positional encodings, causal masks. The mechanics, not the paper (see attention-is-all-you-need).",
+    "status": "stub"
+  },
+  {
+    "slug": "training-vs-inference",
+    "category": "fundamentals",
+    "title": "Training vs Inference: Different Problems",
+    "summary": "Pretraining, fine-tuning, RLHF, inference-time compute. Three regimes, three cost profiles, three failure modes.",
+    "status": "stub"
+  },
+  {
+    "slug": "context-windows",
+    "category": "fundamentals",
+    "title": "Context Windows and Why They Matter",
+    "summary": "From 2K to 10M tokens. What changes, what doesn't, where long-context retrieval quietly breaks.",
+    "status": "stub"
+  },
+  {
+    "slug": "prompting-as-programming",
+    "category": "fundamentals",
+    "title": "Prompting as Programming",
+    "summary": "System prompts, few-shot, chain-of-thought. Treating prompts as code artifacts.",
+    "status": "stub"
+  },
+  {
+    "slug": "pre-transformer-era",
+    "category": "chronology",
+    "title": "Before Transformers (2012-2017)",
+    "summary": "AlexNet, word2vec, seq2seq, LSTMs. The ML world transformers replaced.",
+    "status": "stub"
+  },
+  {
+    "slug": "transformer-to-gpt3",
+    "category": "chronology",
+    "title": "Transformers to GPT-3 (2017-2020)",
+    "summary": "Attention Is All You Need, then BERT, then GPT-2, then GPT-3. Where scaling laws first click.",
+    "status": "stub"
+  },
+  {
+    "slug": "chatgpt-era",
+    "category": "chronology",
+    "title": "The ChatGPT Era (2022-2023)",
+    "summary": "InstructGPT, RLHF, the consumer breakout. 100M users in two months.",
+    "status": "stub"
+  },
+  {
+    "slug": "reasoning-turn",
+    "category": "chronology",
+    "title": "The Reasoning Turn (2024-2025)",
+    "summary": "Sep 2024 o1, then Claude 3.5 extended thinking, then DeepSeek-R1 (Jan 2025). RL on chain-of-thought becomes the frontier recipe.",
+    "status": "stub"
+  },
+  {
+    "slug": "agentic-era-2026",
+    "category": "chronology",
+    "title": "The Agentic Era (2026)",
+    "summary": "Tool use, long-horizon tasks, multi-agent orchestration. Write code that writes code as the default dev interface.",
+    "status": "stub"
+  },
+  {
+    "slug": "frontier-labs",
+    "category": "players",
+    "title": "Frontier Labs: Who's Actually Shipping",
+    "summary": "OpenAI ($852B, consumer mindshare), Anthropic ($380B, passed OpenAI in revenue on the back of Constitutional AI and interpretability), Google DeepMind (TPU vertical integration), Meta FAIR (open weights, Llama 4), xAI (Memphis Colossus).",
+    "status": "stub"
+  },
+  {
+    "slug": "open-weights-camp",
+    "category": "players",
+    "title": "The Open-Weights Camp",
+    "summary": "Llama 4, Mistral, DeepSeek V3.2 and R1, Qwen 3.5. Why open weights matter strategically, and how the Chinese labs reset the training is expensive narrative.",
+    "status": "stub"
+  },
+  {
+    "slug": "chinese-labs",
+    "category": "players",
+    "title": "Chinese Labs and the Capability Gap",
+    "summary": "DeepSeek, Qwen/Alibaba, Zhipu, Moonshot (Kimi). Speed of iteration, export-control arbitrage, the DeepSeek-R1 moment.",
+    "status": "stub"
+  },
+  {
+    "slug": "infra-players",
+    "category": "players",
+    "title": "Infrastructure Players",
+    "summary": "NVIDIA (still 80%+ of training compute), TSMC, hyperscaler capex. Challengers: AMD MI300X, Groq, Cerebras, SambaNova, Google TPUs.",
+    "status": "stub"
+  },
+  {
+    "slug": "frontier-models-2026",
+    "category": "state-of-the-art",
+    "title": "Frontier Models (Q1 2026)",
+    "summary": "GPT-5.4, Claude Opus 4.6, Gemini 3.1 Pro, Grok 4. The frontier four, and what each is actually best at. Leaderboard specifics live in benchmarks-that-matter.",
+    "status": "stub"
+  },
+  {
+    "slug": "benchmarks-that-matter",
+    "category": "state-of-the-art",
+    "title": "Benchmarks That Still Matter",
+    "summary": "SWE-bench Verified (~80%), ARC-AGI v2, GPQA near saturation, FrontierMath still <3%. What new evals catch that MMLU cannot.",
+    "status": "stub"
+  },
+  {
+    "slug": "multimodal-frontier",
+    "category": "state-of-the-art",
+    "title": "The Multimodal Frontier",
+    "summary": "Native image/audio/video understanding, Sora and Veo, Genie world models. Where modalities merge into one latent.",
+    "status": "stub"
+  },
+  {
+    "slug": "long-horizon-tasks",
+    "category": "state-of-the-art",
+    "title": "Long-Horizon Tasks",
+    "summary": "What hours-long autonomous work actually means in Q1 2026, and where it breaks (context rot, tool drift, silent failures).",
+    "status": "stub"
+  },
+  {
+    "slug": "interpretability-and-saes",
+    "category": "state-of-the-art",
+    "title": "Interpretability and SAEs",
+    "summary": "Sparse autoencoders, feature steering, circuit analysis. Why this stopped being academic-only: production safety filters, jailbreak detection, real model debugging.",
+    "status": "stub"
+  },
+  {
+    "slug": "attention-is-all-you-need",
+    "category": "papers",
+    "title": "Attention Is All You Need (2017)",
+    "summary": "The 2017 paper itself: what it claimed, what it got right, what aged oddly (sinusoidal positional encodings, the original 6-layer depth).",
+    "status": "stub"
+  },
+  {
+    "slug": "scaling-laws",
+    "category": "papers",
+    "title": "Scaling Laws (Kaplan 2020, Chinchilla 2022)",
+    "summary": "Kaplan's first quantitative curves, then Chinchilla rewrites them: compute-optimal means data matters more than params.",
+    "status": "stub"
+  },
+  {
+    "slug": "instruct-gpt",
+    "category": "papers",
+    "title": "InstructGPT / RLHF (2022)",
+    "summary": "How alignment tuning turned raw GPT-3 into a product surface. The paper behind ChatGPT.",
+    "status": "stub"
+  },
+  {
+    "slug": "constitutional-ai",
+    "category": "papers",
+    "title": "Constitutional AI (Anthropic 2022)",
+    "summary": "RLAIF, harmlessness at scale, the Anthropic house style.",
+    "status": "stub"
+  },
+  {
+    "slug": "react-and-tool-use",
+    "category": "papers",
+    "title": "ReAct: The Foundational Agent Loop (2023)",
+    "summary": "Reason plus act plus observe as the base loop every tool-using agent inherits.",
+    "status": "stub"
+  },
+  {
+    "slug": "must-read-2025",
+    "category": "papers",
+    "title": "Must-Read Papers (2025)",
+    "summary": "Scaling Monosemanticity, o1 System Card, DeepSeek-R1, Gemini 1.5 long-context technical report. The short list a 2025 practitioner actually cites.",
+    "status": "stub"
+  },
+  {
+    "slug": "rlhf-dpo-and-friends",
+    "category": "techniques",
+    "title": "RLHF, DPO, and Friends",
+    "summary": "PPO (InstructGPT), DPO (no reward model needed), KTO, RLAIF, Constitutional AI. Preference-optimization family, what each solves.",
+    "status": "stub"
+  },
+  {
+    "slug": "moe-architectures",
+    "category": "techniques",
+    "title": "Mixture of Experts",
+    "summary": "Why sparse beats dense at a given compute budget. Routing problems, Mixtral and DeepSeek's MoE lessons.",
+    "status": "stub"
+  },
+  {
+    "slug": "inference-time-compute",
+    "category": "techniques",
+    "title": "Inference-Time Compute",
+    "summary": "Search, self-consistency, speculative decoding, budget controllers. The dial that turns capability up at the cost of latency. (RL-on-CoT lives in reasoning-turn.)",
+    "status": "stub"
+  },
+  {
+    "slug": "tool-use-and-function-calling",
+    "category": "techniques",
+    "title": "Tool Use and Function Calling",
+    "summary": "The mechanism behind every agentic workflow. MCP, OpenAPI-style schemas, what the model actually sees.",
+    "status": "stub"
+  },
+  {
+    "slug": "rag-in-practice",
+    "category": "techniques",
+    "title": "RAG in Practice",
+    "summary": "Chunking, embeddings, vector stores, hybrid search, reranking, context stuffing. What actually works once the demo ends.",
+    "status": "stub"
+  },
+  {
+    "slug": "observability-and-evals",
+    "category": "techniques",
+    "title": "Observability and Evals",
+    "summary": "LangSmith, Braintrust, Helicone, Phoenix. Trace inspection, eval pipelines, regression detection. The infra layer that makes agentic systems debuggable in prod.",
+    "status": "stub"
+  },
+  {
     "slug": "handoff-protocol",
     "category": "agent-teams",
     "title": "Handoff Protocol Between Agents",
     "summary": "Most multi-agent failure I've seen comes from sloppy handoff. Here's the four-block contract.",
+    "status": "published",
     "published": "2026-04-04",
     "readMin": 3
   },
@@ -12,6 +237,7 @@
     "category": "agent-teams",
     "title": "Failure Modes in Multi-Agent Systems",
     "summary": "Where agent teams quietly break: context drift, mock divergence, and unowned escalations.",
+    "status": "published",
     "published": "2026-03-28",
     "readMin": 4
   },
@@ -20,15 +246,45 @@
     "category": "agent-teams",
     "title": "Agentic Workflows: Landscape 2026",
     "summary": "State of the art in agentic workflows, Q1 2026: what's working, what's overhyped, what's next.",
+    "status": "published",
     "published": "2026-03-15",
     "readMin": 4
   },
   {
+    "slug": "orchestrator-vs-swarm",
+    "category": "agent-teams",
+    "title": "Orchestrator vs Swarm: A Taste Test",
+    "summary": "Two dominant multi-agent paradigms, observed failure profiles, which I actually ship.",
+    "status": "stub"
+  },
+  {
     "slug": "agent-economies",
-    "category": "agent-economies",
+    "category": "economics",
     "title": "Agent Economies Landscape",
     "summary": "Structures, sandboxes, crypto economies, and protocols for autonomous agent markets.",
+    "status": "published",
     "published": "2026-02-14",
     "readMin": 4
+  },
+  {
+    "slug": "capex-and-gpu-market",
+    "category": "economics",
+    "title": "Capex and the GPU Market",
+    "summary": "Hyperscaler capex around $300B in 2025-26, NVIDIA still 80%+ of training. Blackwell (B200) to Rubin. TSMC as the gating factor.",
+    "status": "stub"
+  },
+  {
+    "slug": "ai-revenue-reality",
+    "category": "economics",
+    "title": "AI Revenue: Signal vs Narrative",
+    "summary": "Anthropic ($30B ARR) passed OpenAI ($25B) in Q1 2026 despite 4x less training spend. 80% enterprise mix. OpenAI burns $17B/year.",
+    "status": "stub"
+  },
+  {
+    "slug": "token-price-collapse",
+    "category": "economics",
+    "title": "The Token Price Collapse",
+    "summary": "Cost-per-token fell roughly 90% in 2024 and kept dropping. What it enables (agent workloads), who it pressures (inference margin).",
+    "status": "stub"
   }
 ]

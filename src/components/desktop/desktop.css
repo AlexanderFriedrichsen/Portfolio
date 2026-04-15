@@ -1052,3 +1052,35 @@
   scrollbar-color: #dfdfdf #c0c0c0;
   scrollbar-width: auto;
 }
+
+/* ─── Research Vault: stub leaves + locked-preview notice ─────────────────
+   2026-04-15. Vault expanded to 40 entries (4 published, 36 stubs). Stubs
+   render with FileLockedSmall + a muted text colour so they read as "not
+   openable" in the rail. The locked preview block replaces the "Open full
+   article" link with an honest aside explaining the entry is local-only. */
+.xp-scope .tree-item--stub {
+  color: #707070;
+}
+.xp-scope .tree-item--stub.selected {
+  color: inherit;
+}
+.xp-scope .preview-locked {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #f4f4f2;
+  border-left: 3px solid #b0b0b0;
+  color: #555;
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.xp-scope .preview-locked strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #333;
+}
+.xp-scope .preview-locked p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
