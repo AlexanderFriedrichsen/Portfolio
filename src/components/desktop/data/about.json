@@ -5,37 +5,30 @@
     "/Portfolio/assets/pictures/alex_pics/alex_moxfield_space.jpg",
     "/Portfolio/assets/pictures/alex_pics/IMG_9067.jpg"
   ],
-  "general": [
-    "I'm an applied AI engineer. Most of my energy right now goes into meta-level, auto-research-oriented, iterative improvement work, the fine edges and details most people skip past. It's a very competitive environment to be building in, which is exactly why I like it. It's the game, and I like being on the front end of it.",
-    "My inherent skill sets (organization, archival, juggling many obligations at once) map cleanly onto what AI amplifies. Projects that used to sit on the shelf for years because I 'didn't have time' are finally getting finished.",
-    "I play Magic, not chess. Magic has variance. LLM output has variance. I've spent a decade learning to operate effectively under variance in contexts where minimizing it is everything. That transfer is real."
+  "professional": [
+    "I'm an applied AI researcher and professional Magic player. I'm energized while working on meta-level analysis and processes.",
+    "Working within semi-structured environments that contain variance is my sweet spot - whether that's the variance of a competitive card game, or the variance of LLM output.",
+    "I am fueled by collaboration towards competitive ends.",
+    "My default mode - organized, iterative, self-reflective - is uniquely suited for AI amplification. I feel enabled to build great things, especially in this time that I can offload the more mechanical parts of my work to an LLM,",
+    "and focus on the meta-level processes that I enjoy. I have a track record of building tools that enable me to do this, and I'm excited to continue doing so."
   ],
   "why_this_site": [
-    "This isn't a normal portfolio. That's the point.",
-    "I like the retro aesthetic: nostalgia-evoking, alternative to the flat-modern-AI-CSS everyone else is shipping, and not trivially coded by an LLM. If you're curious enough to poke around, you'll find easter eggs.",
-    "The site took shape after I ran an in-person Easter egg hunt for friends and remembered how much I love watching people explore something I built. Interactive beats static. If you came here just to verify a resume line, the resume is right there, but this is the part I'd want you to actually poke around in."
+    "The site took shape after I ran an in-person Easter egg hunt for friends and remembered how much I love watching people explore something I built.",
+    "The resume is right there if you need it, but this is the part I'd want you to actually poke around in.",
+    "I hope this site gives you nostalgic chills, and captures your attention for long enough to get a sense of what I'm about.",
+    "Alternative to the flat-modern-AI-CSS portfolio is stylized to differentiate, while being still suited for agentic coding."
   ],
-  "off_keyboard": [
-    "Climber, squash player, runner, pianist. Magic pro. Food lover, big traveler, competitor, strategist.",
-    "High openness, low conformity. I like being the first one to try something, and I'd rather ask forgiveness than permission when chasing a long shot.",
-    "Voracious audiobook consumer: progression fantasy, rationalist fiction, world building, high fantasy, sci-fi, self-improvement.",
-    "I don't take myself too seriously day-to-day. I find joy in bringing people together, seeing friends laugh, maintaining relationships and forming new ones."
+  "personal": [
+    "Professional Magic and TCG player. Listmaker! Optimizer, researcher, gamer, climber, runner, pianist, musician, squash player, lover, foodie, world traveler, competitor, strategist.",
+    "I like having a lot of different things going on, and I like saying yes to opportunity.",
+    "High openness, low conformity. I like being the first one to try something. I'd rather ask forgiveness than permission.",
+    "Voracious audiobook consumer: progression fantasy, rationalist fiction, world building, high fantasy, sci-fi, self-improvement. HPMOR, MoL, Worth the Candle, Wheel of Time, Stormlight Archive, and more.",
+    "I find joy in bringing people together. Spreading the branches of my tree of life."
   ],
   "contact": [
     "Email: alex@honestafblog.com",
     "GitHub: https://github.com/AlexanderFriedrichsen",
     "LinkedIn: https://www.linkedin.com/in/alexander-friedrichsen/",
     "X / Twitter: https://x.com/Apfriedr"
-  ],
-  "facts": [
-    { "k": "Based in", "v": "Burlington, VT (open to relocation: NYC, SF)" },
-    {
-      "k": "Currently",
-      "v": "Applied AI engineer, open to senior IC roles"
-    },
-    {
-      "k": "Stack",
-      "v": "TypeScript, Python, Astro, Supabase, Claude Code agent teams"
-    }
   ]
 }

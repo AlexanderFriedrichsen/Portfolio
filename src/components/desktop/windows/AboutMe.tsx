@@ -54,17 +54,9 @@ export default function AboutMe({
         <div className="about-body">
           <h2>{about.name}</h2>
           <p className="tagline">{about.tagline}</p>
-          {about.general.map((p, i) => (
+          {about.professional.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
-          <dl className="quick-facts">
-            {about.facts.map((f, i) => (
-              <div key={i}>
-                <dt>{f.k}</dt>
-                <dd>{f.v}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </div>
 
@@ -92,7 +84,7 @@ export default function AboutMe({
         <div className="photo-frame">
           <img src={about.photos[1]} alt={`Portrait of ${about.name}`} />
         </div>
-        {about.off_keyboard.map((p, i) => (
+        {about.personal.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
