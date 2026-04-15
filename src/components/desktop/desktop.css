@@ -527,12 +527,64 @@
 
 /* R5: BSOD CSS removed — component deleted alongside the joke placeholder. */
 
+/* ─── About Me general panel (photo + prose + facts) ─────────────────────
+   Restored 2026-04-14 after the D2 v2 XP refactor dropped the pre-scope
+   .win7 rules. The two-photo layout (photos[0] here, photos[1] on the
+   Off-the-keyboard panel) depends on these bounds — without them the
+   2160x3240 portrait renders at natural size and blows out the window. */
+.xp-scope .about {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  padding: 18px;
+}
+.xp-scope .photo-frame {
+  width: 160px;
+  height: 200px;
+  border: 1px solid #4a6890;
+  background: linear-gradient(135deg, #cfe0f5 0%, #7ea7d4 100%);
+  box-shadow:
+    inset 0 0 0 4px #fff,
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.xp-scope .photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.xp-scope .about-body {
+  font-size: 12px;
+  color: #1f2a3a;
+  line-height: 1.55;
+}
+.xp-scope .about-body h2 {
+  margin: 0 0 2px;
+  font-size: 20px;
+  color: #0e3766;
+}
+.xp-scope .about-body .tagline {
+  margin: 0 0 12px;
+  font-style: italic;
+  color: #4870a0;
+  font-size: 12px;
+}
+
 /* ─── About Me simple panels (Why this site, Off the keyboard, Contact) ─── */
 .xp-scope .about-simple {
   padding: 18px;
   font-size: 12px;
   color: #1f2a3a;
   line-height: 1.55;
+}
+/* Off-the-keyboard photo (photos[1]): smaller framed image that floats
+   beside the prose so layout doesn't break on the simple-panel tabs. */
+.xp-scope .about-simple .photo-frame {
+  width: 180px;
+  height: 220px;
+  float: left;
+  margin: 0 14px 8px 0;
 }
 /* .philosophy-triptych / .mtg-window / .mtg-shot removed 2026-04-14
    — no components reference them any more (AboutMe dropped the
