@@ -66,18 +66,14 @@
       "position": "Software Developer",
       "startDate": "2022-08-01",
       "endDate": "2023-07-01",
-      "highlights": [
-        "Developed precision agriculture simulation software using Python, C#, and JavaScript in Unity Game Engine"
-      ]
+      "highlights": []
     },
     {
       "name": "Vermont Department of Health",
       "position": "Public Health Analyst I",
       "startDate": "2019-02-01",
       "endDate": "2021-09-01",
-      "highlights": [
-        "Automated reporting workflows (SAS, R) and published data products for CDC reporting systems, saving 10+ hours per month"
-      ]
+      "highlights": []
     }
   ],
   "education": [
@@ -168,12 +164,8 @@
   "projects": [
     {
       "name": "Multi-Agent AI Orchestration System",
-      "description": "Built a production multi-agent system with 12 specialized AI agents coordinated through an Obsidian knowledge vault. Implements RAG-based knowledge retrieval over 200+ documents, model routing across inference tiers for cost-optimized token usage, and structured output parsing for agent coordination.",
-      "highlights": [
-        "12 specialized agents with role-based task delegation, automated quality gates, and persistent memory",
-        "RAG pipeline: BM25 + vector search over knowledge vault, context injection at query time",
-        "MCP tool servers, Discord-based always-on infrastructure, custom hooks for secret detection and verification"
-      ],
+      "description": "Production multi-agent system with 12 specialized AI agents coordinated through an Obsidian-backed knowledge vault. Self-improving via nightly research pipelines that mine X, Hacker News, and Reddit for agent-tooling advances and feed them back into the harness. Deterministic verification gates via hooks, parallel worktree isolation for concurrent code generation, and hybrid retrieval (BM25, dense vector, HyDE) over a 300-plus document knowledge base.",
+      "highlights": [],
       "keywords": [
         "LLM Agents",
         "MCP",
