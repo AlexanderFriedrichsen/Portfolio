@@ -779,15 +779,27 @@ function WindowFrame({
               disabled
               tabIndex={-1}
             />
-            <button
-              type="button"
-              aria-label={maximized ? "Restore" : "Maximize"}
-              title={maximized ? "Restore" : "Maximize"}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleMaximize();
-              }}
-            />
+            {maximized ? (
+              <button
+                type="button"
+                aria-label="Restore"
+                title="Restore"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMaximize();
+                }}
+              />
+            ) : (
+              <button
+                type="button"
+                aria-label="Maximize"
+                title="Maximize"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMaximize();
+                }}
+              />
+            )}
             <button
               type="button"
               aria-label="Close"
