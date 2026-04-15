@@ -40,5 +40,65 @@
     "category": "AI",
     "rating": 3,
     "notes": "For ad creatives where CSS/SVG can't reach. Steep ramp, but the node graph rewards investment."
+  },
+  {
+    "tool": "Python",
+    "category": "Language",
+    "rating": 5,
+    "notes": "Default tool for data work, ML pipelines, and glue code. Ten-year relationship. If a project starts in Python I am immediately productive."
+  },
+  {
+    "tool": "TypeScript",
+    "category": "Language",
+    "rating": 4,
+    "notes": "Worth the ceremony for anything that hits a UI. Strict mode catches the bugs I would have shipped. Less fun than Python, more trustworthy."
+  },
+  {
+    "tool": "PostgreSQL",
+    "category": "Database",
+    "rating": 5,
+    "notes": "The relational workhorse behind every serious project I've shipped. CTEs, window functions, JSONB when I need it. I never regret reaching for Postgres."
+  },
+  {
+    "tool": "OpenAI API",
+    "category": "AI",
+    "rating": 4,
+    "notes": "Fine-tuned GPT vision models for the Union Mutual inspection pipeline: projected $3M+ annual savings. Rate limits and eval tooling are the friction, not the models."
+  },
+  {
+    "tool": "Cursor",
+    "category": "Agent",
+    "rating": 4,
+    "notes": "Ran company-wide AI adoption training on it at Union Mutual. Excellent on-ramp for devs new to agentic coding. I drifted to Claude Code for multi-agent work, but Cursor still wins on solo IDE ergonomics."
+  },
+  {
+    "tool": "AWS",
+    "category": "Cloud",
+    "rating": 3,
+    "notes": "App Runner, Redshift, S3 for the Union Mutual stack. Gets the job done. The console is a maze and the billing is a hostage negotiation."
+  },
+  {
+    "tool": "scikit-learn",
+    "category": "ML",
+    "rating": 4,
+    "notes": "Still the right answer for 80% of classical ML problems. Clean API, sane defaults, boring in the best way."
+  },
+  {
+    "tool": "Julia",
+    "category": "Language",
+    "rating": 3,
+    "notes": "Used it for the GECCO '23 evolutionary ML paper and a JuliaCon talk. Lovely for numerical work. Smaller ecosystem is the tax."
+  },
+  {
+    "tool": "Power BI",
+    "category": "Viz",
+    "rating": 3,
+    "notes": "Delivered multi-source DAX dashboards at BAE for senior stakeholders who lived in the Microsoft stack. Powerful once you accept the DAX mental model. I would not pick it for greenfield work."
+  },
+  {
+    "tool": "GitHub Actions",
+    "category": "CI",
+    "rating": 4,
+    "notes": "The default CI/CD pipeline for everything I ship. YAML sprawl is real, but the ecosystem of actions makes most workflows a copy-paste job."
   }
 ]
