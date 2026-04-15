@@ -49,7 +49,7 @@ export default function AboutMe({
         className="about"
       >
         <div className="photo-frame">
-          <img src={about.photo} alt={`Portrait of ${about.name}`} />
+          <img src={about.photos[0]} alt={`Portrait of ${about.name}`} />
         </div>
         <div className="about-body">
           <h2>{about.name}</h2>
@@ -89,6 +89,9 @@ export default function AboutMe({
         hidden={tab !== "off-keyboard"}
         className="about-simple"
       >
+        <div className="photo-frame">
+          <img src={about.photos[1]} alt={`Portrait of ${about.name}`} />
+        </div>
         {about.off_keyboard.map((p, i) => (
           <p key={i}>{p}</p>
         ))}

@@ -565,6 +565,13 @@ function DesktopIconButton({
 }
 
 // ─── Window frame (Rnd shell) ──────────────────────────────────────────────
+// Taskbar height matches .taskbar CSS (desktop.css). The maximized window
+// must not cover the taskbar, so we subtract this from the parent's inner
+// height when computing the maximized size.
+const TASKBAR_HEIGHT = 30;
+
+type WindowRect = { x: number; y: number; width: number; height: number };
+
 function WindowFrame({
   def,
   zIndex,
@@ -584,6 +591,100 @@ function WindowFrame({
 }) {
   const titleId = `window-${def.id}-title`;
   const bodyRef = useRef<HTMLDivElement>(null);
+  const rndRef = useRef<Rnd>(null);
+
+  // Polish 2026-04-14: Maximize toggle.
+  //
+  // We track maximized state + the pre-maximize rect so we can restore the
+  // exact size/position on second click. When maximized, Rnd is driven by
+  // the `position`/`size` props (controlled mode); drag + resize are
+  // disabled. When restored, we clear those props so Rnd falls back to its
+  // own internal state (uncontrolled), preserving whatever the user had.
+  const [maximized, setMaximized] = useState(false);
+  const [prevRect, setPrevRect] = useState<WindowRect | null>(null);
+  const [maxRect, setMaxRect] = useState<WindowRect | null>(null);
+
+  // Read the current Rnd state, fall back to defaults if the handle isn't
+  // ready yet (shouldn't happen in practice since toggle is user-initiated
+  // after mount, but keep the fallback to avoid NaNs).
+  const readCurrentRect = useCallback((): WindowRect => {
+    const rnd = rndRef.current;
+    if (rnd) {
+      const pos = rnd.getDraggablePosition();
+      const el = rnd.getSelfElement();
+      if (el) {
+        return {
+          x: pos.x,
+          y: pos.y,
+          width: el.offsetWidth,
+          height: el.offsetHeight,
+        };
+      }
+    }
+    return {
+      x: def.defaultPos.x,
+      y: def.defaultPos.y,
+      width: def.defaultSize.width,
+      height: def.defaultSize.height,
+    };
+  }, [def]);
+
+  // Compute maximized rect from the .retro-desktop parent's inner box, at
+  // click time so a resized viewport maximizes correctly. Taskbar height is
+  // subtracted so the window never sits under the taskbar.
+  const computeMaxRect = useCallback((): WindowRect => {
+    const rnd = rndRef.current;
+    const el = rnd?.getSelfElement();
+    const parent = el?.parentElement; // .retro-desktop
+    if (parent) {
+      const r = parent.getBoundingClientRect();
+      return {
+        x: 0,
+        y: 0,
+        width: Math.max(def.minSize.width, Math.floor(r.width)),
+        height: Math.max(
+          def.minSize.height,
+          Math.floor(r.height - TASKBAR_HEIGHT),
+        ),
+      };
+    }
+    // Viewport fallback if parent isn't resolvable for any reason.
+    return {
+      x: 0,
+      y: 0,
+      width:
+        typeof window !== "undefined"
+          ? window.innerWidth
+          : def.defaultSize.width,
+      height:
+        typeof window !== "undefined"
+          ? window.innerHeight - TASKBAR_HEIGHT
+          : def.defaultSize.height,
+    };
+  }, [def]);
+
+  const toggleMaximize = useCallback(() => {
+    if (maximized) {
+      setMaximized(false);
+      setMaxRect(null);
+      // prevRect stays set briefly so the Rnd position/size props snap back;
+      // clearing happens on next toggle.
+    } else {
+      const saved = readCurrentRect();
+      setPrevRect(saved);
+      setMaxRect(computeMaxRect());
+      setMaximized(true);
+    }
+  }, [maximized, readCurrentRect, computeMaxRect]);
+
+  // While maximized, keep filling the parent on viewport resize. Otherwise
+  // a fullscreen toggle or window resize would leave a stale box size.
+  useEffect(() => {
+    if (!maximized) return;
+    const onResize = () => setMaxRect(computeMaxRect());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [maximized, computeMaxRect]);
 
   useEffect(() => {
     if (!autofocus) return;
@@ -594,24 +695,59 @@ function WindowFrame({
     clearAutofocus();
   }, [autofocus, clearAutofocus]);
 
+  // Rnd prop shape depends on maximized state:
+  // - maximized: pass `position` + `size` (controlled) so Rnd is pinned
+  // - restored: pass `default` only; let Rnd manage its own state
+  //
+  // When we transition maximized→restored we want Rnd to jump back to
+  // prevRect. We do that by passing prevRect as position/size for one
+  // render, then clearing it on the next interaction. The simplest
+  // implementation: keep controlled props whenever we have an active
+  // prevRect we want to apply. We reset prevRect when the user drags or
+  // resizes so subsequent maximize/restore cycles start fresh.
+  const controlledRect: WindowRect | null = maximized ? maxRect : prevRect;
+  const rndPosition = controlledRect
+    ? { x: controlledRect.x, y: controlledRect.y }
+    : undefined;
+  const rndSize = controlledRect
+    ? { width: controlledRect.width, height: controlledRect.height }
+    : undefined;
+
+  // When restored, clear prevRect once the user interacts — otherwise the
+  // controlled props would keep pinning the window to the saved rect.
+  const clearPrevAfterRestore = useCallback(() => {
+    if (!maximized && prevRect) setPrevRect(null);
+  }, [maximized, prevRect]);
+
   return (
     <Rnd
+      ref={rndRef}
       default={{
         x: def.defaultPos.x,
         y: def.defaultPos.y,
         width: def.defaultSize.width,
         height: def.defaultSize.height,
       }}
+      position={rndPosition}
+      size={rndSize}
       minWidth={def.minSize.width}
       minHeight={def.minSize.height}
       bounds="parent"
       dragHandleClassName="title-bar"
       cancel=".title-bar-controls button"
+      disableDragging={maximized}
+      enableResizing={!maximized}
+      onDragStart={clearPrevAfterRestore}
+      onResizeStart={clearPrevAfterRestore}
       style={{ zIndex }}
       onMouseDown={onFocus}
     >
       <div
-        className={"window" + (isFocused ? " active" : "")}
+        className={
+          "window" +
+          (isFocused ? " active" : "") +
+          (maximized ? " is-maximized" : "")
+        }
         role="region"
         aria-labelledby={titleId}
         style={{
@@ -621,7 +757,18 @@ function WindowFrame({
           flexDirection: "column",
         }}
       >
-        <div className="title-bar">
+        <div
+          className="title-bar"
+          onDoubleClick={(e) => {
+            // Double-click on the title-bar text region toggles maximize
+            // (standard XP behavior). Ignore double-clicks that originated
+            // from the controls buttons so Close/Min/Max don't double-fire.
+            const target = e.target as HTMLElement;
+            if (target.closest(".title-bar-controls")) return;
+            e.stopPropagation();
+            toggleMaximize();
+          }}
+        >
           <div className="title-bar-text" id={titleId}>
             {def.title}
           </div>
@@ -632,12 +779,27 @@ function WindowFrame({
               disabled
               tabIndex={-1}
             />
-            <button
-              type="button"
-              aria-label="Maximize"
-              disabled
-              tabIndex={-1}
-            />
+            {maximized ? (
+              <button
+                type="button"
+                aria-label="Restore"
+                title="Restore"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMaximize();
+                }}
+              />
+            ) : (
+              <button
+                type="button"
+                aria-label="Maximize"
+                title="Maximize"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMaximize();
+                }}
+              />
+            )}
             <button
               type="button"
               aria-label="Close"

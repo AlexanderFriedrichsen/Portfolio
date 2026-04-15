@@ -1,7 +1,10 @@
 {
   "name": "Alex Friedrichsen",
   "tagline": "Applied AI engineer. Optimizer, archivist, variance specialist.",
-  "photo": "/Portfolio/assets/pictures/alex_pics/IMG_9067.jpg",
+  "photos": [
+    "/Portfolio/assets/pictures/alex_pics/alex_moxfield_space.jpg",
+    "/Portfolio/assets/pictures/alex_pics/IMG_9067.jpg"
+  ],
   "general": [
     "I'm an applied AI engineer. Most of my energy right now goes into meta-level, auto-research-oriented, iterative improvement work, the fine edges and details most people skip past. It's a very competitive environment to be building in, which is exactly why I like it. It's the game, and I like being on the front end of it.",
     "My inherent skill sets (organization, archival, juggling many obligations at once) map cleanly onto what AI amplifies. Projects that used to sit on the shelf for years because I 'didn't have time' are finally getting finished.",
@@ -25,7 +28,7 @@
     "X / Twitter: https://x.com/Apfriedr"
   ],
   "facts": [
-    { "k": "Based in", "v": "Boston, MA" },
+    { "k": "Based in", "v": "Burlington, VT (open to relocation: NYC, SF)" },
     {
       "k": "Currently",
       "v": "Applied AI engineer, open to senior IC roles"

@@ -61,7 +61,7 @@ const research = (await getCollection("research")).sort(
       <p class="mf-sub">{about.tagline}</p>
     </header>
     <div class="mf-about-body">
-      <img class="mf-photo" src={about.photo} alt={about.name} loading="lazy" width="280" height="280" />
+      <img class="mf-photo" src={about.photos[0]} alt={about.name} loading="lazy" width="280" height="280" />
       <section class="mf-about-section">
         <h4>About</h4>
         {about.general.map((p) => <p>{p}</p>)}
