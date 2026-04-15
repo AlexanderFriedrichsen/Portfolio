@@ -63,12 +63,16 @@ const research = (await getCollection("research")).sort(
     <div class="mf-about-body">
       <img class="mf-photo" src={about.photo} alt={about.name} loading="lazy" width="280" height="280" />
       <section class="mf-about-section">
-        <h4>General</h4>
+        <h4>About</h4>
         {about.general.map((p) => <p>{p}</p>)}
       </section>
       <section class="mf-about-section">
-        <h4>Background</h4>
-        {about.background.map((p) => <p>{p}</p>)}
+        <h4>Why this site</h4>
+        {about.why_this_site.map((p) => <p>{p}</p>)}
+      </section>
+      <section class="mf-about-section">
+        <h4>Off the keyboard</h4>
+        {about.off_keyboard.map((p) => <p>{p}</p>)}
       </section>
       <section class="mf-about-section">
         <h4>Contact</h4>

@@ -1,10 +1,13 @@
 import React, { useState, useId } from "react";
 import about from "../data/about.json";
 
+// 2026-04-14 rewrite: replaced Philosophy + Background tabs with
+// "Why this site" + "Off the keyboard" per CEO brief. Data-driven — all
+// copy lives in ../data/about.json.
 const TABS = [
-  { id: "general", label: "General" },
-  { id: "philosophy", label: "Philosophy" },
-  { id: "background", label: "Background" },
+  { id: "general", label: "About" },
+  { id: "why-site", label: "Why this site" },
+  { id: "off-keyboard", label: "Off the keyboard" },
   { id: "contact", label: "Contact" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
@@ -37,7 +40,7 @@ export default function AboutMe({
         ))}
       </menu>
 
-      {/* General panel */}
+      {/* About panel — photo + general prose + facts. */}
       <div
         role="tabpanel"
         id={panelId("general")}
@@ -65,38 +68,33 @@ export default function AboutMe({
         </div>
       </div>
 
-      {/* Philosophy panel — folded in from index.astro Movement I */}
+      {/* Why this site — the XP-desktop framing. */}
       <div
         role="tabpanel"
-        id={panelId("philosophy")}
-        aria-labelledby={tabId("philosophy")}
-        hidden={tab !== "philosophy"}
+        id={panelId("why-site")}
+        aria-labelledby={tabId("why-site")}
+        hidden={tab !== "why-site"}
         className="about-simple"
       >
-        <h2 className="philosophy-triptych">
-          <span>Grow with friends.</span>
-          <span>Find joy in hard problems.</span>
-          <span>Build things that help people.</span>
-        </h2>
-        {(about as { philosophy?: string[] }).philosophy?.map((p, i) => (
+        {about.why_this_site.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
 
-      {/* Background panel */}
+      {/* Off the keyboard — the "not just a resume" context. */}
       <div
         role="tabpanel"
-        id={panelId("background")}
-        aria-labelledby={tabId("background")}
-        hidden={tab !== "background"}
+        id={panelId("off-keyboard")}
+        aria-labelledby={tabId("off-keyboard")}
+        hidden={tab !== "off-keyboard"}
         className="about-simple"
       >
-        {about.background.map((p, i) => (
+        {about.off_keyboard.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
 
-      {/* Contact panel */}
+      {/* Contact — links + facts as a last resort for hiring managers. */}
       <div
         role="tabpanel"
         id={panelId("contact")}
