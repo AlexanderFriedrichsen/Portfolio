@@ -1,9 +1,31 @@
 import React, { useMemo, useState } from "react";
 import index from "../data/research-index.json";
 import tools from "../data/tools.json";
-import { FolderSmall, FileSmall } from "../icons";
+import { FolderSmall, FileSmall, FileLockedSmall } from "../icons";
 
-type Entry = (typeof index)[number];
+// Discriminated union: published entries have date + readMin, stubs do not.
+// JSON's inferred type collapses these into "all optional" which loses the
+// narrowing in the preview pane below. Declare explicitly so TS enforces the
+// shape we actually wrote in research-index.json.
+type PublishedEntry = {
+  status: "published";
+  slug: string;
+  category: string;
+  title: string;
+  summary: string;
+  published: string;
+  readMin: number;
+};
+type StubEntry = {
+  status: "stub";
+  slug: string;
+  category: string;
+  title: string;
+  summary: string;
+};
+type Entry = PublishedEntry | StubEntry;
+const entries = index as Entry[];
+
 type SectionId = "research" | "tools";
 
 function stars(n: number) {
@@ -14,19 +36,32 @@ function stars(n: number) {
 // CEO review folded it into Research Vault so the desktop isn't cluttered
 // with a second content vault. Implementation: a section toggle that swaps
 // between the tree/preview explorer (research) and the tools table.
+// 2026-04-15: Vault expanded from 4 to 40 entries (8 categories) as a
+// curated crash course. Most are stubs — visible in the tree, summary in
+// the preview, no published markdown. Stubs render a locked-state preview
+// (no "Open full article" link) and a distinct leaf icon so the user can
+// scan the rail and instantly see what's actually readable.
 // Group flat index by category. Plain <nav> + grouped lists per Cipher punch list #4
 // (the "honest" downgrade from full tree ARIA — every leaf is a real <button>).
 export default function ResearchVault() {
   const [section, setSection] = useState<SectionId>("research");
   const grouped = useMemo(() => {
     const out: Record<string, Entry[]> = {};
-    for (const e of index) {
+    for (const e of entries) {
       (out[e.category] ||= []).push(e);
     }
     return out;
   }, []);
+  const publishedCount = useMemo(
+    () => entries.filter((e) => e.status === "published").length,
+    [],
+  );
+  const stubCount = useMemo(
+    () => entries.filter((e) => e.status === "stub").length,
+    [],
+  );
   // D5: guard empty-index crash — null-safe initial state + conditional preview.
-  const [selected, setSelected] = useState<Entry | null>(index[0] ?? null);
+  const [selected, setSelected] = useState<Entry | null>(entries[0] ?? null);
 
   return (
     <>
@@ -64,28 +99,39 @@ export default function ResearchVault() {
               <>
                 {" "}
                 › {selected.category} › {selected.slug}.md
+                {selected.status === "stub" && " (local only)"}
               </>
             )}
           </div>
           <div className="explorer">
             <nav className="tree" aria-label="Research files">
-              {Object.entries(grouped).map(([cat, entries]) => (
+              {Object.entries(grouped).map(([cat, items]) => (
                 <div key={cat} className="tree-group">
                   <div className="tree-group-label">
                     <FolderSmall />
                     {cat}
                   </div>
                   <ul>
-                    {entries.map((e) => {
+                    {items.map((e) => {
                       const isSel = selected?.slug === e.slug;
+                      const isStub = e.status === "stub";
+                      const cls =
+                        "tree-item" +
+                        (isSel ? " selected" : "") +
+                        (isStub ? " tree-item--stub" : "");
                       return (
                         <li key={e.slug}>
                           <button
                             type="button"
-                            className={"tree-item" + (isSel ? " selected" : "")}
+                            className={cls}
                             onClick={() => setSelected(e)}
+                            aria-label={
+                              isStub
+                                ? `${e.slug}.md, not yet published`
+                                : undefined
+                            }
                           >
-                            <FileSmall />
+                            {isStub ? <FileLockedSmall /> : <FileSmall />}
                             {e.slug}.md
                           </button>
                         </li>
@@ -100,20 +146,42 @@ export default function ResearchVault() {
                 <>
                   <h2>{selected.title}</h2>
                   <div className="meta">
-                    research/{selected.category} · published{" "}
-                    {selected.published} · {selected.readMin} min read
+                    research/{selected.category}
+                    {selected.status === "published" && (
+                      <>
+                        {" "}
+                        · published {selected.published} · {selected.readMin}{" "}
+                        min read
+                      </>
+                    )}
+                    {selected.status === "stub" && <> · locked</>}
                   </div>
                   <p>{selected.summary}</p>
-                  <p>
-                    <a
-                      className="preview-open"
-                      href={`${import.meta.env.BASE_URL}research/${selected.slug}`}
-                      target="_blank"
-                      rel="noopener"
+                  {selected.status === "published" ? (
+                    <p>
+                      <a
+                        className="preview-open"
+                        href={`${import.meta.env.BASE_URL}research/${selected.slug}`}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Open full article →
+                      </a>
+                    </p>
+                  ) : (
+                    <aside
+                      className="preview-locked"
+                      role="note"
+                      aria-label="Locked entry"
                     >
-                      Open full article →
-                    </a>
-                  </p>
+                      <strong>Local only.</strong>
+                      <p>
+                        This is a note in my working vault that hasn't been
+                        polished for publication. Summary above is accurate; the
+                        full piece will ship here when it's ready.
+                      </p>
+                    </aside>
+                  )}
                 </>
               ) : (
                 <p className="empty">No research entries yet.</p>
@@ -121,7 +189,9 @@ export default function ResearchVault() {
             </article>
           </div>
           <div className="status-bar">
-            <p className="status-bar-field">{index.length} items</p>
+            <p className="status-bar-field">
+              {publishedCount} published · {stubCount} stubs
+            </p>
             <p className="status-bar-field">
               {selected ? "1 selected" : "0 selected"}
             </p>

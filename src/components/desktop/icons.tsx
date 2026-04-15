@@ -266,3 +266,46 @@ export function FileSmall({ size = 14 }: IconProps) {
     </svg>
   );
 }
+
+// Stub-state file icon: same base shape as FileSmall, with a small padlock in
+// the lower-right corner. The lock keeps the leaf clearly recognizable as a
+// file while signalling "not openable" at a glance. Body and rules are greyed
+// so the icon also reads as muted in the tree without needing CSS overrides.
+export function FileLockedSmall({ size = 14 }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      style={{ verticalAlign: "-2px", marginRight: 4 }}
+    >
+      <path
+        d="M3 1 h7 l3 3 v11 a1 1 0 0 1 -1 1 H3 a1 1 0 0 1 -1 -1 V2 a1 1 0 0 1 1 -1 z"
+        fill="#f2f2f2"
+        stroke="#8a8a8a"
+        strokeWidth="0.7"
+      />
+      <path d="M10 1 v3 h3" fill="none" stroke="#8a8a8a" strokeWidth="0.7" />
+      <path d="M4 7 h6 M4 9 h5" stroke="#b0b0b0" strokeWidth="0.6" />
+      {/* Padlock, lower-right corner. Shackle (arc), then body, then keyhole. */}
+      <path
+        d="M9.6 11.6 v-1 a1.3 1.3 0 0 1 2.6 0 v1"
+        fill="none"
+        stroke="#3a3a3a"
+        strokeWidth="0.7"
+      />
+      <rect
+        x="8.9"
+        y="11.6"
+        width="4"
+        height="3.2"
+        rx="0.4"
+        fill="#d4a72c"
+        stroke="#3a3a3a"
+        strokeWidth="0.6"
+      />
+      <circle cx="10.9" cy="13.1" r="0.45" fill="#3a3a3a" />
+    </svg>
+  );
+}
